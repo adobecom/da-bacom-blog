@@ -8,6 +8,7 @@ module.exports = {
     sourceType: 'module',
     requireConfigFile: false,
   },
+  ignorePatterns: ['/scripts/fallback.js'],
   rules: {
     // allow reassigning param
     'no-param-reassign': [2, { props: false }],
