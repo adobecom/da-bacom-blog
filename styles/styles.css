@@ -98,7 +98,8 @@ main p picture img {
     font-size: var(--body-font-size-l);
   }
 
-  main .section .content {
+  main .section .content,
+  main .section .tags {
     max-width: var(--body-max-width);
     margin-left: auto;
     margin-right: auto;

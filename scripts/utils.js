@@ -34,3 +34,65 @@ export const [setLibs, getLibs] = (() => {
  * Edit above at your own risk.
  * ------------------------------------------------------------
  */
+
+/**
+ * Builds a block DOM Element from a two dimensional array
+ * @param {string} blockName name of the block
+ * @param {any} content two dimensional array or string or object of content
+ */
+function buildBlock(blockName, content) {
+  const table = Array.isArray(content) ? content : [[content]];
+  const blockEl = document.createElement('div');
+
+  blockEl.classList.add(blockName);
+  table.forEach((row) => {
+    const rowEl = document.createElement('div');
+    row.forEach((col) => {
+      const colEl = document.createElement('div');
+      const vals = col.elems || [col];
+      vals.forEach((val) => {
+        if (val) {
+          if (typeof val === 'string') {
+            colEl.innerHTML += val;
+          } else {
+            colEl.appendChild(val);
+          }
+        }
+      });
+      rowEl.appendChild(colEl);
+    });
+    blockEl.appendChild(rowEl);
+  });
+  return (blockEl);
+}
+
+function buildTagsBlock() {
+  const tagsArray = [...document.head.querySelectorAll('meta[property="article:tag"]')].map((el) => el.content) || [];
+  const tagsBlock = buildBlock('tags', tagsArray.join(', '));
+  const main = document.querySelector('main');
+  const recBlock = main.querySelector('.recommended-articles');
+  if (recBlock) {
+    // Put tags block before recommended articles block
+    if (recBlock.parentElement.childElementCount === 1) {
+      recBlock.parentElement.previousElementSibling.append(tagsBlock);
+    } else {
+      recBlock.before(tagsBlock);
+    }
+  } else {
+    main.lastElementChild.append(tagsBlock);
+  }
+}
+
+export async function buildAutoBlocks() {
+  const miloLibs = getLibs();
+  const { getMetadata } = await import(`${miloLibs}/utils/utils.js`);
+  const mainEl = document.querySelector('main');
+  try {
+    if (getMetadata('publication-date') && !mainEl.querySelector('.article-header')) {
+      buildTagsBlock(mainEl);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Auto Blocking failed', error);
+  }
+}
