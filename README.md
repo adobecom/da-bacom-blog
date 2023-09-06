@@ -1,5 +1,8 @@
-# Bacom
+# Bacom Blog
 The Franklin based project for the business.adobe.com blog. Based off of milo-college.
+
+## Contributing
+Please carefully review the [contributing doc](/CONTRIBUTING.md) before beginning development. Understanding the requirements will help facilitate a smooth contribution process.
 
 ## Developing
 1. Install the [Helix CLI](https://github.com/adobe/helix-cli): `sudo npm install -g @adobe/helix-cli`
@@ -14,7 +17,7 @@ The Franklin based project for the business.adobe.com blog. Based off of milo-co
 git commit -m "First" --no-verify
 ```
 
-## Testing Milo Changes on Bacom Pages
+## Testing Milo Changes on Bacom Blog Pages
 1. Run 'hlx up' in this folder to ensure the bacom site is running locally. 
 2. Make changes in milo, and then from the milo folder, run `npm run libs`.
 3. Milo will run at:

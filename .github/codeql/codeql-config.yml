@@ -1,0 +1,4 @@
+name: "BACOM Blog CodeQL Config"
+
+paths-ignore:
+  - node_modules
