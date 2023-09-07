@@ -67,7 +67,9 @@ function buildBlock(blockName, content) {
 }
 
 function buildTagsBlock() {
-  const tagsArray = [...document.head.querySelectorAll('meta[property="article:tag"]')].map((el) => el.content) || [];
+  const metadata = document.head.querySelectorAll('meta[property="article:tag"]');
+  if (!metadata.length) return;
+  const tagsArray = [...metadata].map((el) => el.content);
   const tagsBlock = buildBlock('tags', tagsArray.join(', '));
   const main = document.querySelector('main');
   const recBlock = main.querySelector('.recommended-articles');
