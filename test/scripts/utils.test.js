@@ -2,6 +2,7 @@ import { expect } from '@esm-bundle/chai';
 import { readFile } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import { setLibs, buildAutoBlocks } from '../../scripts/utils.js';
+import waitForElement from '../helpers/waitForElement.js';
 
 describe('Libs', () => {
   it('Default Libs', () => {
@@ -87,5 +88,12 @@ describe('Auto Blocks', () => {
     document.body.innerHTML = await readFile({ path: './mocks/tagsWithRecSectionBody.html' });
     await buildAutoBlocks();
     expect(document.querySelector('.before-rec .tags')).to.exist;
+  });
+
+  it('builds the article header block', async () => {
+    document.body.innerHTML = await readFile({ path: './mocks/articleHeaderBody.html' });
+    await buildAutoBlocks();
+    const articleHeader = await waitForElement('.article-header');
+    expect(articleHeader).to.exist;
   });
 });
