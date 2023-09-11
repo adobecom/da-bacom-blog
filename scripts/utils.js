@@ -109,7 +109,6 @@ async function buildArticleHeader(el) {
     await loadTaxonomy();
   }
   const div = document.createElement('div');
-  // div.setAttribute('class', 'section');
   const h1 = el.querySelector('h1');
   const picture = el.querySelector('picture');
   const caption = getImageCaption(picture);
