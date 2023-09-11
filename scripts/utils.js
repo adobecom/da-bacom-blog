@@ -103,6 +103,7 @@ function getImageCaption(picture) {
 
 async function buildArticleHeader(el) {
   const miloLibs = getLibs();
+  console.log('miloLibs', miloLibs);
   const { getMetadata, getConfig } = await import(`${miloLibs}/utils/utils.js`);
   const { loadTaxonomy, getLinkForTopic, getTaxonomyModule } = await import(`${miloLibs}/blocks/article-feed/article-helpers.js`);
   if (!getTaxonomyModule()) {
@@ -137,6 +138,7 @@ async function buildArticleHeader(el) {
 export async function buildAutoBlocks() {
   const miloLibs = getLibs();
   const { getMetadata } = await import(`${miloLibs}/utils/utils.js`);
+  // const { getMetadata } = await import('https://main--milo--adobecom.hlx.live/libs/utils/utils.js');
   const mainEl = document.querySelector('main');
   try {
     if (getMetadata('publication-date') && !mainEl.querySelector('.article-header')) {

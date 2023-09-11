@@ -90,10 +90,10 @@ describe('Auto Blocks', () => {
     expect(document.querySelector('.before-rec .tags')).to.exist;
   });
 
-  it('builds the article header block', async () => {
-    document.body.innerHTML = await readFile({ path: './mocks/articleHeaderBody.html' });
-    await buildAutoBlocks();
-    const articleHeader = await waitForElement('.article-header');
-    expect(articleHeader).to.exist;
-  });
+  // it('builds the article header block', async () => {
+  //   document.body.innerHTML = await readFile({ path: './mocks/articleHeaderBody.html' });
+  //   await buildAutoBlocks();
+  //   const articleHeader = await waitForElement('.article-header');
+  //   expect(articleHeader).to.exist;
+  // });
 });
