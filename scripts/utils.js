@@ -103,7 +103,6 @@ function getImageCaption(picture) {
 
 async function buildArticleHeader(el) {
   const miloLibs = getLibs();
-  console.log('miloLibs', miloLibs);
   const { getMetadata, getConfig } = await import(`${miloLibs}/utils/utils.js`);
   const { loadTaxonomy, getLinkForTopic, getTaxonomyModule } = await import(`${miloLibs}/blocks/article-feed/article-helpers.js`);
   if (!getTaxonomyModule()) {
