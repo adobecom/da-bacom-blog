@@ -112,6 +112,7 @@ const CONFIG = {
   contentRoot: '/blog',
   codeRoot: '/blog',
   taxonomyRoot: '/tags',
+  links: 'on',
 };
 
 // Load LCP image immediately
