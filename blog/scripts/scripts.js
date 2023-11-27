@@ -107,6 +107,7 @@ const CONFIG = {
     langstore: { ietf: 'en-US', tk: 'hah7vzn.css' },
   },
   // geoRouting: 'on',
+  links: 'on',
   productionDomain: 'business.adobe.com',
   prodDomains: ['business.adobe.com'],
   contentRoot: '/blog',
