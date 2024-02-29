@@ -142,14 +142,14 @@ const miloLibs = setLibs(LIBS);
 }());
 
 const prelooadLCP = (img) => {
-  const imgUrl = new URL(img);
+  const imgUrl = new URL(img.src);
   const link = document.createElement('link');
   link.setAttribute('rel', 'preload');
   link.setAttribute('fetchpriority', 'high');
   link.setAttribute('as', 'image');
-  link.setAttribute('href', `${imgUrl.path}`);
-  link.setAttrubte('type', 'image/webp');
-  console.log(link);
+  link.setAttribute('href', `${imgUrl.pathname}`);
+  link.setAttribute('type', 'image/webp');
+  console.log(link, img.src, imgUrl.pathname);
   document.head.appendChild(link);
 };
 
