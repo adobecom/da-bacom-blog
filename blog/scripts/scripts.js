@@ -158,7 +158,7 @@ const prelooadLCP = (img) => {
 
   setConfig({ ...CONFIG, miloLibs });
   loadLana({ clientId: 'bacom-blog', tags: 'default' });
-  prelooadLCP(document.querySelector('img'));
   await buildAutoBlocks();
   await loadArea();
+  prelooadLCP(document.querySelector('img'));
 }());
