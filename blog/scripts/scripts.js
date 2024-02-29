@@ -147,7 +147,7 @@ const prelooadLCP = (img) => {
   link.setAttribute('rel', 'preload');
   link.setAttribute('fetchpriority', 'high');
   link.setAttribute('as', 'image');
-  link.setAttribute('href', `${imgUrl.pathname}`);
+  link.setAttribute('href', `${imgUrl.pathname}${imgUrl.search}`);
   link.setAttribute('type', 'image/webp');
   console.log(link, img.src, imgUrl.pathname);
   document.head.appendChild(link);
