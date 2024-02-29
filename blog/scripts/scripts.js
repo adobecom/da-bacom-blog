@@ -141,6 +141,18 @@ const miloLibs = setLibs(LIBS);
   });
 }());
 
+const prelooadLCP = (img) => {
+  const imgUrl = new URL(img);
+  const link = document.createElement('link');
+  link.setAttribute('rel', 'preload');
+  link.setAttribute('fetchpriority', 'high');
+  link.setAttribute('as', 'image');
+  link.setAttribute('href', `${imgUrl.path}`);
+  link.setAttrubte('type', 'image/webp');
+  console.log(link);
+  document.head.appendChild(link);
+};
+
 (async function loadPage() {
   const { loadArea, setConfig, loadLana } = await import(`${miloLibs}/utils/utils.js`);
 
@@ -148,4 +160,5 @@ const miloLibs = setLibs(LIBS);
   loadLana({ clientId: 'bacom-blog', tags: 'default' });
   await buildAutoBlocks();
   await loadArea();
+  prelooadLCP(document.querySelector('img'));
 }());
