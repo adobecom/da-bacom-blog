@@ -145,6 +145,6 @@ const miloLibs = setLibs(LIBS);
 
   setConfig({ ...CONFIG, miloLibs });
   loadLana({ clientId: 'bacom-blog', tags: 'default' });
-  await buildAutoBlocks();
+  // await buildAutoBlocks();
   await loadArea();
 }());
