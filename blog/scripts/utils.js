@@ -133,7 +133,7 @@ export async function buildAutoBlocks() {
   try {
     if (getMetadata('publication-date') && !mainEl.querySelector('.article-header')) {
       buildTagsBlock(mainEl);
-      await buildArticleHeader(mainEl);
+      // await buildArticleHeader(mainEl);
     }
   } catch (error) {
     window.lana?.log(`Auto Blocking failed: ${error}`, { tags: 'autoBlock' });
