@@ -105,9 +105,11 @@ async function buildArticleHeader(el) {
   }
   const div = document.createElement('div');
   const h1 = el.querySelector('h1');
+  h1.classList.add('article-title');
   const picture = el.querySelector('picture');
   const caption = getImageCaption(picture);
   const figure = document.createElement('div');
+  figure.classList.add('article-feature-image');
   figure.append(picture, caption);
   const category = getMetadata('category');
   const author = getMetadata('author') || 'Adobe Communications Team';
@@ -116,10 +118,10 @@ async function buildArticleHeader(el) {
   const publicationDate = getMetadata('publication-date');
   const categoryTag = getLinkForTopic(category);
   const articleHeaderBlockEl = buildBlock('article-header', [
-    [`<p>${categoryTag}</p>`],
+    [`<p class="article-category">${categoryTag}</p>`],
     [h1],
-    [`<p>${authorURL ? `<a href="${authorURL}">${author}</a>` : author}</p>
-      <p>${publicationDate}</p>`],
+    [`<p class="article-byline">${authorURL ? `<a class="article-author" href="${authorURL}">${author}</a>` : author}</p>
+      <p class="article-date">${publicationDate}</p>`],
     [figure],
   ]);
   div.append(articleHeaderBlockEl);
