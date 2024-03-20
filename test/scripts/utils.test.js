@@ -46,13 +46,14 @@ describe('Libs', () => {
   });
 });
 
-const metadata = await readFile({ path: './mocks/tagsHead.html' });
+const metadata = await readFile({ path: './mocks/head.html' });
 
 window.lana = { log: () => {} };
 
 describe('Auto Blocks', () => {
   before(() => {
-    setLibs('/libs');
+    setLibs('/test/scripts/mocks', { hostname: 'none', search: '' });
+    document.head.innerHTML = metadata;
   });
 
   beforeEach(() => {
@@ -64,30 +65,39 @@ describe('Auto Blocks', () => {
   });
 
   it('catches errors', async () => {
-    document.head.innerHTML = metadata;
     document.body.innerHTML = '';
     await buildAutoBlocks();
     expect(window.lana.log.called).to.be.true;
   });
 
   it('builds the tags block', async () => {
-    document.head.innerHTML = metadata;
-    document.body.innerHTML = await readFile({ path: './mocks/tagsBody.html' });
+    document.body.innerHTML = await readFile({ path: './mocks/body.html' });
     await buildAutoBlocks();
     expect(document.querySelector('.tags')).to.exist;
   });
 
   it('inserts the tags block before recommended articles if present', async () => {
-    document.head.innerHTML = metadata;
     document.body.innerHTML = await readFile({ path: './mocks/tagsWithRecBody.html' });
     await buildAutoBlocks();
     expect(document.querySelector('.tags + .recommended-articles')).to.exist;
   });
 
   it('inserts the tags block in section before recommended articles if present', async () => {
-    document.head.innerHTML = metadata;
     document.body.innerHTML = await readFile({ path: './mocks/tagsWithRecSectionBody.html' });
     await buildAutoBlocks();
     expect(document.querySelector('.before-rec .tags')).to.exist;
+  });
+
+  it('builds the article header block', async () => {
+    document.body.innerHTML = await readFile({ path: './mocks/body.html' });
+    await buildAutoBlocks();
+    expect(document.querySelector('.article-header')).to.exist;
+  });
+
+  it('does not display null category', async () => {
+    document.head.innerHTML = await readFile({ path: './mocks/noCategoryHead.html' });
+    document.body.innerHTML = await readFile({ path: './mocks/body.html' });
+    await buildAutoBlocks();
+    expect(document.querySelector('.article-header > div').textContent).to.not.equal('null');
   });
 });

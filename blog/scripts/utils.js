@@ -114,7 +114,7 @@ async function buildArticleHeader(el) {
   const { locale } = getConfig();
   const authorURL = getMetadata('author-url') || (author ? `${locale.contentRoot}/authors/${author.replace(/[^0-9a-z]/gi, '-').toLowerCase()}` : null);
   const publicationDate = getMetadata('publication-date');
-  const categoryTag = getLinkForTopic(category);
+  const categoryTag = category ? getLinkForTopic(category) : '';
   const articleHeaderBlockEl = buildBlock('article-header', [
     [`<p>${categoryTag}</p>`],
     [h1],
