@@ -67,6 +67,16 @@
     },
     {
       "containerId": "tools",
+      "id": "localize-2",
+      "title": "Localize (V2)",
+      "environments": [ "edit" ],
+      "url": "https://main--bacom-blog--adobecom.hlx.page/tools/loc?milolibs=locui",
+      "passReferrer": true,
+      "passConfig": true,
+      "includePaths": [ "**.xlsx**" ]
+    },
+    {
+      "containerId": "tools",
       "title": "Tag Selector",
       "id": "tag-selector",
       "environments": ["edit"],
