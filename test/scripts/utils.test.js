@@ -56,8 +56,9 @@ describe('Auto Blocks', () => {
     document.head.innerHTML = metadata;
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     sinon.stub(window.lana, 'log');
+    document.body.innerHTML = await readFile({ path: './mocks/body.html' });
   });
 
   afterEach(() => {
@@ -70,27 +71,14 @@ describe('Auto Blocks', () => {
     expect(window.lana.log.called).to.be.true;
   });
 
-  it('builds the tags block', async () => {
-    document.body.innerHTML = await readFile({ path: './mocks/body.html' });
-    await buildAutoBlocks();
-    expect(document.querySelector('.tags')).to.exist;
-  });
-
-  it('inserts the tags block before recommended articles if present', async () => {
-    document.body.innerHTML = await readFile({ path: './mocks/tagsWithRecBody.html' });
-    await buildAutoBlocks();
-    expect(document.querySelector('.tags + .recommended-articles')).to.exist;
-  });
-
-  it('inserts the tags block in section before recommended articles if present', async () => {
-    document.body.innerHTML = await readFile({ path: './mocks/tagsWithRecSectionBody.html' });
-    await buildAutoBlocks();
-    expect(document.querySelector('.before-rec .tags')).to.exist;
-  });
-
   it('builds the article header block', async () => {
-    document.body.innerHTML = await readFile({ path: './mocks/body.html' });
     await buildAutoBlocks();
     expect(document.querySelector('.article-header')).to.exist;
+  });
+
+  it('does not show the category', async () => {
+    await buildAutoBlocks();
+    const category = document.head.querySelector('meta[name=category]').content;
+    expect(document.querySelector('.article-header').innerText.includes(category)).to.be.false;
   });
 });

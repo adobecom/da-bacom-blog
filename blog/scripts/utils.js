@@ -61,27 +61,6 @@ function buildBlock(blockName, content) {
   return (blockEl);
 }
 
-function buildTagsBlock() {
-  const metadata = document.head.querySelectorAll('meta[property="article:tag"]');
-  if (!metadata.length) return;
-  const tagsArray = [...metadata].map((el) => el.content);
-  const tagsBlock = buildBlock('tags', tagsArray.join(', '));
-  const main = document.querySelector('main');
-  const recBlock = main.querySelector('.recommended-articles');
-
-  if (!recBlock) {
-    main.lastElementChild.append(tagsBlock);
-    return;
-  }
-
-  // Put tags block before recommended articles block
-  if (recBlock.parentElement.childElementCount === 1) {
-    recBlock.parentElement.previousElementSibling.append(tagsBlock);
-  } else {
-    recBlock.before(tagsBlock);
-  }
-}
-
 function getImageCaption(picture) {
   // Check if the parent element has a caption
   const parentEl = picture.parentNode;
@@ -99,24 +78,18 @@ function getImageCaption(picture) {
 async function buildArticleHeader(el) {
   const miloLibs = getLibs();
   const { getMetadata, getConfig } = await import(`${miloLibs}/utils/utils.js`);
-  const { loadTaxonomy, getLinkForTopic, getTaxonomyModule } = await import(`${miloLibs}/blocks/article-feed/article-helpers.js`);
-  if (!getTaxonomyModule()) {
-    await loadTaxonomy();
-  }
   const div = document.createElement('div');
   const h1 = el.querySelector('h1');
   const picture = el.querySelector('picture');
   const caption = getImageCaption(picture);
   const figure = document.createElement('div');
   figure.append(picture, caption);
-  const category = getMetadata('category');
   const author = getMetadata('author') || 'Adobe Communications Team';
   const { locale } = getConfig();
   const authorURL = getMetadata('author-url') || (author ? `${locale.contentRoot}/authors/${author.replace(/[^0-9a-z]/gi, '-').toLowerCase()}` : null);
   const publicationDate = getMetadata('publication-date');
-  const categoryTag = getLinkForTopic(category);
   const articleHeaderBlockEl = buildBlock('article-header', [
-    [`<p>${categoryTag}</p>`],
+    ['<p></p>'],
     [h1],
     [`<p>${authorURL ? `<a href="${authorURL}">${author}</a>` : author}</p>
       <p>${publicationDate}</p>`],
@@ -132,7 +105,6 @@ export async function buildAutoBlocks() {
   const mainEl = document.querySelector('main');
   try {
     if (getMetadata('publication-date') && !mainEl.querySelector('.article-header')) {
-      buildTagsBlock(mainEl);
       await buildArticleHeader(mainEl);
     }
   } catch (error) {
