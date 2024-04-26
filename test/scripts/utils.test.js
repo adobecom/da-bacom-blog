@@ -47,6 +47,7 @@ describe('Libs', () => {
 });
 
 const metadata = await readFile({ path: './mocks/head.html' });
+const body = await readFile({ path: './mocks/body.html' });
 
 window.lana = { log: () => {} };
 
@@ -58,7 +59,7 @@ describe('Auto Blocks', () => {
 
   beforeEach(async () => {
     sinon.stub(window.lana, 'log');
-    document.body.innerHTML = await readFile({ path: './mocks/body.html' });
+    document.body.innerHTML = body;
   });
 
   afterEach(() => {
