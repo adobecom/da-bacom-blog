@@ -140,11 +140,20 @@ const miloLibs = setLibs(LIBS);
   });
 }());
 
-(async function loadPage() {
+async function loadPage() {
   const { loadArea, setConfig, loadLana } = await import(`${miloLibs}/utils/utils.js`);
 
   setConfig({ ...CONFIG, miloLibs });
   loadLana({ clientId: 'bacom-blog', tags: 'default' });
   await buildAutoBlocks();
   await loadArea();
+}
+
+loadPage();
+
+(async function livePreview() {
+  const preview = new URL(window.location.href).searchParams.get('dapreview');
+  if (!preview) return;
+  const origin = preview === 'local' ? 'http://localhost:3000' : 'https://da.live';
+  import(`${origin}/scripts/dapreview.js`).then(({ default: daPreview }) => daPreview(loadPage));
 }());
