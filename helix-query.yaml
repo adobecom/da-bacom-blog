@@ -11,7 +11,7 @@ indices:
     exclude:
       - '**/fragments/**'
       - '**/drafts/**'
-    target: /blog/query-index.xlsx
+    target: /blog/query-index.json
     properties: &minProps
       author:
         select: head > meta[name="author"]
@@ -94,7 +94,7 @@ indices:
       - '**/drafts/**'
     properties:
       <<: *minProps
-    target: /uk/blog/query-index.xlsx
+    target: /uk/blog/query-index.json
 
   blog-uk-us:
     include:
@@ -117,7 +117,7 @@ indices:
         select: head > meta[name="seo-article"]
         value: |
           attribute(el, 'content')
-    target: /uk/blog/us-uk-query-index.xlsx
+    target: /uk/blog/us-uk-query-index.json
 
   blog-au:
     include:
@@ -131,7 +131,7 @@ indices:
       - '**/drafts/**'
     properties:
       <<: *minProps
-    target: /au/blog/query-index.xlsx
+    target: /au/blog/query-index.json
 
   blog-au-us:
     include:
@@ -154,7 +154,7 @@ indices:
         select: head > meta[name="seo-article"]
         value: |
           attribute(el, 'content')
-    target: /au/blog/us-au-query-index.xlsx
+    target: /au/blog/us-au-query-index.json
 
   fr:
     include:
@@ -170,7 +170,7 @@ indices:
       - '**/drafts/**'
     properties:
       <<: *minProps
-    target: /fr/blog/query-index.xlsx
+    target: /fr/blog/query-index.json
 
   blog-de:
     include:
@@ -187,7 +187,7 @@ indices:
       - '**/drafts/**'
     properties:
       <<: *minProps
-    target: /de/blog/query-index.xlsx
+    target: /de/blog/query-index.json
 
   blog-jp:
     include:
@@ -203,7 +203,7 @@ indices:
       - '**/drafts/**'
     properties:
       <<: *minProps
-    target: /jp/blog/query-index.xlsx
+    target: /jp/blog/query-index.json
 
   blog-kr:
     include:
@@ -217,4 +217,4 @@ indices:
       - '**/drafts/**'
     properties:
       <<: *minProps
-    target: /kr/blog/query-index.xlsx
+    target: /kr/blog/query-index.json
