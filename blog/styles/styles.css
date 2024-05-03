@@ -63,6 +63,8 @@
   --detail-font-size-s: 0.75rem; /* 12px */
 }
 
+helix-sidekick { opacity: 0; }
+
 body main {
   font-size: var(--body-font-size-m);
   line-height: var(--body-line-height);
