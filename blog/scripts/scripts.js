@@ -151,11 +151,8 @@ async function loadPage() {
 
 loadPage();
 
+// DA Live Preview
 (async function loadDa() {
-  import(`${import.meta.url.replace('/scripts.js', '/dask.js')}`);
-
-  const preview = new URL(window.location.href).searchParams.get('dapreview');
-  if (!preview) return;
-  import('https://da.live/scripts/dapreview.js')
-    .then(({ default: daPreview }) => daPreview(loadPage));
+  if (!new URL(window.location.href).searchParams.get('dapreview')) return;
+  import('https://da.live/scripts/dapreview.js').then(({ default: daPreview }) => daPreview(loadPage));
 }());
