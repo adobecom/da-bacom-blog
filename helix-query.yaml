@@ -47,7 +47,7 @@ indices:
           attribute(el, 'content')
       tags:
         select: head > meta[property="article:tag"]
-        values: |
+        value: |
           attribute(el, 'content')
       robots:
         select: head > meta[name="robots"]
