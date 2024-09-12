@@ -11,7 +11,7 @@ indices:
     exclude:
       - '**/fragments/**'
       - '**/drafts/**'
-    target: /blog/query-index.json
+    target: /blog/query-index-old.json
     properties: &minProps
       author:
         select: head > meta[name="author"]
