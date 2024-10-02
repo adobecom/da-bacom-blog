@@ -84,5 +84,13 @@
       "isPalette": true,
       "paletteRect": "top: 150px; left: 7%; height: 675px; width: 85vw;"
     }
+  ],
+  "apps": [
+    {
+      "title": "Placeholder Updater",
+      "description": "Find and replace placeholder values across all locales.",
+      "cardImage": "https://main--da-bacom-blog--adobecom.hlx.live/blog/media/media_16511e0ee43cd539bda4e68e33ec41888c79de546.jpeg",
+      "url": "https://da.live/app/adobecom/da-bacom-blog/tools/updater"
+    }
   ]
 }
