@@ -42,12 +42,6 @@ function setVisibility(sk) {
   const editBtn = getBtn('da-edit', 'Edit', handleEdit);
   container.insertAdjacentElement('afterbegin', editBtn);
 
-  // const prevBtn = getBtn('da-preview', 'Preview', () => { handleAemAction('page') });
-  // editBtn.insertAdjacentElement('afterend', prevBtn);
-
-  // const pubBtn = getBtn('da-publish', 'Publish', () => { handleAemAction('live') });
-  // prevBtn.insertAdjacentElement('afterend', pubBtn);
-
   sk.classList.add('da-show');
 }
 
@@ -57,7 +51,7 @@ async function setStyles(sk) {
   const text = await resp.text();
   const style = new CSSStyleSheet();
   style.replaceSync(text);
-  sk.shadowRoot.adoptedStyleSheets = [style];
+  sk.shadowRoot.adoptedStyleSheets = [...sk.shadowRoot.adoptedStyleSheets, style];
 }
 
 async function init(sk) {
