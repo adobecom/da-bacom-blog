@@ -6,7 +6,7 @@ import { setLibs, buildAutoBlocks } from '../../blog/scripts/utils.js';
 describe('Libs', () => {
   it('Default Libs', () => {
     const libs = setLibs('/libs');
-    expect(libs).to.equal('https://main--milo--adobecom.hlx.live/libs');
+    expect(libs).to.equal('https://da-patch--milo--adobecom.hlx.live/libs');
   });
 
   it('Does not support milolibs query param on prod', () => {
