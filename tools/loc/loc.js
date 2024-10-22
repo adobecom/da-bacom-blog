@@ -28,9 +28,9 @@ const MOCK_PAGE = `
   const check = checkSession(glaasConf);
   if (check.error) return;
 
-  getTask(glaasConf, '/2023_03_loc-walkthrough_en-GB');
+  const taskConf = { ...glaasConf, name: 'da-test-de-1234', targetLocales: ['de'] };
+  getTask(taskConf);
 
-  const taskConf = { ...glaasConf, name: 'da-test-de-123456', targetLocales: ['de'] };
   createTask(taskConf);
 
   const data = new Blob([MOCK_PAGE], { type: 'text/html' });

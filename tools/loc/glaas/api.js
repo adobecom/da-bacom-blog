@@ -1,13 +1,14 @@
-function getOpts(clientid, token, body, method = 'GET') {
-  return {
+function getOpts(clientid, token, body, contentType, method = 'GET') {
+  const opts = {
     body,
     method,
     headers: {
-      // 'Content-Type': contentType,
       'X-Glaas-Authtoken': token,
       'X-Glaas-Clientid': clientid,
     },
   };
+  if (contentType) opts.headers['Content-Type'] = contentType;
+  return opts;
 }
 
 export async function checkSession({ origin, clientid, token }) {
@@ -34,7 +35,7 @@ export async function createTask({ origin, clientid, token, name, targetLocales 
     ],
   };
 
-  const opts = getOpts(clientid, token, body, 'POST');
+  const opts = getOpts(clientid, token, JSON.stringify(body), 'application/json', 'POST');
 
   try {
     const resp = await fetch(`${origin}/api/l10n/v1.1/tasks/WCMS/WCMS/create`, opts);
@@ -44,10 +45,10 @@ export async function createTask({ origin, clientid, token, name, targetLocales 
   }
 }
 
-export async function getTask({ origin, clientid, token }, path) {
+export async function getTask({ origin, clientid, token, name }) {
   const opts = getOpts(clientid, token);
   try {
-    const resp = await fetch(`${origin}/api/l10n/v1.1/tasks/WCMS_FASTLANE/FASTLANE${path}`, opts);
+    const resp = await fetch(`${origin}/api/l10n/v1.1/tasks/WCMS/WCMS/${name}`, opts);
     return resp.json();
   } catch {
     return { error: 'Error getting task.' };
