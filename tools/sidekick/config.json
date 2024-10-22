@@ -66,6 +66,12 @@
       ]
     },
     {
+      "id": "locales",
+      "title": "Locales",
+      "environments": ["da-edit"],
+      "path": "/tools/locale-nav/locale-nav.html"
+    },
+    {
       "containerId": "tools",
       "id": "localize-2",
       "title": "Localize (V2)",

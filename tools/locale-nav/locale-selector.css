@@ -1,0 +1,112 @@
+:host {
+  font-family: 'Adobe Clean', adobe-clean, sans-serif;
+
+  --local-padding: 0 6px;
+}
+
+.locale-selector {
+  width: 100%;
+  overflow: auto;
+  font-size: 0.875rem;
+}
+
+.locale-header {
+  background-color: #f8f8f8;
+  display: flex;
+  justify-content: space-between;
+  padding: var(--local-padding);
+  line-height: 36px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 48px 60px 48px;
+  text-align: center;
+}
+
+.detail {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--local-padding);
+  line-height: 46px;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+li::after {
+  content: "";
+  display: block;
+  height: 1px;
+  background: #d1d1d1;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.action {
+  display: inline-block;
+  overflow: hidden;
+  text-indent: -1000px;
+}
+
+.action.edit {
+  background: url('/tools/locale-nav/img/Smock_FileHTML_18_N.svg') center / 26px no-repeat;
+}
+
+.action.preview, .action.live {
+  background: url('/tools/locale-nav/img/aec-icon.svg') center / 26px no-repeat;
+}
+
+.action.status-404 {
+  pointer-events: none;
+  opacity: 0.25;
+}
+
+ul.locales {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.locale-search-wrapper {
+  position: relative;
+}
+
+.locale-search {
+  width: 100%;
+  background-color: #f8f8f8;
+  display: block;
+  font-family: var(--body-font-family);
+  border: none;
+  margin: 0;
+  padding: var(--local-padding);
+  line-height: 36px;
+  text-transform: uppercase;
+  font-weight: 700;
+  box-sizing: border-box;
+  transition: padding .2s ease-in-out;
+}
+
+.locale-search-icon {
+  position: absolute;
+  content: '';
+  width: 36px;
+  height: 36px;
+  left: -36px;
+  top: 0;
+  background: url('/tools/locale-nav/img/spectrum-search.svg') center / 24px no-repeat;
+  transition: left .2s ease-in-out;
+}
+
+.locale-search:hover + .locale-search-icon, .locale-search:focus + .locale-search-icon {
+  left: 6px;
+}
+
+.locale-search:hover, .locale-search:focus {
+  padding: 0 42px;
+}
+
+.locale-search::placeholder {
+  color: #676767;
+}

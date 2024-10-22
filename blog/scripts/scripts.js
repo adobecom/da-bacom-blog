@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 /*
  * Copyright 2022 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,13 +11,93 @@
  * governing permissions and limitations under the License.
  */
 
-import { setLibs, buildAutoBlocks } from './utils.js';
+export function setLibs(location) {
+  const { hostname, search } = location;
+  if (!['.hlx.', '.stage.', 'local'].some((i) => hostname.includes(i))) return '/libs';
+  const branch = new URLSearchParams(search).get('milolibs') || 'main';
+  if (branch === 'local') return 'http://localhost:6456/libs';
+  return branch.includes('--') ? `https://${branch}.hlx.live/libs` : `https://${branch}--milo--adobecom.hlx.live/libs`;
+}
+
+export const LIBS = setLibs(window.location);
+
+/**
+ * Builds a block DOM Element from a two dimensional array
+ * @param {string} blockName name of the block
+ * @param {any} content two dimensional array or string or object of content
+ */
+function buildBlock(blockName, content) {
+  const table = Array.isArray(content) ? content : [[content]];
+  const blockEl = document.createElement('div');
+
+  blockEl.classList.add(blockName);
+  table.forEach((row) => {
+    const rowEl = document.createElement('div');
+    row.forEach((col) => {
+      const colEl = document.createElement('div');
+      if (typeof col === 'string') {
+        colEl.innerHTML = col;
+      } else {
+        colEl.appendChild(col);
+      }
+      rowEl.appendChild(colEl);
+    });
+    blockEl.appendChild(rowEl);
+  });
+  return (blockEl);
+}
+
+function getImageCaption(picture) {
+  // Check if the parent element has a caption
+  const parentEl = picture.parentNode;
+  const caption = parentEl.querySelector('em');
+  if (caption) return caption;
+
+  // If the parent element doesn't have a caption, check if the next sibling does
+  const parentSiblingEl = parentEl.nextElementSibling;
+  if (!parentSiblingEl || !parentSiblingEl.querySelector('picture')) return '';
+  const firstChildEl = parentSiblingEl.firstChild;
+  if (firstChildEl?.tagName === 'EM') return firstChildEl;
+  return '';
+}
+
+async function buildArticleHeader(el) {
+  const { getMetadata, getConfig } = await import(`${LIBS}/utils/utils.js`);
+  const div = document.createElement('div');
+  const h1 = el.querySelector('h1');
+  const picture = el.querySelector('picture');
+  const caption = getImageCaption(picture);
+  const figure = document.createElement('div');
+  figure.append(picture, caption);
+  const author = getMetadata('author') || 'Adobe Communications Team';
+  const { locale } = getConfig();
+  const authorURL = getMetadata('author-url') || (author ? `${locale.contentRoot}/authors/${author.replace(/[^0-9a-z]/gi, '-').toLowerCase()}` : null);
+  const publicationDate = getMetadata('publication-date');
+  const articleHeaderBlockEl = buildBlock('article-header', [
+    ['<p></p>'],
+    [h1],
+    [`<p><span ${authorURL ? `data-author-page="${authorURL}"` : ''}>${author}</span></p>
+      <p>${publicationDate}</p>`],
+    [figure],
+  ]);
+  div.append(articleHeaderBlockEl);
+  el.prepend(div);
+}
+
+export async function buildAutoBlocks() {
+  const { getMetadata } = await import(`${LIBS}/utils/utils.js`);
+  const mainEl = document.querySelector('main');
+  try {
+    if (getMetadata('publication-date') && !mainEl.querySelector('.article-header')) {
+      await buildArticleHeader(mainEl);
+    }
+  } catch (error) {
+    window.lana?.log(`Auto Blocking failed: ${error}`, { tags: 'autoBlock' });
+  }
+}
 
 // Add project-wide style path here.
 const STYLES = '/blog/styles/styles.css';
-
-// Use '/libs' if your live site maps '/libs' to milo's origin.
-const LIBS = '/libs';
 
 // Add any config options.
 const CONFIG = {
@@ -126,11 +207,8 @@ const CONFIG = {
  * Edit below at your own risk
  * ------------------------------------------------------------
  */
-
-const miloLibs = setLibs(LIBS);
-
 (function loadStyles() {
-  const paths = [`${miloLibs}/styles/styles.css`];
+  const paths = [`${LIBS}/styles/styles.css`];
   if (STYLES) { paths.push(STYLES); }
   paths.forEach((path) => {
     const link = document.createElement('link');
@@ -141,9 +219,9 @@ const miloLibs = setLibs(LIBS);
 }());
 
 async function loadPage() {
-  const { loadArea, setConfig, loadLana } = await import(`${miloLibs}/utils/utils.js`);
+  const { loadArea, setConfig, loadLana } = await import(`${LIBS}/utils/utils.js`);
 
-  setConfig({ ...CONFIG, miloLibs });
+  setConfig({ ...CONFIG, miloLibs: LIBS });
   loadLana({ clientId: 'bacom-blog', tags: 'default' });
   await buildAutoBlocks();
   await loadArea();
