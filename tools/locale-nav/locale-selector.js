@@ -33,14 +33,23 @@ export default class DaLocaleSelector extends LitElement {
     const status = this.status[locale.path] || {};
 
     return html`
-      <div class="detail">
+      <section class="detail">
         <span>${locale.code}</span>
         <div class="actions">
-          <a class="edit action" href="${edit}" target="_blank" title="Edit">Edit</a>
-          <a class="preview action status-${status?.preview}" href="${preview}" target="_blank" title="Preview">Preview</a>
-          <a class="live action status-${status?.live}" href="${live}" target="_blank" title="Live">Live</a>
+          <a class="edit action" href="${edit}" target="_blank" title="Edit">
+            <div class="icon icon-html"></div>
+            <div class="details">Edit</div>
+          </a>
+          <a class="preview action" href="${preview}" target="_blank" title="Preview">
+             <div class="icon icon-aem ${status?.preview ? `status-${status.preview}` : ''}"></div>
+            <div class="details">Preview</div>
+          </a>
+           <a class="live action" href="${live}" target="_blank" title="Live">
+            <div class="icon icon-aem ${status?.live ? `status-${status.live}` : ''}"></div>
+            <div class="details">Live</div>
+          </a>
         </div>
-      </div>`;
+      </section>`;
   }
 
   decorateLocales(locales) {
@@ -54,7 +63,7 @@ export default class DaLocaleSelector extends LitElement {
 
   render() {
     return html`
-      <div class="locale-selector" role="region" aria-label="Locale Selector">
+      <section class="locale-selector" role="region" aria-label="Locale Selector">
         <div class="locale-header">
           <span>Current</span>
           <div class="actions">
@@ -73,7 +82,7 @@ export default class DaLocaleSelector extends LitElement {
         <div class="locales">
           ${this.altLocales ? this.decorateLocales(this.altLocales) : nothing}
         </div>
-      </div>
+      </section>
     `;
   }
 }
