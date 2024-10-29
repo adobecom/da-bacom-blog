@@ -8,69 +8,69 @@ const locales = [
     code: 'uk',
     path: '/uk/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/uk/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/uk/blog/index',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/uk/blog/index',
+    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/uk/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.hlx.live/uk/blog/',
   },
   {
     code: 'au',
     path: '/au/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/au/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/au/blog/index',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/au/blog/index',
+    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/au/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.hlx.live/au/blog/',
   },
   {
     code: 'de',
     path: '/de/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/de/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/de/blog/index',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/de/blog/index',
+    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/de/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.hlx.live/de/blog/',
   },
   {
     code: 'fr',
     path: '/fr/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/fr/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/fr/blog/index',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/fr/blog/index',
+    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/fr/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.hlx.live/fr/blog/',
   },
   {
     code: 'kr',
     path: '/kr/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/kr/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/kr/blog/index',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/kr/blog/index',
+    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/kr/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.hlx.live/kr/blog/',
   },
   {
     code: 'ja',
     path: '/ja/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/ja/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/ja/blog/index',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/ja/blog/index',
+    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/ja/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.hlx.live/ja/blog/',
   },
   {
     code: 'en',
     path: '/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/blog/index',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/blog/index',
+    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.hlx.live/blog/',
   },
   {
     code: 'langstore/en',
     path: '/langstore/en/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/langstore/en/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/langstore/en/blog/index',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/langstore/en/blog/index',
+    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/langstore/en/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.hlx.live/langstore/en/blog/',
   },
 ];
 
 const status = {
-  uk: { preview: 200, live: 200 },
-  au: { preview: 200, live: 404 },
-  de: { preview: 200, live: 404 },
-  fr: { preview: 200, live: 404 },
-  kr: { preview: 200, live: 404 },
-  ja: { preview: 200, live: 404 },
-  en: { preview: 200, live: 200 },
-  'langstore/en': { preview: 404, live: 404 },
+  '/uk/blog/index': { preview: 200, live: 200 },
+  '/au/blog/index': { preview: 200, live: 404 },
+  '/de/blog/index': { preview: 200, live: 404 },
+  '/fr/blog/index': { preview: 200, live: 404 },
+  '/kr/blog/index': { preview: 200, live: 404 },
+  '/ja/blog/index': { preview: 200, live: 404 },
+  '/blog/index': { preview: 200, live: 200 },
+  '/langstore/en/blog/index': {},
 };
 
 const ogLana = window.lana;
@@ -79,7 +79,6 @@ const delay = (milliseconds) => new Promise((resolve) => { setTimeout(resolve, m
 
 const init = (localeCode = '') => {
   const localeNav = document.createElement('da-locale-selector');
-
   const altLocales = locales.filter((locale) => locale.code !== localeCode);
   const currLocale = locales.find((locale) => locale.code === localeCode);
 
@@ -115,8 +114,8 @@ describe('Locale Selector', () => {
     expect(currentLocale).to.exist;
     expect(currentLocale.querySelector('span').textContent).to.equal('en');
     expect(currentLocale.querySelector('.edit').href).to.equal('https://da.live/edit#/adobecom/da-bacom-blog/blog/index');
-    expect(currentLocale.querySelector('.preview').href).to.equal('https://main--da-bacom-blog--adobecom.hlx.page/blog/index');
-    expect(currentLocale.querySelector('.live').href).to.equal('https://main--da-bacom-blog--adobecom.hlx.live/blog/index');
+    expect(currentLocale.querySelector('.preview').href).to.equal('https://main--da-bacom-blog--adobecom.hlx.page/blog/');
+    expect(currentLocale.querySelector('.live').href).to.equal('https://main--da-bacom-blog--adobecom.hlx.live/blog/');
   });
 
   it('handle search', async () => {

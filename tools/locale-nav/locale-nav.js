@@ -13,7 +13,9 @@ function extractPaths(languages) {
     if (!location.startsWith('/langstore') && location !== ROOT_PATH) {
       acc.push(location);
     }
-    if (locales) acc.push(...locales.split(', ').filter((loc) => loc !== ROOT_PATH));
+    if (locales) {
+      acc.push(...locales.split(', ').filter((loc) => loc !== ROOT_PATH));
+    }
     return acc;
   }, []);
 
@@ -50,25 +52,30 @@ async function fetchStatus({ org, repo }, locPath) {
 (async function init() {
   const { context, token } = await DA_SDK;
   if (!context) {
+    // eslint-disable-next-line no-console
     console.error('No context found');
     return;
   }
   const { org, repo, path } = context;
+  const aemPath = `/${path.replace(/^\/|index$/g, '')}`;
+
   const langPaths = await fetchLangPaths(context, token);
   if (!langPaths) {
+    // eslint-disable-next-line no-console
     console.error('No languages found');
     return;
   }
 
-  const currLang = langPaths.find((lang) => path.startsWith(lang));
+  const currLang = langPaths.find((lang) => aemPath.startsWith(lang));
   const langPathList = langPaths.map((lang) => {
     const code = lang === ROOT_PATH ? ROOT_LANG : lang.replace(ROOT_PATH, '');
     const currLocation = lang === ROOT_PATH ? '' : lang;
-    const locPath = path.replace(currLang === ROOT_PATH ? '' : currLang, currLocation);
+    const editPath = path.replace(currLang === ROOT_PATH ? '' : currLang, currLocation);
+    const locPath = aemPath.replace(currLang === ROOT_PATH ? '' : currLang, currLocation);
     return {
       code,
       path: locPath,
-      edit: `${EDIT_URL}${org}/${repo}${locPath}`,
+      edit: `${EDIT_URL}${org}/${repo}${editPath}`,
       preview: `https://main--${repo}--${org}.hlx.page${locPath}`,
       live: `https://main--${repo}--${org}.hlx.live${locPath}`,
     };
@@ -76,7 +83,7 @@ async function fetchStatus({ org, repo }, locPath) {
 
   const tagBrowser = document.createElement('da-locale-selector');
   const status = langPathList.reduce((acc, locale) => {
-    acc[locale.path] = { preview: 404, live: 404 };
+    acc[locale.path] = { };
     return acc;
   }, {});
   const currLangIndex = langPathList.findIndex((lang) => lang.code === (currLang === ROOT_PATH ? ROOT_LANG : currLang.replace(ROOT_PATH, '')));
