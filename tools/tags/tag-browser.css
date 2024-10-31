@@ -6,8 +6,32 @@
   display: block;
 }
 
+.da-tag-browser {
+  position:relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+}
+
+.da-path-details {
+  height: 36px;
+  display: flex;
+  justify-content: space-between;
+  line-height: 36px;
+  font-size: 16px;
+  padding: 0 12px;
+}
+
 .da-tag-groups {
   display: flex;
+  overflow: auto;
+  position: absolute;
+  width:100%;
+  height: calc(100% - 36px);
+  /* width: calc(100% + 15px); */
+  /* height: calc(100% - 22px); */
+  /* right: -15px; */
+  /* bottom: -15px; */
 }
 
 ul {
@@ -17,8 +41,10 @@ ul {
 }
 
 .da-tag-group-column {
-  min-width: 264px;
-  padding: 0 12px 0 0;
+  flex-shrink: 0;
+  width:100%;
+  max-width: 264px;
+  padding: 0 12px;
   box-sizing: border-box;
 }
 
@@ -26,7 +52,50 @@ ul {
   padding: 0 12px;
 }
 
-.da-tag-group {
+.da-tag-group .da-tag-details {
+  cursor: pointer;
   display: flex;
   justify-content: space-between;
+  line-height: 36px;
+  font-size: 16px;
+}
+
+.da-tag-path .da-tag-title,
+.da-tag-group .da-tag-title {
+  flex: 1;
+  padding: 0 6px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.da-tag-group .da-tag-title.selected {
+  cursor: default;
+}
+
+.da-path-details button,
+.da-tag-details button {
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+  margin: 2px;
+  padding: 0;
+  border: none;
+  display: block;
+  border-radius: 2px;
+  background-color: #efefef;
+}
+
+.da-tag-group button:hover,
+.da-tag-group .da-tag-title.selected,
+.da-tag-group .da-tag-title:hover {
+  background-color: #e9e9e9;
+}
+
+.da-tag-path::after,
+.da-tag-group::after {
+  content: "";
+  display: block;
+  height: 1px;
+  background: #d1d1d1;
 }
