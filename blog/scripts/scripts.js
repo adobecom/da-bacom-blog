@@ -13,7 +13,7 @@
 export function setLibs(location) {
   const { hostname, search } = location;
   if (!['.hlx.', '.stage.', 'local'].some((i) => hostname.includes(i))) return '/libs';
-  const branch = new URLSearchParams(search).get('milolibs') || 'main';
+  const branch = new URLSearchParams(search).get('milolibs') || 'da-patch';
   if (branch === 'local') return 'http://localhost:6456/libs';
   return branch.includes('--') ? `https://${branch}.hlx.live/libs` : `https://${branch}--milo--adobecom.hlx.live/libs`;
 }
