@@ -48,8 +48,9 @@ class DaTagBrowser extends LitElement {
   }
 
   handleTagInsert(e, tag, idx) {
-    const tagPath = this._activeTag.split('/').slice(0, idx).join('/');
-    this.actions.sendText(`${tagPath}/${tag.title}`);
+    const tagRoot = this._activeTag.split('/')[0];
+    const tagPath = this._activeTag.split('/').slice(1, idx).join('/');
+    this.actions.sendText(`${tagRoot}:${tagPath}/${tag.name}`);
   }
 
   handleBackClick() {
