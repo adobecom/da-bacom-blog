@@ -13,7 +13,7 @@
   height: 100vh;
 }
 
-.da-path-details {
+.da-path {
   height: 36px;
   display: flex;
   justify-content: space-between;
@@ -50,12 +50,33 @@ ul {
   padding: 0 12px;
 }
 
-.da-tag-group .da-tag-details {
+.da-tag-group .da-tag {
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   line-height: 36px;
   font-size: 16px;
+}
+
+.da-tag-group-column .da-tag-details {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 32px 1fr 32px;
+  gap: 12px 6px;
+  justify-content: space-between;
+  align-items: center;
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.da-tag-details label {
+  font-weight: 700;
+}
+
+.da-tag-details span {
+  display: block;
+  text-align: center;
+  overflow: auto;
 }
 
 .da-tag-path .da-tag-title,
@@ -71,8 +92,9 @@ ul {
   cursor: default;
 }
 
-.da-path-details button,
-.da-tag-details button {
+.da-tag-details button,
+.da-path button,
+.da-tag button {
   cursor: pointer;
   height: 32px;
   width: 32px;
@@ -84,6 +106,7 @@ ul {
   background-color: #efefef;
 }
 
+.da-tag-details button:hover,
 .da-tag-group button:hover,
 .da-tag-group .da-tag-title.selected,
 .da-tag-group .da-tag-title:hover {

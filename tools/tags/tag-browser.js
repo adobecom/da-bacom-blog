@@ -12,6 +12,7 @@ class DaTagBrowser extends LitElement {
     getTags: { type: Function },
     _tags: { state: true },
     _activeTag: { state: true },
+    _tag: { state: true },
   };
 
   constructor() {
@@ -54,6 +55,10 @@ class DaTagBrowser extends LitElement {
   }
 
   handleBackClick() {
+    if (this._tag) {
+      this._tag = null;
+      return;
+    }
     if (this._tags.length > 0) {
       this._tags = this._tags.slice(0, -1);
       this._activeTag = this._activeTag.split('/').slice(0, this._tags.length - 1).join('/');
@@ -63,8 +68,8 @@ class DaTagBrowser extends LitElement {
   renderTagPath() {
     return html`
       <section class="da-tag-path">
-        <div class="da-path-details">
-          <span class="da-tag-title">Path: ${this._activeTag}</span>
+        <div class="da-path">
+          <span class="da-tag-title">${this._tag ? '' : 'Path: '}${this._activeTag}</span>
           ${this._activeTag ? html`<button @click=${this.handleBackClick}>←</button>` : nothing}
         </div>
       </section>
@@ -75,12 +80,41 @@ class DaTagBrowser extends LitElement {
     const selected = this._activeTag.split('/').includes(tag.name);
     return html`
       <li class="da-tag-group">
-        <div class="da-tag-details">
+        <div class="da-tag">
           <span class="da-tag-title ${selected ? 'selected' : ''}" @click=${(e) => this.handleTagClick(e, tag, idx)} tabindex="0">
             ${tag.title}
           </span>
-          <button @click=${(e) => { this.handleTagInsert(e, tag, idx); }}>→</button>
+           <button @click=${() => {
+    this._activeTag = tag.activeTag ? `${tag.activeTag}/${tag.name}` : tag.name;
+    this._tag = tag;
+  }}>→</button>
         </div>
+      </li>
+    `;
+  }
+
+  renderTagDetails(tag) {
+    if (this._activeTag.split('/').length === 0) return nothing;
+
+    const tagSegments = this._activeTag.split('/');
+    const idx = tagSegments.length;
+    const tagRoot = tagSegments[0];
+    const tagPath = tagSegments.slice(1, idx - 1).join('/');
+    const caasPath = `${tagRoot}:${tagPath}/${tag.name}`;
+
+    return html`
+      <li class="da-tag-group-column">
+        <section class="da-tag-details">
+          <label>Title</label>
+          <span class="da-tag-title">${tag.title}</span>
+          <button @click=${() => { this.actions.sendText(tag.title); }}>→</button>
+          <label>Name</label>
+          <span class="da-tag-name">${tag.name}</span>
+          <button @click=${() => { this.actions.sendText(tag.name); }}>→</button>
+          <label>Path</label>
+          <span class="da-tag-caas">${caasPath}</span>
+          <button @click=${() => { this.actions.sendText(caasPath); }}>→</button>
+        </section>
       </li>
     `;
   }
@@ -104,6 +138,7 @@ class DaTagBrowser extends LitElement {
               ${this.renderTagGroup(group, idx)}
             </li>
           `)}
+          ${this._tag ? this.renderTagDetails(this._tag) : nothing}
         </ul>
       </div>
     `;
