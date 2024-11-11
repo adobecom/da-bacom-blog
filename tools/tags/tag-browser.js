@@ -39,7 +39,7 @@ class DaTagBrowser extends LitElement {
     }, 100);
   }
 
-  async handleTagClick(e, tag, idx) {
+  async handleTagClick(tag, idx) {
     this._activeTag = tag.activeTag ? `${tag.activeTag}/${tag.name}` : tag.name;
     if (!this.getTags) return;
     const newTags = await this.getTags(tag);
@@ -47,9 +47,10 @@ class DaTagBrowser extends LitElement {
     this._tags = [...this._tags.toSpliced(idx + 1), newTags];
   }
 
-  handleTagInsert(e, tag, idx) {
-    const tagPath = this._activeTag.split('/').slice(0, idx).join('/');
-    this.actions.sendText(`${tagPath}/${tag.title}`);
+  handleTagInsert(tag, idx) {
+    const tagRoot = this._activeTag.split('/')[0];
+    const tagPath = this._activeTag.split('/').slice(1, idx).join('/');
+    this.actions.sendText(`${tagRoot}:${tagPath}/${tag.name}`);
   }
 
   handleBackClick() {
@@ -71,14 +72,21 @@ class DaTagBrowser extends LitElement {
   }
 
   renderTag(tag, idx) {
-    const selected = this._activeTag.split('/').includes(tag.name);
+    const active = this._activeTag.split('/')[idx] === tag.name;
     return html`
       <li class="da-tag-group">
         <div class="da-tag-details">
-          <span class="da-tag-title ${selected ? 'selected' : ''}" @click=${(e) => this.handleTagClick(e, tag, idx)} tabindex="0">
+          <button 
+            class="da-tag-title ${active ? 'active' : ''}" 
+            @click=${() => this.handleTagClick(tag, idx)}>
             ${tag.title}
-          </span>
-          <button @click=${(e) => { this.handleTagInsert(e, tag, idx); }}>→</button>
+          </button>
+          <button 
+            class="da-tag-insert"
+            @click=${() => this.handleTagInsert(tag, idx)} 
+            aria-label="Insert tag ${tag.title}">
+            →
+          </button>
         </div>
       </li>
     `;

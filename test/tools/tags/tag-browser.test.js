@@ -5,16 +5,22 @@ import '../../../tools/tags/tag-browser.js';
 
 const tags = [
   {
-    path: 'tag1',
+    path: '/content/cq:tags/audience.1.json',
     activeTag: '',
-    name: 'tag1',
-    title: 'Tag 1 Title',
+    name: 'audience',
+    title: 'User Guide Audience',
   },
   {
-    path: 'tag2',
+    path: '/content/cq:tags/authoring.1.json',
     activeTag: '',
-    name: 'tag2',
-    title: 'Tag 2 Title',
+    name: 'authoring',
+    title: 'Authoring',
+  },
+  {
+    path: '/content/cq:tags/caas.1.json',
+    activeTag: '',
+    name: 'caas',
+    title: 'CaaS',
   },
 ];
 
@@ -47,6 +53,42 @@ describe('Locale Selector', () => {
   it('render the tag browser', async () => {
     const tagBrowser = init();
     await delay(100);
-    expect(tagBrowser.shadowRoot.querySelector('.da-tag-groups')).to.exist;
+
+    expect(tagBrowser.shadowRoot.querySelector('.da-tag-browser')).to.exist;
+    const groups = tagBrowser.shadowRoot.querySelector('.da-tag-groups');
+    expect(groups).to.exist;
+    expect(groups.children).to.have.lengthOf(1);
+
+    const firstTitle = groups.firstElementChild.querySelector('.da-tag-title');
+    expect(firstTitle).to.exist;
+    expect(firstTitle.textContent.trim()).to.equal('User Guide Audience');
+
+    const firstInsert = groups.firstElementChild.querySelector('.da-tag-insert');
+    expect(firstInsert).to.exist;
+  });
+
+  it('expand tag group', async () => {
+    const tagBrowser = init();
+    await delay(100);
+
+    const groups = tagBrowser.shadowRoot.querySelector('.da-tag-groups');
+    const firstTitle = groups.firstElementChild.querySelector('.da-tag-title');
+    firstTitle.click();
+    await delay(100);
+
+    expect(firstTitle.classList.contains('active')).to.be.true;
+    expect(groups.children).to.have.lengthOf(2);
+  });
+
+  it('send tag text', async () => {
+    const tagBrowser = init();
+    await delay(100);
+
+    const groups = tagBrowser.shadowRoot.querySelector('.da-tag-groups');
+    const firstInsert = groups.firstElementChild.querySelector('.da-tag-insert');
+
+    firstInsert.click();
+    expect(tagBrowser.actions.sendText.calledOnce).to.be.true;
+    expect(tagBrowser.actions.sendText.getCall(0).args[0]).to.equal(':/audience');
   });
 });
