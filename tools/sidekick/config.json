@@ -68,6 +68,13 @@
       ]
     },
     {
+      "id": "locales",
+      "title": "Locales",
+      "environments": ["da-edit"],
+      "icon": "https://main--da-bacom-blog--adobecom.hlx.live/media/media_1c385be465401986f20e49857dc80f772c7f77d09.png",
+      "path": "/tools/locale-nav/locale-nav.html"
+    },
+    {
       "containerId": "tools",
       "id": "localize-2",
       "title": "Localize (V2)",
