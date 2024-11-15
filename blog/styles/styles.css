@@ -29,6 +29,7 @@
   --body-max-width: 600px;
   --body-background-color: var(--color-white);
   --body-alt-background-color: var(--color-gray-600);
+  --body-font-family: 'adobe-clean', 'Trebuchet MS', sans-serif;
   --body-font-weight: 400;
   --body-color: var(--color-black);
   --body-line-height: 1.5;
@@ -61,8 +62,6 @@
   --detail-font-size-m: 1rem; /* 16px */
   --detail-font-size-s: 0.75rem; /* 12px */
 }
-
-helix-sidekick { opacity: 0; }
 
 body main {
   font-size: var(--body-font-size-m);
