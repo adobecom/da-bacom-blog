@@ -13,7 +13,7 @@
 /* stylelint-disable omment-whitespace-inside */
 /* stylelint-disable value-no-vendor-prefix */
 
-@import url('../article-card.css');
+@import url('./article-card.css');
 
 element {
   --detail-color: var(--color-gray-600);
