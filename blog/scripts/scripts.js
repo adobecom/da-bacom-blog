@@ -18,7 +18,7 @@ export function setLibs(location) {
   return branch.includes('--') ? `https://${branch}.hlx.live/libs` : `https://${branch}--milo--adobecom.hlx.live/libs`;
 }
 
-const LIBS = setLibs(window.location);
+export const LIBS = setLibs(window.location);
 
 /**
  * Builds a block DOM Element from a two dimensional array
