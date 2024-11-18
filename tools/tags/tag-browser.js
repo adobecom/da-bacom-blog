@@ -1,5 +1,4 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable import/no-unresolved */
+/* eslint-disable no-underscore-dangle, import/no-unresolved */
 import { LitElement, html, nothing } from 'https://da.live/nx/deps/lit/lit-core.min.js';
 import getStyle from 'https://da.live/nx/utils/styles.js';
 
@@ -32,39 +31,43 @@ class DaTagBrowser extends LitElement {
     }
 
     setTimeout(() => {
-      const groups = this.renderRoot.querySelector('.da-tag-groups');
-      const firstTag = groups?.lastElementChild?.querySelector('.da-tag-title');
-      if (firstTag) firstTag.focus();
-      if (groups) groups.scrollTo({ left: groups.scrollWidth, behavior: 'smooth' });
+      const groups = this.renderRoot.querySelector('.tag-groups');
+      if (!groups) return;
+      const firstTag = groups.lastElementChild?.querySelector('.tag-title');
+      firstTag?.focus();
+      groups.scrollTo({ left: groups.scrollWidth, behavior: 'smooth' });
     }, 100);
   }
 
+  setTagPath(tag) {
+    const tagSegments = [...(tag.activeTag ? tag.activeTag.split(/:|\//) : []), tag.name].filter(Boolean);
+    this._activeTag = tagSegments.join(tagSegments.length > 2 ? '/' : ':').replace('/', ':');
+  }
+
   async handleTagClick(tag, idx) {
-    this._activeTag = tag.activeTag ? `${tag.activeTag}/${tag.name}` : tag.name;
+    this.setTagPath(tag);
     if (!this.getTags) return;
     const newTags = await this.getTags(tag);
     if (!newTags || newTags.length === 0) return;
     this._tags = [...this._tags.toSpliced(idx + 1), newTags];
   }
 
-  handleTagInsert(tag, idx) {
-    const tagRoot = this._activeTag.split('/')[0];
-    const tagPath = this._activeTag.split('/').slice(1, idx).join('/');
-    this.actions.sendText(`${tagRoot}:${tagPath}/${tag.name}`);
+  handleTagInsert(tag) {
+    this.setTagPath(tag);
+    this.actions.sendText(this._activeTag);
   }
 
   handleBackClick() {
-    if (this._tags.length > 0) {
-      this._tags = this._tags.slice(0, -1);
-      this._activeTag = this._activeTag.split('/').slice(0, this._tags.length - 1).join('/');
-    }
+    if (this._tags.length === 0) return;
+    this._tags = this._tags.slice(0, -1);
+    this._activeTag = this._activeTag.split(/:|\//).slice(0, this._tags.length - 1).join('/');
   }
 
   renderTagPath() {
     return html`
-      <section class="da-tag-path">
-        <div class="da-path-details">
-          <span class="da-tag-title">Path: ${this._activeTag}</span>
+      <section class="tag-path">
+        <div class="path-details">
+          <span class="tag-title">Tag: ${this._activeTag}</span>
           ${this._activeTag ? html`<button @click=${this.handleBackClick}>←</button>` : nothing}
         </div>
       </section>
@@ -72,17 +75,17 @@ class DaTagBrowser extends LitElement {
   }
 
   renderTag(tag, idx) {
-    const active = this._activeTag.split('/')[idx] === tag.name;
+    const active = this._activeTag.split(/:|\//)[idx] === tag.name;
     return html`
-      <li class="da-tag-group">
-        <div class="da-tag-details">
+      <li class="tag-group">
+        <div class="tag-details">
           <button 
-            class="da-tag-title ${active ? 'active' : ''}" 
+            class="tag-title ${active ? 'active' : ''}" 
             @click=${() => this.handleTagClick(tag, idx)}>
             ${tag.title}
           </button>
           <button 
-            class="da-tag-insert"
+            class="tag-insert"
             @click=${() => this.handleTagInsert(tag, idx)} 
             aria-label="Insert tag ${tag.title}">
             →
@@ -94,7 +97,7 @@ class DaTagBrowser extends LitElement {
 
   renderTagGroup(group, idx) {
     return html`
-      <ul class="da-tag-group-list">
+      <ul class="tag-group-list">
         ${group.map((tag) => this.renderTag(tag, idx))}
       </ul>
     `;
@@ -103,11 +106,11 @@ class DaTagBrowser extends LitElement {
   render() {
     if (this._tags.length === 0) return nothing;
     return html`
-      <div class="da-tag-browser">
+      <div class="tag-browser">
         ${this.renderTagPath()}
-        <ul class="da-tag-groups">
+        <ul class="tag-groups">
           ${this._tags.map((group, idx) => html`
-            <li class="da-tag-group-column">
+            <li class="tag-group-column">
               ${this.renderTagGroup(group, idx)}
             </li>
           `)}

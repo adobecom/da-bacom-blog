@@ -48,7 +48,7 @@ async function getTags(path, opts) {
 
   if (!rootTags || rootTags.length === 0) {
     const login = document.createElement('a');
-    login.textContent = 'Please login to AEM to view tags';
+    login.textContent = 'Please log in to AEM to view tags';
     login.href = `https://${aemRepo}${UI_TAG_PATH}`;
     login.target = '_blank';
     document.body.querySelector('main').append(login);

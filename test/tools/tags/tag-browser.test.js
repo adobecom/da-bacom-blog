@@ -33,10 +33,7 @@ const init = () => {
   document.body.append(daTagBrowser);
   daTagBrowser.rootTags = tags;
   daTagBrowser.actions = { sendText: sinon.spy() };
-  daTagBrowser.getTags = async (tag) => tags.map((t) => {
-    t.activeTag = `${tag.activeTag}/${tag.name}`;
-    return t;
-  });
+  daTagBrowser.getTags = async () => tags;
   return daTagBrowser;
 };
 
@@ -54,16 +51,16 @@ describe('Locale Selector', () => {
     const tagBrowser = init();
     await delay(100);
 
-    expect(tagBrowser.shadowRoot.querySelector('.da-tag-browser')).to.exist;
-    const groups = tagBrowser.shadowRoot.querySelector('.da-tag-groups');
+    expect(tagBrowser.shadowRoot.querySelector('.tag-browser')).to.exist;
+    const groups = tagBrowser.shadowRoot.querySelector('.tag-groups');
     expect(groups).to.exist;
     expect(groups.children).to.have.lengthOf(1);
 
-    const firstTitle = groups.firstElementChild.querySelector('.da-tag-title');
+    const firstTitle = groups.firstElementChild.querySelector('.tag-title');
     expect(firstTitle).to.exist;
     expect(firstTitle.textContent.trim()).to.equal('User Guide Audience');
 
-    const firstInsert = groups.firstElementChild.querySelector('.da-tag-insert');
+    const firstInsert = groups.firstElementChild.querySelector('.tag-insert');
     expect(firstInsert).to.exist;
   });
 
@@ -71,8 +68,8 @@ describe('Locale Selector', () => {
     const tagBrowser = init();
     await delay(100);
 
-    const groups = tagBrowser.shadowRoot.querySelector('.da-tag-groups');
-    const firstTitle = groups.firstElementChild.querySelector('.da-tag-title');
+    const groups = tagBrowser.shadowRoot.querySelector('.tag-groups');
+    const firstTitle = groups.firstElementChild.querySelector('.tag-title');
     firstTitle.click();
     await delay(100);
 
@@ -84,11 +81,11 @@ describe('Locale Selector', () => {
     const tagBrowser = init();
     await delay(100);
 
-    const groups = tagBrowser.shadowRoot.querySelector('.da-tag-groups');
-    const firstInsert = groups.firstElementChild.querySelector('.da-tag-insert');
+    const groups = tagBrowser.shadowRoot.querySelector('.tag-groups');
+    const firstInsert = groups.firstElementChild.querySelector('.tag-insert');
 
     firstInsert.click();
     expect(tagBrowser.actions.sendText.calledOnce).to.be.true;
-    expect(tagBrowser.actions.sendText.getCall(0).args[0]).to.equal(':/audience');
+    expect(tagBrowser.actions.sendText.getCall(0).args[0]).to.equal('audience');
   });
 });

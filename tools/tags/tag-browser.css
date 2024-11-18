@@ -4,16 +4,13 @@
 
 .tag-browser {
   display: block;
-}
-
-.da-tag-browser {
-  position:relative;
+  position: relative;
   overflow: hidden;
   width: 100%;
   height: 100vh;
 }
 
-.da-path-details {
+.tag-browser .path-details {
   height: 36px;
   display: flex;
   justify-content: space-between;
@@ -22,21 +19,21 @@
   padding: 0 12px;
 }
 
-.da-tag-groups {
+.tag-browser .tag-groups {
   display: flex;
   overflow: auto;
   position: absolute;
-  width:100%;
+  width: 100%;
   height: calc(100% - 36px);
 }
 
-ul {
+.tag-browser ul {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.da-tag-group-column {
+.tag-browser .tag-group-column {
   flex-shrink: 0;
   width: 100%;
   height: 100%;
@@ -46,19 +43,19 @@ ul {
   box-sizing: border-box;
 }
 
-.da-tag-group-column:first-child {
+.tag-browser .tag-group-column:first-child {
   padding: 0 12px;
 }
 
-.da-tag-group .da-tag-details {
+.tag-browser .tag-group .tag-details {
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   line-height: 36px;
 }
 
-.da-tag-path .da-tag-title,
-.da-tag-group .da-tag-title {
+.tag-browser .tag-path .tag-title,
+.tag-browser .tag-group .tag-title {
   flex: 1;
   padding: 0 6px;
   font-size: 16px;
@@ -68,16 +65,19 @@ ul {
   text-overflow: ellipsis;
   background: none;
   border: none;
-  cursor: pointer;
   text-align: left;
 }
 
-.da-tag-group .da-tag-title.active {
+.tag-browser .tag-group .tag-title {
+  cursor: pointer;
+}
+
+.tag-browser .tag-group .tag-title.active {
   cursor: default;
 }
 
-.da-path-details button,
-.da-tag-details button {
+.tag-browser .path-details button,
+.tag-browser .tag-details button {
   cursor: pointer;
   height: 32px;
   width: 32px;
@@ -89,14 +89,17 @@ ul {
   background-color: #efefef;
 }
 
-.da-tag-group button:hover,
-.da-tag-group .da-tag-title.active,
-.da-tag-group .da-tag-title:hover {
+.tag-browser .tag-group .tag-title:hover {
+  background-color: #efefef;
+}
+
+.tag-browser .tag-group button:hover,
+.tag-browser .tag-group .tag-title.active {
   background-color: #e9e9e9;
 }
 
-.da-tag-path::after,
-.da-tag-group::after {
+.tag-browser .tag-path::after,
+.tag-browser .tag-group::after {
   content: "";
   display: block;
   height: 1px;
