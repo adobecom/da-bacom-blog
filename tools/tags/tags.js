@@ -1,5 +1,6 @@
 /* eslint-disable import/no-unresolved */
 import DA_SDK from 'https://da.live/nx/utils/sdk.js';
+import { DA_ORIGIN } from 'https://da.live/nx/public/utils/constants.js';
 import './tag-browser.js';
 
 const ROOT_TAG_PATH = '/content/cq:tags';
@@ -7,7 +8,7 @@ const UI_TAG_PATH = '/ui#/aem/aem/tags';
 const TAG_EXT = '.1.json';
 
 async function getAemRepo(project, opts) {
-  const configUrl = `https://admin.da.live/config/${project.org}/${project.repo}`;
+  const configUrl = `${DA_ORIGIN}/config/${project.org}/${project.repo}`;
   const resp = await fetch(configUrl, opts);
   if (!resp.ok) return null;
   const json = await resp.json();

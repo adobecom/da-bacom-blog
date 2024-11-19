@@ -30,13 +30,15 @@ class DaTagBrowser extends LitElement {
       this._activeTag = '';
     }
 
-    setTimeout(() => {
-      const groups = this.renderRoot.querySelector('.tag-groups');
-      if (!groups) return;
-      const firstTag = groups.lastElementChild?.querySelector('.tag-title');
-      firstTag?.focus();
-      groups.scrollTo({ left: groups.scrollWidth, behavior: 'smooth' });
-    }, 100);
+    if (changedProperties.has('_tags')) {
+      setTimeout(() => {
+        const groups = this.renderRoot.querySelector('.tag-groups');
+        if (!groups) return;
+        const firstTag = groups.lastElementChild?.querySelector('.tag-title');
+        firstTag?.focus();
+        groups.scrollTo({ left: groups.scrollWidth, behavior: 'smooth' });
+      }, 100);
+    }
   }
 
   setTagPath(tag) {
@@ -68,7 +70,7 @@ class DaTagBrowser extends LitElement {
       <section class="tag-path">
         <div class="path-details">
           <span class="tag-title">Tag: ${this._activeTag}</span>
-          ${this._activeTag ? html`<button @click=${this.handleBackClick}>←</button>` : nothing}
+          ${(this._tags.length > 1) ? html`<button @click=${this.handleBackClick}>←</button>` : nothing}
         </div>
       </section>
     `;

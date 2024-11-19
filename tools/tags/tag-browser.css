@@ -72,10 +72,6 @@
   cursor: pointer;
 }
 
-.tag-browser .tag-group .tag-title.active {
-  cursor: default;
-}
-
 .tag-browser .path-details button,
 .tag-browser .tag-details button {
   cursor: pointer;
