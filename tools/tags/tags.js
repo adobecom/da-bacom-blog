@@ -37,21 +37,33 @@ async function getTags(path, opts) {
   return tags;
 }
 
+function showError(message, link = null) {
+  const errorMessage = document.createElement(link ? 'a' : 'p');
+  errorMessage.textContent = message;
+  if (link) {
+    errorMessage.href = link;
+    errorMessage.target = '_blank';
+  }
+  document.body.querySelector('main').append(errorMessage);
+}
+
 (async function init() {
-  const { context, actions, token } = await DA_SDK;
-  if (!context || !token) return;
+  const { context, actions, token } = await DA_SDK.catch(() => null);
+  if (!context || !actions || !token) {
+    showError('Please log in to view tags.');
+    return;
+  }
+
   const opts = { headers: { Authorization: `Bearer ${token}` } };
-  const aemRepo = await getAemRepo(context, opts);
-  if (!aemRepo) return;
+  const aemRepo = await getAemRepo(context, opts).catch(() => null);
+  if (!aemRepo) {
+    showError('Failed to retrieve AEM repository.');
+    return;
+  }
 
-  const rootTags = await getTags(`https://${aemRepo}${ROOT_TAG_PATH}${TAG_EXT}`, opts);
-
+  const rootTags = await getTags(`https://${aemRepo}${ROOT_TAG_PATH}${TAG_EXT}`, opts).catch(() => null);
   if (!rootTags || rootTags.length === 0) {
-    const login = document.createElement('a');
-    login.textContent = 'Please log in to AEM to view tags';
-    login.href = `https://${aemRepo}${UI_TAG_PATH}`;
-    login.target = '_blank';
-    document.body.querySelector('main').append(login);
+    showError('Please log in to AEM to view tags.', `https://${aemRepo}${UI_TAG_PATH}`);
     return;
   }
 
