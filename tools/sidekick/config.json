@@ -35,7 +35,7 @@
       "title": "Send to CaaS",
       "id": "sendtocaas",
       "environments": ["dev","preview", "live", "prod"],
-      "event": "send-to-caas",
+      "event": "dx-send-to-caas",
       "excludePaths": ["/tools/caas**", "*.json"]
     },
     {

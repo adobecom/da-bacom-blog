@@ -215,6 +215,21 @@ const CONFIG = {
   lcpImg?.removeAttribute('loading');
 }());
 
+async function detectSidekick({ loadScript, loadStyle }) {
+  const initPlugins = async () => {
+    const init = (await import('./sidekick.js')).default;
+    init({ loadScript, loadStyle });
+  };
+
+  if (document.querySelector('aem-sidekick, helix-sidekick')) {
+    initPlugins();
+    return;
+  }
+  document.addEventListener('sidekick-ready', () => {
+    initPlugins();
+  });
+}
+
 /*
  * ------------------------------------------------------------
  * Edit below at your own risk
@@ -232,7 +247,15 @@ const CONFIG = {
 }());
 
 async function loadPage() {
-  const { loadArea, setConfig, loadLana } = await import(`${LIBS}/utils/utils.js`);
+  const {
+    loadArea,
+    setConfig,
+    loadLana,
+    loadScript,
+    loadStyle,
+  } = await import(`${LIBS}/utils/utils.js`);
+
+  detectSidekick({ loadScript, loadStyle });
 
   setConfig({ ...CONFIG, miloLibs: LIBS });
   loadLana({ clientId: 'bacom-blog', tags: 'default' });
