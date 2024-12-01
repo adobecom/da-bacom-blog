@@ -1,76 +1,106 @@
-/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-underscore-dangle, import/no-unresolved */
 import { LitElement, html, nothing } from 'https://da.live/nx/deps/lit/lit-core.min.js';
 import getStyle from 'https://da.live/nx/utils/styles.js';
-
-import DA_SDK from 'https://da.live/nx/utils/sdk.js';
-
-const { actions } = await DA_SDK;
-
-const ROOT_TAG_PATH = '/content/cq:tags';
-const TAG_EXT = '.1.json';
 
 const style = await getStyle(import.meta.url);
 
 class DaTagBrowser extends LitElement {
   static properties = {
-    aemRepo: { attribute: false },
-    token: { attribute: false },
+    rootTags: { type: Array },
+    actions: { type: Object },
+    getTags: { type: Function },
     _tags: { state: true },
+    _activeTag: { state: true },
   };
 
   constructor() {
     super();
     this._tags = [];
+    this._activeTag = '';
   }
 
   connectedCallback() {
     super.connectedCallback();
     this.shadowRoot.adoptedStyleSheets = [style];
-    if (this.aemRepo && this.token) this.getTags(`https://${this.aemRepo}${ROOT_TAG_PATH}${TAG_EXT}`);
   }
 
-  async getTags(path) {
-    this.caasPath = path.split('cq:tags').pop().replace('.1.json', '').slice(1);
-    if (this.caasPath) console.log(this.caasPath);
-    const opts = { headers: { Authorization: `Bearer ${this.token}` } };
-    const resp = await fetch(path, opts);
-    if (!resp.ok) return;
-    const json = await resp.json();
-    const tags = Object.keys(json).reduce((acc, key) => {
-      if (json[key]['jcr:primaryType'] === 'cq:Tag') {
-        acc.push({
-          path: `${path.replace(TAG_EXT, '')}/${key}${TAG_EXT}`,
-          name: key,
-          title: json[key]['jcr:title'] || key,
-          details: json[key],
-        });
-      }
-      return acc;
-    }, []);
-    this._tags = [...this._tags, tags];
-    setTimeout(() => {
-      window.scrollTo(document.body.scrollWidth, 0);
-    }, 100);
+  updated(changedProperties) {
+    if (changedProperties.has('rootTags')) {
+      this._tags = [this.rootTags];
+      this._activeTag = '';
+    }
+
+    if (changedProperties.has('_tags')) {
+      setTimeout(() => {
+        const groups = this.renderRoot.querySelector('.tag-groups');
+        if (!groups) return;
+        const firstTag = groups.lastElementChild?.querySelector('.tag-title');
+        firstTag?.focus();
+        groups.scrollTo({ left: groups.scrollWidth, behavior: 'smooth' });
+      }, 100);
+    }
   }
 
-  handleTagClick(tag, idx) {
-    this._tags = this._tags.toSpliced(idx + 1);
-    this.getTags(tag.path);
+  setTagPath(tag) {
+    const tagSegments = [...(tag.activeTag ? tag.activeTag.split(/:|\//) : []), tag.name].filter(Boolean);
+    this._activeTag = tagSegments.join(tagSegments.length > 2 ? '/' : ':').replace('/', ':');
   }
 
-  handleTagInsert(e, title) {
-    actions.sendText(`${this.caasPath}/${title}`);
+  async handleTagClick(tag, idx) {
+    this.setTagPath(tag);
+    if (!this.getTags) return;
+    const newTags = await this.getTags(tag);
+    if (!newTags || newTags.length === 0) return;
+    this._tags = [...this._tags.toSpliced(idx + 1), newTags];
+  }
+
+  handleTagInsert(tag) {
+    this.setTagPath(tag);
+    this.actions.sendText(this._activeTag);
+  }
+
+  handleBackClick() {
+    if (this._tags.length === 0) return;
+    this._tags = this._tags.slice(0, -1);
+    this._activeTag = this._activeTag.split(/:|\//).slice(0, this._tags.length - 1).join('/');
+  }
+
+  renderTagPath() {
+    return html`
+      <section class="tag-path">
+        <div class="path-details">
+          <span class="tag-title">Tag: ${this._activeTag}</span>
+          ${(this._tags.length > 1) ? html`<button @click=${this.handleBackClick}>←</button>` : nothing}
+        </div>
+      </section>
+    `;
+  }
+
+  renderTag(tag, idx) {
+    const active = this._activeTag.split(/:|\//)[idx] === tag.name;
+    return html`
+      <li class="tag-group">
+        <div class="tag-details">
+          <button 
+            class="tag-title ${active ? 'active' : ''}" 
+            @click=${() => this.handleTagClick(tag, idx)}>
+            ${tag.title}
+          </button>
+          <button 
+            class="tag-insert"
+            @click=${() => this.handleTagInsert(tag, idx)} 
+            aria-label="Insert tag ${tag.title}">
+            →
+          </button>
+        </div>
+      </li>
+    `;
   }
 
   renderTagGroup(group, idx) {
     return html`
-      <ul class="da-tag-group-list">
-        ${group.map((tag) => html`
-          <li class="da-tag-group">
-            <span @click=${() => this.handleTagClick(tag, idx)}>${tag.title}</span>
-            <button @click=${(e) => { this.handleTagInsert(e, tag.title); }}>→</button>
-          </li>
-        `)}
+      <ul class="tag-group-list">
+        ${group.map((tag) => this.renderTag(tag, idx))}
       </ul>
     `;
   }
@@ -78,13 +108,16 @@ class DaTagBrowser extends LitElement {
   render() {
     if (this._tags.length === 0) return nothing;
     return html`
-      <ul class="da-tag-groups">
-        ${this._tags.map((group, idx) => html`
-          <li class="da-tag-group-column">
-            ${this.renderTagGroup(group, idx)}
-          </li>
-        `)}
-      </ul>
+      <div class="tag-browser">
+        ${this.renderTagPath()}
+        <ul class="tag-groups">
+          ${this._tags.map((group, idx) => html`
+            <li class="tag-group-column">
+              ${this.renderTagGroup(group, idx)}
+            </li>
+          `)}
+        </ul>
+      </div>
     `;
   }
 }

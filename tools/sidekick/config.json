@@ -114,8 +114,8 @@
       "id": "da-tags",
       "title": "Tag Browser",
       "environments": ["da-edit"],
-      "daLibrary": true,
-      "url": "https://main--da-bacom-blog--adobecom.hlx.live/tools/tags.html"
+      "icon": "https://main--da-bacom-blog--adobecom.hlx.live/media/media_16dd3261cd73df7adf30ed02b31d7d58ada82a3f0.png",
+      "path": "/tools/tags.html"
     }
   ]
 }
