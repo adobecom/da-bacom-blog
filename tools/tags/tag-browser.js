@@ -9,6 +9,7 @@ class DaTagBrowser extends LitElement {
     rootTags: { type: Array },
     actions: { type: Object },
     getTags: { type: Function },
+    tagValue: { type: String },
     _tags: { state: true },
     _activeTag: { state: true },
   };
@@ -16,7 +17,13 @@ class DaTagBrowser extends LitElement {
   constructor() {
     super();
     this._tags = [];
-    this._activeTag = '';
+    this._activeTag = {};
+  }
+
+  getTagValue() {
+    if (this.tagValue === 'title') return this._activeTag.title;
+    const tagSegments = [...(this._activeTag.activeTag ? this._activeTag.activeTag.split(/:|\//) : []), this._activeTag.name].filter(Boolean);
+    return tagSegments.join(tagSegments.length > 2 ? '/' : ':').replace('/', ':');
   }
 
   connectedCallback() {
@@ -27,7 +34,7 @@ class DaTagBrowser extends LitElement {
   updated(changedProperties) {
     if (changedProperties.has('rootTags')) {
       this._tags = [this.rootTags];
-      this._activeTag = '';
+      this._activeTag = {};
     }
 
     if (changedProperties.has('_tags')) {
@@ -41,13 +48,8 @@ class DaTagBrowser extends LitElement {
     }
   }
 
-  setTagPath(tag) {
-    const tagSegments = [...(tag.activeTag ? tag.activeTag.split(/:|\//) : []), tag.name].filter(Boolean);
-    this._activeTag = tagSegments.join(tagSegments.length > 2 ? '/' : ':').replace('/', ':');
-  }
-
   async handleTagClick(tag, idx) {
-    this.setTagPath(tag);
+    this._activeTag = tag;
     if (!this.getTags) return;
     const newTags = await this.getTags(tag);
     if (!newTags || newTags.length === 0) return;
@@ -55,21 +57,24 @@ class DaTagBrowser extends LitElement {
   }
 
   handleTagInsert(tag) {
-    this.setTagPath(tag);
-    this.actions.sendText(this._activeTag);
+    this._activeTag = tag;
+    // TODO: figure out multi insert
+    // Consider organization inside of AEM Tags
+    this.actions.sendText(this.getTagValue());
   }
 
   handleBackClick() {
     if (this._tags.length === 0) return;
     this._tags = this._tags.slice(0, -1);
-    this._activeTag = this._activeTag.split(/:|\//).slice(0, this._tags.length - 1).join('/');
+    this._activeTag = this._tags[this._tags.length - 1]
+      .find((tag) => this._activeTag.activeTag.includes(tag.name)) || {};
   }
 
   renderTagPath() {
     return html`
       <section class="tag-path">
         <div class="path-details">
-          <span class="tag-title">Tag: ${this._activeTag}</span>
+          <span class="tag-title">Tag: ${this.getTagValue()}</span>
           ${(this._tags.length > 1) ? html`<button @click=${this.handleBackClick}>←</button>` : nothing}
         </div>
       </section>
@@ -77,14 +82,14 @@ class DaTagBrowser extends LitElement {
   }
 
   renderTag(tag, idx) {
-    const active = this._activeTag.split(/:|\//)[idx] === tag.name;
+    const active = this._activeTag.name === tag.name;
     return html`
       <li class="tag-group">
         <div class="tag-details">
           <button 
             class="tag-title ${active ? 'active' : ''}" 
             @click=${() => this.handleTagClick(tag, idx)}>
-            ${tag.title}
+            ${tag.title.split('/').pop()}
           </button>
           <button 
             class="tag-insert"

@@ -12,9 +12,9 @@ async function getAemRepo(project, opts) {
   const resp = await fetch(configUrl, opts);
   if (!resp.ok) return null;
   const json = await resp.json();
-  const { value: repoId } = json.data.find((entry) => entry.key === 'aem.repositoryId');
-  if (repoId) return repoId;
-  return null;
+  const { value: repoId } = json.data.find((entry) => entry.key === 'aem.repositoryId') || {};
+  const { value: namespace } = json.data.find((entry) => entry.key === 'aem.tags.namespace') || {};
+  return { aemRepo: repoId, namespace };
 }
 
 async function getTags(path, opts) {
@@ -56,21 +56,23 @@ function showError(message, link = null) {
   }
 
   const opts = { headers: { Authorization: `Bearer ${token}` } };
-  const aemRepo = await getAemRepo(context, opts).catch(() => null);
-  if (!aemRepo) {
+  const aemConfig = await getAemRepo(context, opts).catch(() => {});
+  if (!aemConfig.aemRepo) {
     showError('Failed to retrieve AEM repository.');
     return;
   }
 
-  const rootTags = await getTags(`https://${aemRepo}${ROOT_TAG_PATH}${TAG_EXT}`, opts).catch(() => null);
+  const tagUrl = aemConfig.namespace ? `https://${aemConfig.aemRepo}${ROOT_TAG_PATH}/${aemConfig.namespace}${TAG_EXT}` : `https://${aemConfig.aemRepo}${ROOT_TAG_PATH}${TAG_EXT}`;
+  const rootTags = await getTags(tagUrl, opts).catch(() => null);
   if (!rootTags || rootTags.length === 0) {
-    showError('Please log in to AEM to view tags.', `https://${aemRepo}${UI_TAG_PATH}`);
+    showError('Could not load AEM tags.', `https://${aemConfig.aemRepo}${UI_TAG_PATH}`);
     return;
   }
 
   const daTagBrowser = document.createElement('da-tag-browser');
   daTagBrowser.rootTags = rootTags;
   daTagBrowser.getTags = async (tag) => getTags(tag.path, opts);
+  daTagBrowser.tagValue = aemConfig.namespace ? 'title' : '';
   daTagBrowser.actions = actions;
   document.body.querySelector('main').append(daTagBrowser);
 }());
