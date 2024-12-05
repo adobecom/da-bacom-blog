@@ -45,7 +45,10 @@ function showError(message, link = null) {
     errorMessage.href = link;
     errorMessage.target = '_blank';
   }
-  document.body.querySelector('main').append(errorMessage);
+  const reloadButton = document.createElement('button');
+  reloadButton.textContent = 'Reload';
+  reloadButton.addEventListener('click', () => window.location.reload());
+  document.body.querySelector('main').append(errorMessage, reloadButton);
 }
 
 (async function init() {
@@ -57,7 +60,7 @@ function showError(message, link = null) {
 
   const opts = { headers: { Authorization: `Bearer ${token}` } };
   const aemConfig = await getAemRepo(context, opts).catch(() => {});
-  if (!aemConfig.aemRepo) {
+  if (!aemConfig || !aemConfig.aemRepo) {
     showError('Failed to retrieve AEM repository.');
     return;
   }
@@ -72,7 +75,7 @@ function showError(message, link = null) {
   const daTagBrowser = document.createElement('da-tag-browser');
   daTagBrowser.rootTags = rootTags;
   daTagBrowser.getTags = async (tag) => getTags(tag.path, opts);
-  daTagBrowser.tagValue = aemConfig.namespace ? 'title' : '';
+  daTagBrowser.tagValue = aemConfig.namespace ? 'title' : 'path';
   daTagBrowser.actions = actions;
   document.body.querySelector('main').append(daTagBrowser);
 }());

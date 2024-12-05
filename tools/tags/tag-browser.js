@@ -12,12 +12,16 @@ class DaTagBrowser extends LitElement {
     tagValue: { type: String },
     _tags: { state: true },
     _activeTag: { state: true },
+    _searchQuery: { state: true },
+    _secondaryTags: { state: true },
   };
 
   constructor() {
     super();
     this._tags = [];
     this._activeTag = {};
+    this._searchQuery = '';
+    this._secondaryTags = false;
   }
 
   getTagValue() {
@@ -26,9 +30,19 @@ class DaTagBrowser extends LitElement {
     return tagSegments.join(tagSegments.length > 2 ? '/' : ':').replace('/', ':');
   }
 
+  handleBlur() {
+    this._secondaryTags = false;
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this.shadowRoot.adoptedStyleSheets = [style];
+    this.addEventListener('blur', this.handleBlur, true);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('blur', this.handleBlur, true);
+    super.disconnectedCallback();
   }
 
   updated(changedProperties) {
@@ -58,9 +72,9 @@ class DaTagBrowser extends LitElement {
 
   handleTagInsert(tag) {
     this._activeTag = tag;
-    // TODO: figure out multi insert
-    // Consider organization inside of AEM Tags
-    this.actions.sendText(this.getTagValue());
+    const tagValue = this._secondaryTags ? `,${this.getTagValue()}` : this.getTagValue();
+    this.actions.sendText(tagValue);
+    this._secondaryTags = true;
   }
 
   handleBackClick() {
@@ -70,13 +84,25 @@ class DaTagBrowser extends LitElement {
       .find((tag) => this._activeTag.activeTag.includes(tag.name)) || {};
   }
 
-  renderTagPath() {
+  handleSearchInput(event) {
+    this._searchQuery = event.target.value.toLowerCase();
+  }
+
+  filterTags(tags) {
+    if (!this._searchQuery) return tags;
+    return tags.filter((tag) => tag.title.toLowerCase().includes(this._searchQuery));
+  }
+
+  renderSearchBar() {
     return html`
-      <section class="tag-path">
-        <div class="path-details">
-          <span class="tag-title">Tag: ${this.getTagValue()}</span>
-          ${(this._tags.length > 1) ? html`<button @click=${this.handleBackClick}>←</button>` : nothing}
-        </div>
+      <section class="tag-search">
+        <input 
+          type="text" 
+          placeholder="Search tags..." 
+          @input=${this.handleSearchInput} 
+          value=${this._searchQuery} 
+        />
+        ${(this._tags.length > 1) ? html`<button @click=${this.handleBackClick}>←</button>` : nothing}
       </section>
     `;
   }
@@ -88,7 +114,8 @@ class DaTagBrowser extends LitElement {
         <div class="tag-details">
           <button 
             class="tag-title ${active ? 'active' : ''}" 
-            @click=${() => this.handleTagClick(tag, idx)}>
+            @click=${() => this.handleTagClick(tag, idx)}
+            aria-pressed="${active}">
             ${tag.title.split('/').pop()}
           </button>
           <button 
@@ -103,18 +130,19 @@ class DaTagBrowser extends LitElement {
   }
 
   renderTagGroup(group, idx) {
+    const filteredGroup = this.filterTags(group);
     return html`
       <ul class="tag-group-list">
-        ${group.map((tag) => this.renderTag(tag, idx))}
+        ${filteredGroup.map((tag) => this.renderTag(tag, idx))}
       </ul>
     `;
   }
 
   render() {
-    if (this._tags.length === 0) return nothing;
+    // if (this._tags.length === 0) return nothing;
     return html`
       <div class="tag-browser">
-        ${this.renderTagPath()}
+        ${this.renderSearchBar()}
         <ul class="tag-groups">
           ${this._tags.map((group, idx) => html`
             <li class="tag-group-column">
