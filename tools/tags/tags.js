@@ -13,8 +13,8 @@ async function getAemRepo(project, opts) {
   if (!resp.ok) return null;
   const json = await resp.json();
   const { value: repoId } = json.data.find((entry) => entry.key === 'aem.repositoryId') || {};
-  const { value: namespace } = json.data.find((entry) => entry.key === 'aem.tags.namespace') || {};
-  return { aemRepo: repoId, namespace };
+  const { value: namespaces } = json.data.find((entry) => entry.key === 'aem.tags.namespaces') || {};
+  return { aemRepo: repoId, namespaces };
 }
 
 async function getTags(path, opts) {
@@ -37,6 +37,30 @@ async function getTags(path, opts) {
 
   return tags;
 }
+
+const getRootTags = async (namespaces, aemConfig, opts) => {
+  const createTagUrl = (namespace = '') => `https://${aemConfig.aemRepo}${ROOT_TAG_PATH}${namespace ? `/${namespace}` : ''}${TAG_EXT}`;
+
+  if (namespaces.length === 0) {
+    return getTags(createTagUrl(), opts).catch(() => null);
+  }
+
+  if (namespaces.length === 1) {
+    const namespace = namespaces[0].toLowerCase().replaceAll(' ', '-');
+    return getTags(createTagUrl(namespace), opts).catch(() => null);
+  }
+
+  return namespaces.map((title) => {
+    const namespace = title.toLowerCase().replaceAll(' ', '-');
+    return {
+      path: createTagUrl(namespace),
+      name: namespace,
+      title,
+      activeTag: '',
+      details: {},
+    };
+  });
+};
 
 function showError(message, link = null) {
   const errorMessage = document.createElement(link ? 'a' : 'p');
@@ -65,9 +89,10 @@ function showError(message, link = null) {
     return;
   }
 
-  const tagUrl = aemConfig.namespace ? `https://${aemConfig.aemRepo}${ROOT_TAG_PATH}/${aemConfig.namespace}${TAG_EXT}` : `https://${aemConfig.aemRepo}${ROOT_TAG_PATH}${TAG_EXT}`;
-  const rootTags = await getTags(tagUrl, opts).catch(() => null);
-  if (!rootTags || rootTags.length === 0) {
+  const namespaces = aemConfig?.namespaces.split(',').map((namespace) => namespace.trim()) || [];
+  const rootTags = await getRootTags(namespaces, aemConfig, opts);
+
+  if (rootTags.length === 0) {
     showError('Could not load AEM tags.', `https://${aemConfig.aemRepo}${UI_TAG_PATH}`);
     return;
   }
@@ -75,7 +100,7 @@ function showError(message, link = null) {
   const daTagBrowser = document.createElement('da-tag-browser');
   daTagBrowser.rootTags = rootTags;
   daTagBrowser.getTags = async (tag) => getTags(tag.path, opts);
-  daTagBrowser.tagValue = aemConfig.namespace ? 'title' : 'path';
+  daTagBrowser.tagValue = aemConfig.namespaces ? 'title' : 'path';
   daTagBrowser.actions = actions;
   document.body.querySelector('main').append(daTagBrowser);
 }());

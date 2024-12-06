@@ -72,7 +72,7 @@ class DaTagBrowser extends LitElement {
 
   handleTagInsert(tag) {
     this._activeTag = tag;
-    const tagValue = this._secondaryTags ? `,${this.getTagValue()}` : this.getTagValue();
+    const tagValue = this._secondaryTags ? `, ${this.getTagValue()}` : this.getTagValue();
     this.actions.sendText(tagValue);
     this._secondaryTags = true;
   }
