@@ -9,25 +9,50 @@ class DaTagBrowser extends LitElement {
     rootTags: { type: Array },
     actions: { type: Object },
     getTags: { type: Function },
+    tagValue: { type: String },
     _tags: { state: true },
     _activeTag: { state: true },
+    _searchQuery: { state: true },
+    _secondaryTags: { state: true },
   };
 
   constructor() {
     super();
     this._tags = [];
-    this._activeTag = '';
+    this._activeTag = {};
+    this._searchQuery = '';
+    this._secondaryTags = false;
+  }
+
+  getTagSegments() {
+    return (this._activeTag.activeTag ? this._activeTag.activeTag.split('/') : []).concat(this._activeTag.name);
+  }
+
+  getTagValue() {
+    if (this.tagValue === 'title') return this._activeTag.title;
+    const tagSegments = this.getTagSegments();
+    return tagSegments.join(tagSegments.length > 2 ? '/' : ':').replace('/', ':');
+  }
+
+  handleBlur() {
+    this._secondaryTags = false;
   }
 
   connectedCallback() {
     super.connectedCallback();
     this.shadowRoot.adoptedStyleSheets = [style];
+    this.addEventListener('blur', this.handleBlur, true);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('blur', this.handleBlur, true);
+    super.disconnectedCallback();
   }
 
   updated(changedProperties) {
     if (changedProperties.has('rootTags')) {
       this._tags = [this.rootTags];
-      this._activeTag = '';
+      this._activeTag = {};
     }
 
     if (changedProperties.has('_tags')) {
@@ -41,13 +66,8 @@ class DaTagBrowser extends LitElement {
     }
   }
 
-  setTagPath(tag) {
-    const tagSegments = [...(tag.activeTag ? tag.activeTag.split(/:|\//) : []), tag.name].filter(Boolean);
-    this._activeTag = tagSegments.join(tagSegments.length > 2 ? '/' : ':').replace('/', ':');
-  }
-
   async handleTagClick(tag, idx) {
-    this.setTagPath(tag);
+    this._activeTag = tag;
     if (!this.getTags) return;
     const newTags = await this.getTags(tag);
     if (!newTags || newTags.length === 0) return;
@@ -55,21 +75,38 @@ class DaTagBrowser extends LitElement {
   }
 
   handleTagInsert(tag) {
-    this.setTagPath(tag);
-    this.actions.sendText(this._activeTag);
+    this._activeTag = tag;
+    const tagValue = this._secondaryTags ? `, ${this.getTagValue()}` : this.getTagValue();
+    this.actions.sendText(tagValue);
+    this._secondaryTags = true;
   }
 
   handleBackClick() {
     if (this._tags.length === 0) return;
     this._tags = this._tags.slice(0, -1);
-    this._activeTag = this._activeTag.split(/:|\//).slice(0, this._tags.length - 1).join('/');
+    this._activeTag = this._tags[this._tags.length - 1]
+      .find((tag) => this._activeTag.activeTag.includes(tag.name)) || {};
   }
 
-  renderTagPath() {
+  handleSearchInput(event) {
+    this._searchQuery = event.target.value.toLowerCase();
+  }
+
+  filterTags(tags) {
+    if (!this._searchQuery) return tags;
+    return tags.filter((tag) => tag.title.toLowerCase().includes(this._searchQuery));
+  }
+
+  renderSearchBar() {
     return html`
-      <section class="tag-path">
-        <div class="path-details">
-          <span class="tag-title">Tag: ${this._activeTag}</span>
+      <section class="tag-search">
+        <div class="search-details">
+          <input 
+            type="text" 
+            placeholder="Search tags..." 
+            @input=${this.handleSearchInput} 
+            value=${this._searchQuery} 
+          />
           ${(this._tags.length > 1) ? html`<button @click=${this.handleBackClick}>←</button>` : nothing}
         </div>
       </section>
@@ -77,14 +114,15 @@ class DaTagBrowser extends LitElement {
   }
 
   renderTag(tag, idx) {
-    const active = this._activeTag.split(/:|\//)[idx] === tag.name;
+    const active = this.getTagSegments()[idx] === tag.name;
     return html`
       <li class="tag-group">
         <div class="tag-details">
           <button 
             class="tag-title ${active ? 'active' : ''}" 
-            @click=${() => this.handleTagClick(tag, idx)}>
-            ${tag.title}
+            @click=${() => this.handleTagClick(tag, idx)}
+            aria-pressed="${active}">
+            ${tag.title.split('/').pop()}
           </button>
           <button 
             class="tag-insert"
@@ -98,9 +136,10 @@ class DaTagBrowser extends LitElement {
   }
 
   renderTagGroup(group, idx) {
+    const filteredGroup = this.filterTags(group);
     return html`
       <ul class="tag-group-list">
-        ${group.map((tag) => this.renderTag(tag, idx))}
+        ${filteredGroup.map((tag) => this.renderTag(tag, idx))}
       </ul>
     `;
   }
@@ -109,7 +148,7 @@ class DaTagBrowser extends LitElement {
     if (this._tags.length === 0) return nothing;
     return html`
       <div class="tag-browser">
-        ${this.renderTagPath()}
+        ${this.renderSearchBar()}
         <ul class="tag-groups">
           ${this._tags.map((group, idx) => html`
             <li class="tag-group-column">
