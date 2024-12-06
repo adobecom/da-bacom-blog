@@ -24,9 +24,13 @@ class DaTagBrowser extends LitElement {
     this._secondaryTags = false;
   }
 
+  getTagSegments() {
+    return (this._activeTag.activeTag ? this._activeTag.activeTag.split('/') : []).concat(this._activeTag.name);
+  }
+
   getTagValue() {
     if (this.tagValue === 'title') return this._activeTag.title;
-    const tagSegments = [...(this._activeTag.activeTag ? this._activeTag.activeTag.split(/:|\//) : []), this._activeTag.name].filter(Boolean);
+    const tagSegments = this.getTagSegments();
     return tagSegments.join(tagSegments.length > 2 ? '/' : ':').replace('/', ':');
   }
 
@@ -72,7 +76,7 @@ class DaTagBrowser extends LitElement {
 
   handleTagInsert(tag) {
     this._activeTag = tag;
-    const tagValue = this._secondaryTags ? `,${this.getTagValue()}` : this.getTagValue();
+    const tagValue = this._secondaryTags ? `, ${this.getTagValue()}` : this.getTagValue();
     this.actions.sendText(tagValue);
     this._secondaryTags = true;
   }
@@ -96,19 +100,21 @@ class DaTagBrowser extends LitElement {
   renderSearchBar() {
     return html`
       <section class="tag-search">
-        <input 
-          type="text" 
-          placeholder="Search tags..." 
-          @input=${this.handleSearchInput} 
-          value=${this._searchQuery} 
-        />
-        ${(this._tags.length > 1) ? html`<button @click=${this.handleBackClick}>←</button>` : nothing}
+        <div class="search-details">
+          <input 
+            type="text" 
+            placeholder="Search tags..." 
+            @input=${this.handleSearchInput} 
+            value=${this._searchQuery} 
+          />
+          ${(this._tags.length > 1) ? html`<button @click=${this.handleBackClick}>←</button>` : nothing}
+        </div>
       </section>
     `;
   }
 
   renderTag(tag, idx) {
-    const active = this._activeTag.name === tag.name;
+    const active = this.getTagSegments()[idx] === tag.name;
     return html`
       <li class="tag-group">
         <div class="tag-details">
@@ -139,7 +145,7 @@ class DaTagBrowser extends LitElement {
   }
 
   render() {
-    // if (this._tags.length === 0) return nothing;
+    if (this._tags.length === 0) return nothing;
     return html`
       <div class="tag-browser">
         ${this.renderSearchBar()}

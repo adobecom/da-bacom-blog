@@ -79,7 +79,7 @@
       "id": "localize-2",
       "title": "Localize (V2)",
       "environments": [ "edit" ],
-      "url": "https://main--bacom-blog--adobecom.hlx.live/tools/loc?milolibs=locui",
+      "url": "https://main--bacom-blog--adobecom.hlx.page/tools/loc?milolibs=locui",
       "passReferrer": true,
       "passConfig": true,
       "includePaths": [ "**.xlsx**" ]
@@ -89,7 +89,7 @@
       "id": "floodgate",
       "title": "Floodgate",
       "environments": [ "edit" ],
-      "url": "https://main--bacom-blog--adobecom.hlx.live/tools/floodgate?milolibs=floodgateui",
+      "url": "https://main--bacom-blog--adobecom.hlx.page/tools/floodgate?milolibs=floodgateui",
       "passReferrer": true,
       "passConfig": true,
       "includePaths": [ "**.xlsx**" ]
@@ -108,14 +108,14 @@
       "id": "bulk",
       "title": "Bulk operations",
       "environments": [ "edit", "dev", "preview", "live" ],
-      "url": "https://main--bacom-blog--adobecom.hlx.live/tools/bulk"
+      "url": "https://main--bacom-blog--adobecom.hlx.page/tools/bulk"
     },
     {
       "id": "da-tags",
       "title": "Tag Browser",
       "environments": ["da-edit"],
       "icon": "https://main--da-bacom-blog--adobecom.hlx.live/media/media_16dd3261cd73df7adf30ed02b31d7d58ada82a3f0.png",
-      "url": "https://dx-tags--da-bacom-blog--adobecom.hlx.live/tools/tags.html"
+      "url": "https://main--da-bacom-blog--adobecom.hlx.live/tools/tags.html"
     }
   ]
 }
