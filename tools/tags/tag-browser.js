@@ -96,13 +96,15 @@ class DaTagBrowser extends LitElement {
   renderSearchBar() {
     return html`
       <section class="tag-search">
-        <input 
-          type="text" 
-          placeholder="Search tags..." 
-          @input=${this.handleSearchInput} 
-          value=${this._searchQuery} 
-        />
-        ${(this._tags.length > 1) ? html`<button @click=${this.handleBackClick}>←</button>` : nothing}
+        <div class="search-details">
+          <input 
+            type="text" 
+            placeholder="Search tags..." 
+            @input=${this.handleSearchInput} 
+            value=${this._searchQuery} 
+          />
+          ${(this._tags.length > 1) ? html`<button @click=${this.handleBackClick}>←</button>` : nothing}
+        </div>
       </section>
     `;
   }
@@ -139,7 +141,7 @@ class DaTagBrowser extends LitElement {
   }
 
   render() {
-    // if (this._tags.length === 0) return nothing;
+    if (this._tags.length === 0) return nothing;
     return html`
       <div class="tag-browser">
         ${this.renderSearchBar()}

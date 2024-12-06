@@ -88,4 +88,34 @@ describe('Locale Selector', () => {
     expect(tagBrowser.actions.sendText.calledOnce).to.be.true;
     expect(tagBrowser.actions.sendText.getCall(0).args[0]).to.equal('audience');
   });
+
+  it('back button', async () => {
+    const tagBrowser = init();
+    await delay(100);
+
+    const groups = tagBrowser.shadowRoot.querySelector('.tag-groups');
+    const firstTitle = groups.firstElementChild.querySelector('.tag-title');
+    firstTitle.click();
+    await delay(100);
+
+    const backButton = tagBrowser.shadowRoot.querySelector('.tag-search button');
+    backButton.click();
+    await delay(100);
+
+    expect(groups.children).to.have.lengthOf(1);
+  });
+
+  it('search tags', async () => {
+    const tagBrowser = init();
+    await delay(100);
+
+    const searchBar = tagBrowser.shadowRoot.querySelector('.tag-search input');
+    searchBar.value = 'Authoring';
+    searchBar.dispatchEvent(new Event('input'));
+    await delay(100);
+
+    const groups = tagBrowser.shadowRoot.querySelector('.tag-groups');
+    expect(groups.children).to.have.lengthOf(1);
+    expect(groups.firstElementChild.querySelector('.tag-title').textContent.trim()).to.equal('Authoring');
+  });
 });

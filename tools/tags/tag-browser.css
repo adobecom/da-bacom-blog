@@ -10,13 +10,12 @@
   height: 100vh;
 }
 
-.tag-browser .tag-search {
+.tag-browser .search-details {
+  height: 36px;
   display: flex;
   align-items: center;
-  height: 36px;
   justify-content: space-between;
   line-height: 36px;
-  border-bottom: 1px solid #d1d1d1;
   font-size: 16px;
   padding: 0 12px;
 }
@@ -67,7 +66,6 @@
   line-height: 36px;
 }
 
-.tag-browser .tag-search .tag-title,
 .tag-browser .tag-group .tag-title {
   flex: 1;
   padding: 0 6px;
@@ -79,9 +77,6 @@
   background: none;
   border: none;
   text-align: left;
-}
-
-.tag-browser .tag-group .tag-title {
   cursor: pointer;
 }
 

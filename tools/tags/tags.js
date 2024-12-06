@@ -63,16 +63,23 @@ const getRootTags = async (namespaces, aemConfig, opts) => {
 };
 
 function showError(message, link = null) {
-  const errorMessage = document.createElement(link ? 'a' : 'p');
+  const mainElement = document.body.querySelector('main');
+  const errorMessage = document.createElement('p');
   errorMessage.textContent = message;
+
   if (link) {
-    errorMessage.href = link;
-    errorMessage.target = '_blank';
+    const linkEl = document.createElement('a');
+    linkEl.textContent = 'View Here';
+    linkEl.href = link;
+    linkEl.target = '_blank';
+    errorMessage.append(linkEl);
   }
+
   const reloadButton = document.createElement('button');
   reloadButton.textContent = 'Reload';
   reloadButton.addEventListener('click', () => window.location.reload());
-  document.body.querySelector('main').append(errorMessage, reloadButton);
+
+  mainElement.append(errorMessage, reloadButton);
 }
 
 (async function init() {
@@ -83,17 +90,17 @@ function showError(message, link = null) {
   }
 
   const opts = { headers: { Authorization: `Bearer ${token}` } };
-  const aemConfig = await getAemRepo(context, opts).catch(() => {});
+  const aemConfig = await getAemRepo(context, opts).catch(() => null);
   if (!aemConfig || !aemConfig.aemRepo) {
-    showError('Failed to retrieve AEM repository.');
+    showError('Failed to retrieve config. ', `https://da.live/config#/${context.org}/${context.repo}/`);
     return;
   }
 
   const namespaces = aemConfig?.namespaces.split(',').map((namespace) => namespace.trim()) || [];
   const rootTags = await getRootTags(namespaces, aemConfig, opts);
 
-  if (rootTags.length === 0) {
-    showError('Could not load AEM tags.', `https://${aemConfig.aemRepo}${UI_TAG_PATH}`);
+  if (!rootTags || rootTags.length === 0) {
+    showError('Could not load tags. ', `https://${aemConfig.aemRepo}${UI_TAG_PATH}`);
     return;
   }
 
