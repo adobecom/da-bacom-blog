@@ -72,7 +72,7 @@
       "title": "Locales",
       "environments": ["da-edit"],
       "icon": "https://main--da-bacom-blog--adobecom.hlx.live/media/media_1c385be465401986f20e49857dc80f772c7f77d09.png",
-      "url": "https://main--da-bacom-blog--adobecom.hlx.live/tools/locale-nav/locale-nav.html"
+      "path": "/tools/locale-nav/locale-nav.html"
     },
     {
       "containerId": "tools",
@@ -115,7 +115,7 @@
       "title": "Tag Browser",
       "environments": ["da-edit"],
       "icon": "https://main--da-bacom-blog--adobecom.hlx.live/media/media_16dd3261cd73df7adf30ed02b31d7d58ada82a3f0.png",
-      "url": "https://main--da-bacom-blog--adobecom.hlx.live/tools/tags.html"
+      "path": "/tools/tags.html"
     }
   ]
 }
