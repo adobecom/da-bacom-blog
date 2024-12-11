@@ -105,6 +105,7 @@ function showError(message, link = null) {
   }
 
   const daTagBrowser = document.createElement('da-tag-browser');
+  daTagBrowser.tabIndex = 0;
   daTagBrowser.rootTags = rootTags;
   daTagBrowser.getTags = async (tag) => getTags(tag.path, opts);
   daTagBrowser.tagValue = aemConfig.namespaces ? 'title' : 'path';

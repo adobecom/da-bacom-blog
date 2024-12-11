@@ -89,7 +89,7 @@ describe('Locale Selector', () => {
     expect(tagBrowser.actions.sendText.getCall(0).args[0]).to.equal('audience');
   });
 
-  it('back button', async () => {
+  it('collapses tag group on back button click', async () => {
     const tagBrowser = init();
     await delay(100);
 
@@ -105,7 +105,7 @@ describe('Locale Selector', () => {
     expect(groups.children).to.have.lengthOf(1);
   });
 
-  it('search tags', async () => {
+  it('filters tags based on search input', async () => {
     const tagBrowser = init();
     await delay(100);
 
