@@ -12,9 +12,9 @@ async function getAemRepo(project, opts) {
   const resp = await fetch(configUrl, opts);
   if (!resp.ok) return null;
   const json = await resp.json();
-  const { value: repoId } = json.data.find((entry) => entry.key === 'aem.repositoryId');
-  if (repoId) return repoId;
-  return null;
+  const { value: repoId } = json.data.find((entry) => entry.key === 'aem.repositoryId') || {};
+  const { value: namespaces } = json.data.find((entry) => entry.key === 'aem.tags.namespaces') || {};
+  return { aemRepo: repoId, namespaces };
 }
 
 async function getTags(path, opts) {
@@ -38,14 +38,48 @@ async function getTags(path, opts) {
   return tags;
 }
 
-function showError(message, link = null) {
-  const errorMessage = document.createElement(link ? 'a' : 'p');
-  errorMessage.textContent = message;
-  if (link) {
-    errorMessage.href = link;
-    errorMessage.target = '_blank';
+const getRootTags = async (namespaces, aemConfig, opts) => {
+  const createTagUrl = (namespace = '') => `https://${aemConfig.aemRepo}${ROOT_TAG_PATH}${namespace ? `/${namespace}` : ''}${TAG_EXT}`;
+
+  if (namespaces.length === 0) {
+    return getTags(createTagUrl(), opts).catch(() => null);
   }
-  document.body.querySelector('main').append(errorMessage);
+
+  if (namespaces.length === 1) {
+    const namespace = namespaces[0].toLowerCase().replaceAll(' ', '-');
+    return getTags(createTagUrl(namespace), opts).catch(() => null);
+  }
+
+  return namespaces.map((title) => {
+    const namespace = title.toLowerCase().replaceAll(' ', '-');
+    return {
+      path: createTagUrl(namespace),
+      name: namespace,
+      title,
+      activeTag: '',
+      details: {},
+    };
+  });
+};
+
+function showError(message, link = null) {
+  const mainElement = document.body.querySelector('main');
+  const errorMessage = document.createElement('p');
+  errorMessage.textContent = message;
+
+  if (link) {
+    const linkEl = document.createElement('a');
+    linkEl.textContent = 'View Here';
+    linkEl.href = link;
+    linkEl.target = '_blank';
+    errorMessage.append(linkEl);
+  }
+
+  const reloadButton = document.createElement('button');
+  reloadButton.textContent = 'Reload';
+  reloadButton.addEventListener('click', () => window.location.reload());
+
+  mainElement.append(errorMessage, reloadButton);
 }
 
 (async function init() {
@@ -56,21 +90,25 @@ function showError(message, link = null) {
   }
 
   const opts = { headers: { Authorization: `Bearer ${token}` } };
-  const aemRepo = await getAemRepo(context, opts).catch(() => null);
-  if (!aemRepo) {
-    showError('Failed to retrieve AEM repository.');
+  const aemConfig = await getAemRepo(context, opts).catch(() => null);
+  if (!aemConfig || !aemConfig.aemRepo) {
+    showError('Failed to retrieve config. ', `https://da.live/config#/${context.org}/${context.repo}/`);
     return;
   }
 
-  const rootTags = await getTags(`https://${aemRepo}${ROOT_TAG_PATH}${TAG_EXT}`, opts).catch(() => null);
+  const namespaces = aemConfig?.namespaces.split(',').map((namespace) => namespace.trim()) || [];
+  const rootTags = await getRootTags(namespaces, aemConfig, opts);
+
   if (!rootTags || rootTags.length === 0) {
-    showError('Please log in to AEM to view tags.', `https://${aemRepo}${UI_TAG_PATH}`);
+    showError('Could not load tags. ', `https://${aemConfig.aemRepo}${UI_TAG_PATH}`);
     return;
   }
 
   const daTagBrowser = document.createElement('da-tag-browser');
+  daTagBrowser.tabIndex = 0;
   daTagBrowser.rootTags = rootTags;
   daTagBrowser.getTags = async (tag) => getTags(tag.path, opts);
+  daTagBrowser.tagValue = aemConfig.namespaces ? 'title' : 'path';
   daTagBrowser.actions = actions;
   document.body.querySelector('main').append(daTagBrowser);
 }());
