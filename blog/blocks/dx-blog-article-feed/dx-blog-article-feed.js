@@ -357,7 +357,7 @@ async function buildFilter(type, tax, block, config) {
   return container;
 }
 
-const isInList = (list, val) => list && list.map((t) => t.toLowerCase()).includes(val);
+const isInList = (list, val) => list && list.map((t) => t?.toLowerCase()).includes(val);
 
 async function filterArticles(feed, limit, offset) {
   /* filter posts by category, tag and author */
