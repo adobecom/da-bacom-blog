@@ -127,7 +127,17 @@ main p picture img {
 
 .recommended-articles-small-content-wrapper .article-card .article-card-body h3 {
   margin-bottom: 0;
-}  
+}
+
+main .article-header {
+  margin: 0;
+  padding-top: var(--spacing-xxl);
+}
+
+main .article-header .article-category div,
+main .article-header .article-category p {
+  margin: 0;
+}
 
 @media screen and (min-width: 600px) {
   body main {
