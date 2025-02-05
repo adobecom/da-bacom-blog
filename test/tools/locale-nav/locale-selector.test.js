@@ -8,57 +8,57 @@ const locales = [
     code: 'uk',
     path: '/uk/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/uk/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/uk/blog/',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/uk/blog/',
+    preview: 'https://main--da-bacom-blog--adobecom.aem.page/uk/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.aem.live/uk/blog/',
   },
   {
     code: 'au',
     path: '/au/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/au/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/au/blog/',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/au/blog/',
+    preview: 'https://main--da-bacom-blog--adobecom.aem.page/au/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.aem.live/au/blog/',
   },
   {
     code: 'de',
     path: '/de/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/de/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/de/blog/',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/de/blog/',
+    preview: 'https://main--da-bacom-blog--adobecom.aem.page/de/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.aem.live/de/blog/',
   },
   {
     code: 'fr',
     path: '/fr/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/fr/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/fr/blog/',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/fr/blog/',
+    preview: 'https://main--da-bacom-blog--adobecom.aem.page/fr/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.aem.live/fr/blog/',
   },
   {
     code: 'kr',
     path: '/kr/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/kr/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/kr/blog/',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/kr/blog/',
+    preview: 'https://main--da-bacom-blog--adobecom.aem.page/kr/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.aem.live/kr/blog/',
   },
   {
     code: 'ja',
     path: '/ja/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/ja/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/ja/blog/',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/ja/blog/',
+    preview: 'https://main--da-bacom-blog--adobecom.aem.page/ja/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.aem.live/ja/blog/',
   },
   {
     code: 'en',
     path: '/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/blog/',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/blog/',
+    preview: 'https://main--da-bacom-blog--adobecom.aem.page/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.aem.live/blog/',
   },
   {
     code: 'langstore/en',
     path: '/langstore/en/blog/index',
     edit: 'https://da.live/edit#/adobecom/da-bacom-blog/langstore/en/blog/index',
-    preview: 'https://main--da-bacom-blog--adobecom.hlx.page/langstore/en/blog/',
-    live: 'https://main--da-bacom-blog--adobecom.hlx.live/langstore/en/blog/',
+    preview: 'https://main--da-bacom-blog--adobecom.aem.page/langstore/en/blog/',
+    live: 'https://main--da-bacom-blog--adobecom.aem.live/langstore/en/blog/',
   },
 ];
 
@@ -114,8 +114,8 @@ describe('Locale Selector', () => {
     expect(currentLocale).to.exist;
     expect(currentLocale.querySelector('span').textContent).to.equal('en');
     expect(currentLocale.querySelector('.edit').href).to.equal('https://da.live/edit#/adobecom/da-bacom-blog/blog/index');
-    expect(currentLocale.querySelector('.preview').href).to.equal('https://main--da-bacom-blog--adobecom.hlx.page/blog/');
-    expect(currentLocale.querySelector('.live').href).to.equal('https://main--da-bacom-blog--adobecom.hlx.live/blog/');
+    expect(currentLocale.querySelector('.preview').href).to.equal('https://main--da-bacom-blog--adobecom.aem.page/blog/');
+    expect(currentLocale.querySelector('.live').href).to.equal('https://main--da-bacom-blog--adobecom.aem.live/blog/');
   });
 
   it('handle search', async () => {

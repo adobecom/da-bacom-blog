@@ -6,7 +6,7 @@ import { setLibs, buildAutoBlocks } from '../../blog/scripts/scripts.js';
 describe('Libs', () => {
   it('Default Libs', () => {
     const libs = setLibs(window.location);
-    expect(libs).to.equal('https://main--milo--adobecom.hlx.live/libs');
+    expect(libs).to.equal('https://main--milo--adobecom.aem.live/libs');
   });
 
   it('Does not support milolibs query param on prod', () => {
@@ -24,7 +24,7 @@ describe('Libs', () => {
       search: '?milolibs=foo',
     };
     const libs = setLibs(location);
-    expect(libs).to.equal('https://foo--milo--adobecom.hlx.live/libs');
+    expect(libs).to.equal('https://foo--milo--adobecom.aem.live/libs');
   });
 
   it('Supports local milolibs query param', () => {
@@ -42,7 +42,7 @@ describe('Libs', () => {
       search: '?milolibs=awesome--milo--forkedowner',
     };
     const libs = setLibs(location);
-    expect(libs).to.equal('https://awesome--milo--forkedowner.hlx.live/libs');
+    expect(libs).to.equal('https://awesome--milo--forkedowner.aem.live/libs');
   });
 });
 
