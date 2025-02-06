@@ -1,7 +1,7 @@
 const TEMP_PROJ_CONFIG = {
   host: 'business.adobe.com',
   project: 'BACOM-BLOG',
-  ref: 'stage',
+  ref: 'main',
   repo: 'da-bacom-blog',
   owner: 'adobecom',
 };
