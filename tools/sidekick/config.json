@@ -33,14 +33,6 @@
     },
     {
       "containerId": "tools",
-      "title": "Send to CaaS",
-      "id": "sendtocaas",
-      "environments": ["dev","preview", "live", "prod"],
-      "event": "dx-send-to-caas",
-      "excludePaths": ["/tools/caas**", "*.json"]
-    },
-    {
-      "containerId": "tools",
       "title": "Check Schema",
       "id": "checkschema",
       "environments": ["prod"],
