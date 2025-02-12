@@ -6,7 +6,7 @@ Please carefully review the [contributing doc](/CONTRIBUTING.md) before beginnin
 
 ## Developing
 1. Install the [Helix CLI](https://github.com/adobe/helix-cli): `sudo npm install -g @adobe/helix-cli`
-2. Run `hlx up` this repo's folder. (opens your browser at `http://localhost:3000`)
+2. Run `aem up` this repo's folder. (opens your browser at `http://localhost:3000`)
 3. Open this repo's folder in your favorite editor and start coding.
 
 ### Husky Pre-Commit
@@ -18,7 +18,7 @@ git commit -m "First" --no-verify
 ```
 
 ## Testing Milo Changes on Bacom Blog Pages
-1. Run 'hlx up' in this folder to ensure the bacom site is running locally. 
+1. Run 'aem up' in this folder to ensure the bacom site is running locally. 
 2. Make changes in milo, and then from the milo folder, run `npm run libs`.
 3. Milo will run at:
 ```
