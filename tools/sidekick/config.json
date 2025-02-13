@@ -64,7 +64,7 @@
       "id": "locales",
       "title": "Locales",
       "environments": ["da-edit"],
-      "icon": "https://main--da-bacom-blog--adobecom.hlx.live/media/media_1c385be465401986f20e49857dc80f772c7f77d09.png",
+      "icon": "https://main--da-bacom-blog--adobecom.aem.live/media/media_1c385be465401986f20e49857dc80f772c7f77d09.png",
       "path": "/tools/locale-nav/locale-nav.html"
     },
     {
@@ -72,7 +72,7 @@
       "id": "localize-2",
       "title": "Localize (V2)",
       "environments": [ "edit" ],
-      "url": "https://main--bacom-blog--adobecom.hlx.page/tools/loc?milolibs=locui",
+      "url": "https://main--da-bacom-blog--adobecom.hlx.live/tools/loc?milolibs=locui",
       "passReferrer": true,
       "passConfig": true,
       "includePaths": [ "**.xlsx**" ]
@@ -82,7 +82,7 @@
       "id": "floodgate",
       "title": "Floodgate",
       "environments": [ "edit" ],
-      "url": "https://main--bacom-blog--adobecom.hlx.page/tools/floodgate?milolibs=floodgateui",
+      "url": "https://main--da-bacom-blog--adobecom.aem.live/tools/floodgate?milolibs=floodgateui",
       "passReferrer": true,
       "passConfig": true,
       "includePaths": [ "**.xlsx**" ]
@@ -92,7 +92,7 @@
       "title": "Tag Selector",
       "id": "tag-selector",
       "environments": ["edit"],
-      "url": "https://main--bacom-blog--adobecom.hlx.live/tools/tag-selector",
+      "url": "https://main--da-bacom-blog--adobecom.aem.live/tools/tag-selector",
       "isPalette": true,
       "paletteRect": "top: 150px; left: 7%; height: 675px; width: 85vw;"
     },
@@ -101,13 +101,13 @@
       "id": "bulk",
       "title": "Bulk operations",
       "environments": [ "edit", "dev", "preview", "live" ],
-      "url": "https://main--bacom-blog--adobecom.hlx.page/tools/bulk"
+      "url": "https://main--da-bacom-blog--adobecom.aem.live/tools/bulk"
     },
     {
       "id": "da-tags",
       "title": "Tag Browser",
       "environments": ["da-edit"],
-      "icon": "https://main--da-bacom-blog--adobecom.hlx.live/media/media_16dd3261cd73df7adf30ed02b31d7d58ada82a3f0.png",
+      "icon": "https://main--da-bacom-blog--adobecom.aem.live/media/media_16dd3261cd73df7adf30ed02b31d7d58ada82a3f0.png",
       "path": "/tools/tags.html"
     }
   ]

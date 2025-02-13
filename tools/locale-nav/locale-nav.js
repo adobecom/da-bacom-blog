@@ -76,8 +76,8 @@ async function fetchStatus({ org, repo }, locPath) {
       code,
       path: locPath,
       edit: `${EDIT_URL}${org}/${repo}${editPath}`,
-      preview: `https://main--${repo}--${org}.hlx.page${locPath}`,
-      live: `https://main--${repo}--${org}.hlx.live${locPath}`,
+      preview: `https://main--${repo}--${org}.aem.page${locPath}`,
+      live: `https://main--${repo}--${org}.aem.live${locPath}`,
     };
   });
 
