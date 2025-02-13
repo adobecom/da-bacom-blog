@@ -72,7 +72,7 @@
       "id": "localize-2",
       "title": "Localize (V2)",
       "environments": [ "edit" ],
-      "url": "https://main--da-bacom-blog--adobecom.aem.live/tools/loc?milolibs=locui",
+      "url": "https://main--da-bacom-blog--adobecom.hlx.live/tools/loc?milolibs=locui",
       "passReferrer": true,
       "passConfig": true,
       "includePaths": [ "**.xlsx**" ]
