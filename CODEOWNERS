@@ -1,0 +1,9 @@
+# BACOM Blog CODEOWNERS
+# When you create a new block or tool please establish ownership in this file.
+# See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+
+# BACOM Blog Core
+* @brandon32 @JasonHowellSlavin @meganthecoder
+
+# BACOM Blog Blocks - last matching pattern takes precedence
