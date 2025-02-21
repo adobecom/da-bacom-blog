@@ -46,9 +46,9 @@ function buildBlock(blockName, content) {
   return (blockEl);
 }
 
-function getImageCaption(picture) {
+function getImageCaption(media) {
   // Check if the parent element has a caption
-  const parentEl = picture.parentNode;
+  const parentEl = media.parentNode;
   const caption = parentEl.querySelector('em');
   if (caption) return caption;
 
@@ -64,10 +64,10 @@ async function buildArticleHeader(el) {
   const { getMetadata, getConfig } = await import(`${LIBS}/utils/utils.js`);
   const div = document.createElement('div');
   const h1 = el.querySelector('h1');
-  const picture = el.querySelector('picture');
-  const caption = getImageCaption(picture);
-  const figure = document.createElement('div');
-  figure.append(picture, caption);
+  const media = h1.nextElementSibling?.querySelector('picture, a') || el.querySelector('picture');
+  const caption = getImageCaption(media);
+  const mediaContainer = document.createElement('div');
+  mediaContainer.append(media, caption);
   const author = getMetadata('author') || 'Adobe Communications Team';
   const { locale } = getConfig();
   const authorURL = getMetadata('author-url') || (author ? `${locale.contentRoot}/authors/${author.replace(/[^0-9a-z]/gi, '-').toLowerCase()}` : null);
@@ -77,7 +77,7 @@ async function buildArticleHeader(el) {
     [h1],
     [`<p><span ${authorURL ? `data-author-page="${authorURL}"` : ''}>${author}</span></p>
       <p>${publicationDate}</p>`],
-    [figure],
+    [mediaContainer],
   ]);
   div.append(articleHeaderBlockEl);
   el.prepend(div);
