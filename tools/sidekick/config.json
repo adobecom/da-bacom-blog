@@ -2,6 +2,8 @@
   "project": "BACOM-BLOG",
   "editUrlLabel": "Document Authoring",
   "editUrlPattern": "https://da.live/edit#/{{org}}/{{site}}{{pathname}}",
+  "previewHost": "main--da-bacom-blog--adobecom.hlx.page",
+  "liveHost": "main--da-bacom-blog--adobecom.hlx.live",
   "plugins": [
     {
       "id": "library",
