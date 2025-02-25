@@ -46,9 +46,9 @@ function buildBlock(blockName, content) {
   return (blockEl);
 }
 
-function getImageCaption(media) {
+function getImageCaption(picture) {
   // Check if the parent element has a caption
-  const parentEl = media.parentNode;
+  const parentEl = picture.parentNode;
   const caption = parentEl.querySelector('em');
   if (caption) return caption;
 
