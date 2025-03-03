@@ -82,4 +82,10 @@ describe('Auto Blocks', () => {
     const category = document.head.querySelector('meta[name=category]').content;
     expect(document.querySelector('.article-header').innerText.includes(category)).to.be.false;
   });
+
+  it('allows video link', async () => {
+    document.body.innerHTML = await readFile({ path: './mocks/body-video.html' });
+    await buildAutoBlocks();
+    expect(document.querySelector('.article-header > div:nth-child(4) a')).to.exist;
+  });
 });
