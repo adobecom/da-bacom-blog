@@ -1,11 +1,5 @@
-/* 
- * Put project specific base styles here.
- *
- * Note: The proect does not load this file.
- *       You will need to load these using scripts.js.
- * 
- *
- */
+
+  /* stylelint-disable selector-class-pattern */
  :root {
   --color-white: #FFF;
   --color-gray-100: #F8F8F8;
@@ -143,6 +137,22 @@ main .article-header .article-category p {
   margin: 0;
 }
 
+.global-navigation .feds-profile > .feds-signIn {
+  padding: 5px 16px 6px;
+  line-height: 16.8px;
+  border: 2px solid #dadada;
+  border-radius: 16px;
+  margin-right: 8px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.global-navigation .feds-profile > .feds-signIn:hover {
+  color: var(--text-color);
+  background: #e9e9e9;
+  border-color: #c6c6c6;
+}
+
 @media screen and (min-width: 600px) {
   body main {
     font-size: var(--body-font-size-l);
@@ -196,5 +206,9 @@ main .article-header .article-category p {
 @media screen and (min-width: 1200px) {
   .recommended-articles-small-content-wrapper .article-card .article-card-body {
     padding: 1.25rem;
-  }  
+  }
+
+  .global-navigation .feds-profile > .feds-signIn {
+    margin-right: 0;
+  }
 }
