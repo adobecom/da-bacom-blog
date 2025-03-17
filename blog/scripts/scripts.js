@@ -67,7 +67,8 @@ async function buildArticleHeader(el) {
   const media = h1.nextElementSibling?.querySelector('picture, a') || el.querySelector('picture');
   const caption = getImageCaption(media);
   const mediaContainer = document.createElement('div');
-  mediaContainer.append(media, caption);
+  mediaContainer.append(media);
+  if (caption) { mediaContainer.append(caption); }
   const author = getMetadata('author') || 'Adobe Communications Team';
   const { locale } = getConfig();
   const authorURL = getMetadata('author-url') || (author ? `${locale.contentRoot}/authors/${author.replace(/[^0-9a-z]/gi, '-').toLowerCase()}` : null);
