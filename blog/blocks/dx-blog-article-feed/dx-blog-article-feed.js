@@ -490,7 +490,7 @@ async function decorateArticleFeed(
 
 async function decorateFeedFilter(articleFeedEl) {
   const taxonomy = getTaxonomyModule();
-  const parent = document.querySelector('.dx-blog-article-feed');
+  const parent = document.querySelector('.article-feed');
 
   const curtain = createTag('div', { class: 'filter-curtain hide' });
   document.querySelector('main').append(curtain);
