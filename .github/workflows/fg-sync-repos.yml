@@ -30,7 +30,7 @@ jobs:
           repositories: "bacom-blog-pink"
 
       - name: Checkout Repo
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af6833
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ inputs.syncBranch || github.ref_name }}
 
