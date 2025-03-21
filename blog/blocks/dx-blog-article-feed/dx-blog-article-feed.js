@@ -451,7 +451,9 @@ async function decorateArticleFeed(
     // no user filtered results were found
     spinner.remove();
     const noMatches = document.createElement('p');
-    noMatches.innerHTML = `<strong>${await replacePlaceholder('no-matches')}</strong>`;
+    const strong = document.createElement('strong');
+    strong.textContent = await replacePlaceholder('no-matches');
+    noMatches.appendChild(strong);
     const userHelp = document.createElement('p');
     userHelp.classList.add('article-cards-empty-filtered');
     userHelp.textContent = await replacePlaceholder('user-help');
@@ -460,7 +462,9 @@ async function decorateArticleFeed(
     // no results were found
     spinner.remove();
     const noResults = document.createElement('p');
-    noResults.innerHTML = `<strong>${await replacePlaceholder('no-results')}</strong>`;
+    const strong = document.createElement('strong');
+    strong.textContent = await replacePlaceholder('no-results');
+    noResults.appendChild(strong);
     container.append(noResults);
   }
   const max = pageEnd > articles.length ? articles.length : pageEnd;
