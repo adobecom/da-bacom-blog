@@ -94,7 +94,8 @@ main p picture img {
   --featured-media-height: 440px;
 }
 
-.article-header .article-feature-image {
+.article-header .article-feature-image,
+.article-header .article-feature-video {
   padding: 0;
   margin: auto;
   width: 100%;
@@ -197,7 +198,8 @@ main .article-header .article-category p {
     padding-bottom: var(--featured-media-height);
   }
 
-  main .article-feature-video lite-vimeo {
+  main .article-feature-video lite-vimeo,
+  main .article-feature-video video {
     height: var(--featured-media-height);
     width: 100%;
   }
