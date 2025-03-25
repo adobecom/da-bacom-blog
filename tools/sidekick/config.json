@@ -112,5 +112,18 @@
       "icon": "https://main--da-bacom-blog--adobecom.aem.live/media/media_16dd3261cd73df7adf30ed02b31d7d58ada82a3f0.png",
       "path": "/tools/tags.html"
     }
+  ],
+  "apps": [
+    {
+      "title": "Search",
+      "description": "Unlocking Precision with Advanced Contextual Filters",
+      "image": "https://milostudio--milo--adobecom.aem.live/img/tools/search.jpg",
+      "url": "https://da.live/app/adobecom/da-bacom-blog/tools/ms-apps/search"
+    },
+    {
+      "title": "Bulk Operations",
+      "description": "Maximizing Efficiency Through Targeted Automation",
+      "url": "https://da.live/app/adobecom/da-bacom-blog/tools/ms-apps/bulkops"
+    }
   ]
 }
