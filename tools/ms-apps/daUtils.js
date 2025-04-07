@@ -13,8 +13,8 @@ import DA_SDK from 'https://da.live/nx/utils/sdk.js';
         appHost = 'https://milostudio-stage--milo--adobecom.aem.page';
         break;
       case 'dev':
-      case 'local':
         appHost = 'https://milostudio-dev--milo--adobecom.aem.page';
+        break;
     }
     window.location.replace(
       `${appHost}/tools/da-apps/ms-apps.html?path=${redirectPath}&tenant=${repo}&ref=${ref}&token=${token}`
