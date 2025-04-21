@@ -259,7 +259,7 @@ async function loadPage() {
   detectSidekick({ loadScript, loadStyle });
 
   setConfig({ ...CONFIG, miloLibs: LIBS });
-  loadLana({ clientId: 'bacom-blog', tags: 'default' });
+  loadLana({ clientId: 'bacom-blog', tags: 'default', endpoint: 'https://business.adobe.com/lana/ll', endpointStage: 'https://business.stage.adobe.com/lana/ll' });
   await buildAutoBlocks();
   await loadArea();
 }
