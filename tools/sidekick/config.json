@@ -2,6 +2,7 @@
   "project": "BACOM-BLOG",
   "editUrlLabel": "Document Authoring",
   "editUrlPattern": "https://da.live/edit#/{{org}}/{{site}}{{pathname}}",
+  "trustedHosts": ["milo.adobe.com"],
   "plugins": [
     {
       "id": "tools",
