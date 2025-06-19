@@ -12,9 +12,11 @@ async function getAemRepo(project, opts) {
   const resp = await fetch(configUrl, opts);
   if (!resp.ok) return null;
   const json = await resp.json();
-  const { value: repoId } = json.data.find((entry) => entry.key === 'aem.repositoryId') || {};
-  const { value: namespaces } = json.data.find((entry) => entry.key === 'aem.tags.namespaces') || {};
-  return { aemRepo: repoId, namespaces };
+  const data = Array.isArray(json.data?.data) ? json.data.data : json.data;
+  const aemRepo = data?.find((entry) => entry.key === 'aem.repositoryId')?.value;
+  const namespaces = data?.find((entry) => entry.key === 'aem.tags.namespaces')?.value;
+
+  return { aemRepo, namespaces };
 }
 
 async function getTags(path, opts) {
