@@ -60,6 +60,14 @@
       "daLibrary": true,
       "icon": "https://main--da-bacom-blog--adobecom.aem.live/media/media_16dd3261cd73df7adf30ed02b31d7d58ada82a3f0.png",
       "path": "/tools/tags.html"
+    },
+    {
+      "containerId": "tools",
+      "title": "Send to CaaS",
+      "id": "sendtocaas",
+      "environments": ["dev", "preview", "live", "prod"],
+      "event": "send-to-caas",
+      "excludePaths": ["/tools/caas**", "/tools/ost**", "*.json"]
     }
   ],
   "apps": [
