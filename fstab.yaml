@@ -1,4 +1,4 @@
 mountpoints:
   /:
-    url: https://content.da.live/adobecom/da-bacom-blog/
+    url: https://content.da.live/aemsites/da-bacom-blog/
     type: markup
