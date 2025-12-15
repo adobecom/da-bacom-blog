@@ -122,6 +122,6 @@ picture.image-uploading::after {
   width: 16px;
   height: 16px;
   background-color: white;
-  mask: url('/img/icons/close.svg') no-repeat center / contain;
-  -webkit-mask: url('/img/icons/close.svg') no-repeat center / contain;
+  mask: url('icons/close.svg') no-repeat center / contain;
+  -webkit-mask: url('icons/close.svg') no-repeat center / contain;
 }
