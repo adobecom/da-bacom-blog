@@ -247,7 +247,7 @@ async function detectSidekick({ loadScript, loadStyle }) {
   });
 }());
 
-async function loadPage() {
+export async function loadPage() {
   const {
     loadArea,
     setConfig,
