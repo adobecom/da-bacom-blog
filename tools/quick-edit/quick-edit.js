@@ -3,7 +3,9 @@ let initialized = false;
 
 
 import { LIBS } from '../../blog/scripts/scripts.js';
-import { loadStyle } from `${LIBS}/utils/utils.js`;
+
+const { loadStyle } = await import(`${LIBS}/utils/utils.js`);
+
 import { loadPage } from '../../blog/scripts/scripts.js';
 import { saveCursorPosition, restoreCursorPosition } from './utils.js';
 
