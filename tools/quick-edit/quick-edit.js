@@ -388,5 +388,5 @@ export default async function loadQuickEdit({ detail: payload }) {
   });
   document.documentElement.append(iframe);
   iframe.id = 'quick-edit-iframe';
-  // iframe.style.visibility = 'hidden';
+  iframe.style.visibility = 'hidden';
 }
