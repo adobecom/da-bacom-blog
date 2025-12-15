@@ -20,6 +20,20 @@
 
   [miloStyles, miloUtils].forEach((tag) => tag.setAttribute('rel', 'preload'));
   document.head.append(miloStyles, miloUtils);
+
+  const sheetSchema = document.querySelector('[type="application/ld+json"]');
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": 'Adobe for Business', 
+    "url": window.location.href 
+  }
+
+  const jsonLD = document.createElement('script');
+  jsonLD.setAttribute('type', 'application/ld+json');
+  jsonLD.innerText = JSON.stringify(schema);
+  sheetSchema ? sheetSchema.after(jsonLD) : document.head.append(jsonLD);
 </script>
 <script src="/blog/scripts/scripts.js" type="module"></script>
 <style>body { display: none; }</style>
