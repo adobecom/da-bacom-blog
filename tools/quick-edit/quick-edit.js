@@ -1,8 +1,10 @@
 const hostname = window.location.hostname;
 let initialized = false;
 
-import { loadStyle } from '../../scripts/ak.js';
-import { loadPage } from '../../scripts/scripts.js';
+
+import { LIBS } from '../../blog/scripts/scripts.js';
+import { loadStyle } from `${LIBS}/utils/utils.js`;
+import { loadPage } from '../../blog/scripts/scripts.js';
 import { saveCursorPosition, restoreCursorPosition } from './utils.js';
 
 loadStyle('/tools/quick-edit/quick-edit.css');
