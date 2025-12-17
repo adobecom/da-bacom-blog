@@ -122,6 +122,50 @@ picture.image-uploading::after {
   width: 16px;
   height: 16px;
   background-color: white;
-  mask: url('icons/close.svg') no-repeat center / contain;
-  -webkit-mask: url('icons/close.svg') no-repeat center / contain;
+  mask: url('/img/icons/close.svg') no-repeat center / contain;
+  -webkit-mask: url('/img/icons/close.svg') no-repeat center / contain;
+}
+
+/* Floating Toolbar Styles */
+.prosemirror-floating-toolbar {
+  font-size: 13px;
+  position: fixed;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.prosemirror-floating-toolbar .toolbar-btn {
+  padding: 6px 12px;
+  margin: 0 2px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.prosemirror-floating-toolbar .toolbar-btn:hover {
+  background: #f0f0f0;
+}
+
+.prosemirror-floating-toolbar .toolbar-btn.active {
+  background: #e0e0e0;
+  border-color: #999;
+}
+
+.prosemirror-floating-toolbar .toolbar-btn-bold {
+  font-weight: bold;
+}
+
+.prosemirror-floating-toolbar .toolbar-btn-italic {
+  font-style: italic;
+}
+
+.prosemirror-floating-toolbar .toolbar-btn-underline {
+  text-decoration: underline;
 }
