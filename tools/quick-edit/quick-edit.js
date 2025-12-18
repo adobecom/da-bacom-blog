@@ -16,7 +16,7 @@ let remoteUpdate = false;
 const QUICK_EDIT_ID = 'quick-edit-iframe';
 const QUICK_EDIT_SRC =
   hostname != "localhost"
-    ? "https://main--da-live--adobe.aem.live/drafts/wysiwyg/init?nx=da-fusion-rte"
+    ? "https://main--da-live--adobe.aem.live/drafts/wysiwyg/init?nx=da-fusion"
     : `https://main--da-live--adobe.aem.live/drafts/wysiwyg/init?nx=local&ref=local`;
 
 function pollConnection(action) {
@@ -215,7 +215,7 @@ function setRemoteCursors() {
   remoteCursorElements.forEach((element) => {
     element.classList.add('remote-cursor-indicator');
     const color = element.getAttribute('data-cursor-remote-color');
-    element.style.borderColor = color;
+    element.style.outlineColor = color;
     element.style.setProperty('--cursor-remote-color', color);
   });
 }
