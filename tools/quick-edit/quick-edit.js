@@ -24,7 +24,7 @@ function pollConnection(action) {
   let count = 0;
   const interval = setInterval(() => {
     count += 1;
-    if (initialized || count > 20) {
+    if (initialized || count > 120) {
       clearInterval(interval);
       return;
     }
@@ -274,11 +274,11 @@ function createProsemirrorEditor(cursorOffset, state, port1) {
       handleDOMEvents: {
         focus: (view, event) => {
           setCurrentEditorView(view);
-          showToolbar();
+          showToolbar(view);
           return false;
         },
         blur: (view, event) => {
-          hideToolbar();
+          hideToolbar(view);
           setCurrentEditorView(null);
           port1.postMessage({
             type: 'cursor-move',
@@ -419,7 +419,6 @@ function handleLoad({ target, config, location }) {
 export default async function loadQuickEdit({ detail: payload }) {
   if (document.getElementById(QUICK_EDIT_ID)) return;
 
-  console.log('loadQuickEdit', payload);
   const iframe = document.createElement("iframe");
   iframe.id = QUICK_EDIT_ID;
   iframe.src = QUICK_EDIT_SRC;

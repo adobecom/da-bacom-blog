@@ -1,9 +1,37 @@
+import { linkItem, removeLinkItem } from 'https://main--da-live--adobe.aem.live/blocks/edit/prose/plugins/menu/linkItem.js';
+import { renderGrouped } from 'https://main--da-live--adobe.aem.live/deps/da-y-wrapper/dist/index.js';
+
 let floatingToolbar = null;
 let currentEditorView = null;
 let scrollListener = null;
+let updateLinkMenu = null;
 
-function createFloatingToolbar() {
-  if (floatingToolbar) return floatingToolbar;
+function createLinkToolbar(view) {
+  const { marks } = view.state.schema;
+  const linkMenu = [linkItem(marks.link), removeLinkItem(marks.link)];
+
+  const { dom, update } = renderGrouped(view, [linkMenu]);
+  updateLinkMenu = update;
+
+  // Required by the modal. We should rewrite this.
+  window.view = view;
+  // Also required by the modal.
+  document.querySelector('.da-palettes')?.remove();
+  const insertedElement = document.createElement('div');
+  insertedElement.className = 'da-palettes';
+  window.view.dom.parentNode.insertBefore(insertedElement, window.view.dom.nextSibling);
+  updateLinkMenu(view.state);
+
+  return dom;
+}
+
+function createFloatingToolbar(view) {
+  if (floatingToolbar) {
+    floatingToolbar.querySelectorAll('.ProseMirror-menuitem').forEach(item => item.remove());
+    const linkToolbar = createLinkToolbar(view);
+    floatingToolbar.appendChild(linkToolbar);
+    return floatingToolbar;
+  };
   
   const toolbar = document.createElement('div');
   toolbar.className = 'prosemirror-floating-toolbar';
@@ -36,6 +64,9 @@ function createFloatingToolbar() {
   toolbar.appendChild(italicBtn);
   toolbar.appendChild(underlineBtn);
   document.body.appendChild(toolbar);
+
+  const linkToolbar = createLinkToolbar(view);
+  toolbar.appendChild(linkToolbar);
   
   floatingToolbar = toolbar;
   return toolbar;
@@ -125,6 +156,8 @@ function updateToolbarState() {
     }
     underlineBtn.classList.toggle('active', hasUnderline);
   }
+
+  updateLinkMenu(state);
 }
 
 function positionToolbar() {
@@ -133,16 +166,18 @@ function positionToolbar() {
   const editorDom = currentEditorView.dom;
   const rect = editorDom.getBoundingClientRect();
   
+  const top = Math.max(rect.top - floatingToolbar.offsetHeight - 8, 8);
+
   // Position toolbar above the editor
   floatingToolbar.style.position = 'fixed';
   floatingToolbar.style.left = `${rect.left}px`;
-  floatingToolbar.style.top = `${rect.top - floatingToolbar.offsetHeight - 8}px`;
+  floatingToolbar.style.top = `${top}px`;
   floatingToolbar.style.transform = 'none';
 }
 
-export function showToolbar() {
-  const toolbar = createFloatingToolbar();
-  toolbar.style.display = 'block';
+export function showToolbar(view) {
+  const toolbar = createFloatingToolbar(view);
+  toolbar.style.display = 'flex';
   
   // Wait for toolbar to render so we can measure its height
   requestAnimationFrame(() => {
