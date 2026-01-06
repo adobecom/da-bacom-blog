@@ -35,14 +35,6 @@
   jsonLD.innerText = JSON.stringify(schema);
   sheetSchema ? sheetSchema.after(jsonLD) : document.head.append(jsonLD);
 
-  function buildLink(language, url) {
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'alternate');
-    link.setAttribute('hreflang', language);
-    link.setAttribute('href', url);
-    return link;
-  }
-
   (() => {
     function buildLink(language, url) {
       const link = document.createElement('link');
