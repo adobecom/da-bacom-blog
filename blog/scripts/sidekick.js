@@ -18,7 +18,7 @@ export default function init({ loadScript, loadStyle }) {
     sendToCaaS({ host, project, branch, repo, owner }, loadScript, loadStyle);
   };
 
-  const sk = document.querySelector('aem-sidekick');
+  const sk = document.querySelector('aem-sidekick, helix-sidekick');
 
   // Add plugin listeners here
   sk.addEventListener('custom:dx-send-to-caas', sendToCaasListener);
