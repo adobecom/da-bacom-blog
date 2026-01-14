@@ -1,6 +1,6 @@
 import { loadPage } from '../../blog/scripts/scripts.js';
 
-async function loadMoudle(origin, payload) {
+async function loadModule(origin, payload) {
   const { default: loadQuickEdit } = await import(`${origin}/nx/public/plugins/quick-edit/quick-edit.js`);
   loadQuickEdit(payload, loadPage);
 }
@@ -12,5 +12,5 @@ export default function init(payload) {
   if (ref === 'on' || !ref) origin = 'https://main--da-nx--adobe.aem.live';
   if (ref === 'local') origin = 'http://localhost:6456';
   if (!origin) origin = `https://${ref}--da-nx--adobe.aem.live`;
-  loadMoudle(origin, payload);
+  loadModule(origin, payload);
 }
