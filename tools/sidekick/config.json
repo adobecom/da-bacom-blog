@@ -64,15 +64,6 @@
       "daLibrary": true,
       "icon": "https://main--da-bacom-blog--adobecom.aem.live/media/media_16dd3261cd73df7adf30ed02b31d7d58ada82a3f0.png",
       "path": "/tools/tags.html"
-    },
-    {
-      "id": "quick-edit",
-      "title": "Quick Edit",
-      "event": "quick-edit",
-      "environments": [
-        "preview",
-        "dev"
-      ]
     }
   ],
   "apps": [
