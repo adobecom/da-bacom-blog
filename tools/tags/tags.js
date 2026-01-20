@@ -1,68 +1,10 @@
 /* eslint-disable import/no-unresolved */
 import DA_SDK from 'https://da.live/nx/utils/sdk.js';
-import { DA_ORIGIN } from 'https://da.live/nx/public/utils/constants.js';
+import { getAemRepo, getTags, getRootTags, setTagPathConfig } from './tag-utils.js';
 import './tag-browser.js';
 
-const ROOT_TAG_PATH = '/content/cq:tags';
 const UI_TAG_PATH = '/ui#/aem/aem/tags';
-const TAG_EXT = '.1.json';
-
-async function getAemRepo(project, opts) {
-  const configUrl = `${DA_ORIGIN}/config/${project.org}/${project.repo}`;
-  const resp = await fetch(configUrl, opts);
-  if (!resp.ok) return null;
-  const json = await resp.json();
-  const data = Array.isArray(json.data?.data) ? json.data.data : json.data;
-  const aemRepo = data?.find((entry) => entry.key === 'aem.repositoryId')?.value;
-  const namespaces = data?.find((entry) => entry.key === 'aem.tags.namespaces')?.value;
-
-  return { aemRepo, namespaces };
-}
-
-async function getTags(path, opts) {
-  const activeTag = path.split('cq:tags').pop().replace('.1.json', '').slice(1);
-  const resp = await fetch(path, opts);
-  if (!resp.ok) return null;
-  const json = await resp.json();
-  const tags = Object.keys(json).reduce((acc, key) => {
-    if (json[key]['jcr:primaryType'] === 'cq:Tag') {
-      acc.push({
-        path: `${path.replace(TAG_EXT, '')}/${key}${TAG_EXT}`,
-        activeTag,
-        name: key,
-        title: json[key]['jcr:title'] || key,
-        details: json[key],
-      });
-    }
-    return acc;
-  }, []);
-
-  return tags;
-}
-
-const getRootTags = async (namespaces, aemConfig, opts) => {
-  const createTagUrl = (namespace = '') => `https://${aemConfig.aemRepo}${ROOT_TAG_PATH}${namespace ? `/${namespace}` : ''}${TAG_EXT}`;
-
-  if (namespaces.length === 0) {
-    return getTags(createTagUrl(), opts).catch(() => null);
-  }
-
-  if (namespaces.length === 1) {
-    const namespace = namespaces[0].toLowerCase().replaceAll(' ', '-');
-    return getTags(createTagUrl(namespace), opts).catch(() => null);
-  }
-
-  return namespaces.map((title) => {
-    const namespace = title.toLowerCase().replaceAll(' ', '-');
-    return {
-      path: createTagUrl(namespace),
-      name: namespace,
-      title,
-      activeTag: '',
-      details: {},
-    };
-  });
-};
+const TAG_EXT = '.2.json';
 
 function showError(message, link = null) {
   const mainElement = document.body.querySelector('main');
@@ -98,6 +40,8 @@ function showError(message, link = null) {
     return;
   }
 
+  setTagPathConfig({ root: '/content/cq:tags', ext: TAG_EXT });
+
   const namespaces = aemConfig?.namespaces.split(',').map((namespace) => namespace.trim()) || [];
   const rootTags = await getRootTags(namespaces, aemConfig, opts);
 
@@ -112,5 +56,5 @@ function showError(message, link = null) {
   daTagBrowser.getTags = async (tag) => getTags(tag.path, opts);
   daTagBrowser.tagValue = aemConfig.namespaces ? 'title' : 'path';
   daTagBrowser.actions = actions;
-  document.body.querySelector('main').append(daTagBrowser);
+  document.body.querySelector('main').replaceChildren(daTagBrowser);
 }());
