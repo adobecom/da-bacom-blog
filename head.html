@@ -67,7 +67,7 @@
       const localeMatch = LOCALES.find(locale => pathname.startsWith(`/${locale}/`));
 
       if (localeMatch) {
-        sitemapPath = `sitemap-${locale}.xml`;
+        sitemapPath = `sitemap-${localeMatch}.xml`;
       }
       
       try {
