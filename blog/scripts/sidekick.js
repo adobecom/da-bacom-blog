@@ -1,3 +1,5 @@
+import loadQuickEdit from '../../tools/quick-edit/quick-edit.js';
+
 const TEMP_PROJ_CONFIG = {
   host: 'business.adobe.com',
   project: 'BACOM-BLOG',
@@ -20,4 +22,6 @@ export default function init({ loadScript, loadStyle }) {
 
   // Add plugin listeners here
   sk.addEventListener('custom:dx-send-to-caas', sendToCaasListener);
+
+  sk.addEventListener('custom:quick-edit', loadQuickEdit);
 }
