@@ -92,7 +92,7 @@ export async function buildAutoBlocks() {
       await buildArticleHeader(mainEl);
     }
   } catch (error) {
-    window.lana?.log(`Auto Blocking failed: ${error}`, { tags: 'autoBlock' });
+    window.lana?.log(`Auto Blocking failed: ${error}`, { tags: 'autoBlock', severity: 'error' });
   }
 }
 
