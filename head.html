@@ -17,17 +17,21 @@
     return branch.includes('--') ? `https://${branch}.aem.live/libs` : `https://${branch}--milo--adobecom.aem.live/libs`;
   })();
 
-  const miloStyles = document.createElement('link');
-  const miloUtils = document.createElement('link');
+  const ssrFlag = document.getElementById('page-load-ok-milo')
 
-  miloStyles.setAttribute('as', 'style');
-  miloStyles.setAttribute('href', `${libs}/styles/styles.css`);
-  miloUtils.setAttribute('as', 'script');
-  miloUtils.setAttribute('crossorigin', 'true');
-  miloUtils.setAttribute('href', `${libs}/utils/utils.js`);
+  if (!ssrFlag) {
+    const miloStyles = document.createElement('link');
+    const miloUtils = document.createElement('link');
 
-  [miloStyles, miloUtils].forEach((tag) => tag.setAttribute('rel', 'preload'));
-  document.head.append(miloStyles, miloUtils);
+    miloStyles.setAttribute('as', 'style');
+    miloStyles.setAttribute('href', `${libs}/styles/styles.css`);
+    miloUtils.setAttribute('as', 'script');
+    miloUtils.setAttribute('crossorigin', 'true');
+    miloUtils.setAttribute('href', `${libs}/utils/utils.js`);
+
+    [miloStyles, miloUtils].forEach((tag) => tag.setAttribute('rel', 'preload'));
+    document.head.append(miloStyles, miloUtils);
+  }
 
   const sheetSchema = document.querySelector('[type="application/ld+json"]');
 
@@ -118,7 +122,7 @@
       }
     }
     
-    if (isAllowedAgent) {
+    if (isAllowedAgent && !ssrFlag) {
       fetchAndParseSitemap();
     }
   })();
