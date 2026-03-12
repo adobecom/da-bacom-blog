@@ -92,7 +92,7 @@ export async function buildAutoBlocks() {
       await buildArticleHeader(mainEl);
     }
   } catch (error) {
-    window.lana?.log(`Auto Blocking failed: ${error}`, { tags: 'autoBlock' });
+    window.lana?.log(`Auto Blocking failed: ${error}`, { tags: 'autoBlock', severity: 'error' });
   }
 }
 
@@ -201,7 +201,7 @@ const CONFIG = {
   },
   // geoRouting: 'on',
   productionDomain: 'business.adobe.com',
-  prodDomains: ['business.adobe.com'],
+  prodDomains: ['business.adobe.com', 'www.adobe.com'],
   contentRoot: '/blog',
   codeRoot: '/blog',
   taxonomyRoot: '/tags',
