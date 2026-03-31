@@ -208,6 +208,7 @@ const CONFIG = {
   links: 'on',
   dynamicNavKey: 'bacom',
   stageDomainsMap: { 'business.stage.adobe.com': { 'business.adobe.com': 'origin' } },
+  onlybanner: true,
 };
 
 // Load LCP image immediately
