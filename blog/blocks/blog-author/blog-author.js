@@ -1,5 +1,7 @@
 import { LIBS } from '../../scripts/scripts.js';
 
+const { getConfig } = await import(`${LIBS}/utils/utils.js`);
+const { replaceKey } = await import(`${LIBS}/features/placeholders.js`);
 const iconsModule = await import(`${LIBS}/features/icons/icons.js`).catch(() => null);
 const loadIcons = iconsModule?.default ?? (() => {});
 
@@ -16,8 +18,11 @@ function resolvePlatform(href) {
 }
 
 function decorateSocial(row) {
+  // Links may be wrapped in <p> tags — flatten them to direct children
+  const links = [...row.querySelectorAll('a')];
+  row.replaceChildren(...links);
   row.className = 'blog-author-social';
-  row.querySelectorAll('a').forEach((a) => {
+  links.forEach((a) => {
     const domain = resolvePlatform(a.href);
     if (!domain) { a.hidden = true; return; }
     const { name, icon } = SOCIAL_PLATFORMS[domain];
@@ -31,15 +36,55 @@ function decorateSocial(row) {
   loadIcons(row.querySelectorAll('span.icon'));
 }
 
-// Expects each field (name, title, description) as a separate <p> in the authored doc.
+function normalizeBrToParagraphs(row) {
+  const nodes = [...row.childNodes];
+  const paras = [];
+  let p = document.createElement('p');
+  nodes.forEach((node) => {
+    if (node.nodeName === 'BR') {
+      if (p.textContent.trim()) paras.push(p);
+      p = document.createElement('p');
+    } else {
+      p.append(node.cloneNode(true));
+    }
+  });
+  if (p.textContent.trim()) paras.push(p);
+  row.replaceChildren(...paras);
+}
+
 function decorateText(row) {
   row.className = 'blog-author-info';
+  if (!row.querySelector('p') && row.querySelector('br')) normalizeBrToParagraphs(row);
   const paras = row.querySelectorAll('p');
   if (paras[0]) paras[0].className = 'blog-author-name';
   if (paras[1]) paras[1].className = 'blog-author-title';
   paras.forEach((p, i) => {
     if (i >= 2) p.className = 'blog-author-description';
   });
+}
+
+async function decorateSubscribe(row) {
+  row.className = 'blog-author-subscribe';
+  const cfg = getConfig();
+  const resolve = async (key) => {
+    const val = await replaceKey(key, cfg).catch(() => '');
+    return val && val.toLowerCase().replace(/[\s-]+/g, '-') !== key ? val : '';
+  };
+  const body = await resolve('get-the-latest-articles') || 'Get the latest articles sent to your inbox.';
+  const btn = await resolve('subscribe') || 'Subscribe';
+
+  const a = row.querySelector('a');
+  row.replaceChildren();
+
+  const p = document.createElement('p');
+  p.textContent = body;
+  row.append(p);
+
+  if (a) {
+    a.textContent = btn;
+    a.className = 'blog-author-subscribe-btn';
+    row.append(a);
+  }
 }
 
 function injectSchema(el) {
@@ -64,8 +109,8 @@ function injectSchema(el) {
   const img = el.querySelector('picture img')?.src;
   if (img) schema.image = img;
 
-  const sameAs = [...el.querySelectorAll('.blog-author-social a')]
-    .map((a) => a.href).filter(Boolean);
+  const sameAs = [...el.querySelectorAll('.blog-author-social a:not([hidden])')]
+    .map((a) => a.getAttribute('aria-label') && a.href).filter(Boolean);
   if (sameAs.length) schema.sameAs = sameAs;
 
   const script = document.createElement('script');
@@ -74,17 +119,32 @@ function injectSchema(el) {
   document.head.append(script);
 }
 
-export default function init(el) {
+export default async function init(el) {
+  let socialContainer = null;
+  const rowsToRemove = [];
+  const subscribeDecorations = [];
+
   [...el.children].forEach((row) => {
     const inner = row.querySelector(':scope > div') ?? row;
     if (inner.querySelector('picture')) {
       inner.className = 'blog-author-image';
     } else if ([...inner.querySelectorAll('a')].some((a) => resolvePlatform(a.href))) {
-      decorateSocial(inner);
+      if (!socialContainer) {
+        socialContainer = inner;
+      } else {
+        [...inner.querySelectorAll('a')].forEach((a) => socialContainer.append(a));
+        rowsToRemove.push(row);
+      }
+    } else if (inner.querySelector('a')) {
+      subscribeDecorations.push(decorateSubscribe(inner));
     } else {
       decorateText(inner);
     }
   });
 
+  if (socialContainer) decorateSocial(socialContainer);
+  rowsToRemove.forEach((r) => r.remove());
+
+  await Promise.all(subscribeDecorations);
   injectSchema(el);
 }
