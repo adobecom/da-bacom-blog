@@ -14,7 +14,7 @@ const BLOCK_HTML = `
     <a href="https://twitter.com/janedoe">Twitter</a>
   </div></div>
   <div><div>
-    <a href="https://example.com/subscribe">Subscribe</a>
+    <p><a href="https://example.com/subscribe">Subscribe</a></p>
   </div></div>
 </div>`;
 
@@ -146,7 +146,7 @@ describe('Blog Author', () => {
           <p>Jane Doe</p>
         </div></div>
         <div><div>
-          <a href="https://example.com/subscribe">Subscribe</a>
+          <p><a href="https://example.com/subscribe">Subscribe</a></p>
         </div></div>
       </div>`;
     await init(document.querySelector('.blog-author'));

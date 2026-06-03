@@ -57,17 +57,15 @@ async function decorateSubscribe(row) {
   const btn = await resolve('subscribe') || 'Subscribe';
 
   const a = row.querySelector('a');
-  row.replaceChildren();
+  const p = row.querySelector('p');
 
-  const p = document.createElement('p');
-  p.textContent = body;
-  row.append(p);
-
+  if (p) p.textContent = body;
   if (a) {
     a.textContent = btn;
     a.className = 'blog-author-subscribe-btn';
-    row.append(a);
   }
+
+  row.replaceChildren(...[p, a].filter(Boolean));
 }
 
 function injectSchema(el) {
