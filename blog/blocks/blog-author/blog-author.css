@@ -104,15 +104,76 @@
   color: inherit;
 }
 
-/* Tablet 600px+: image becomes circle on left, content stacks on right */
+/* Small tablet 600-767px: stacked, 300x300 image */
 @media (min-width: 600px) {
   .blog-author {
+    padding: 56px 32px;
+  }
+
+  .blog-author-image picture {
+    width: 300px;
+  }
+
+  .blog-author-image img {
+    width: 300px;
+    height: 300px;
+    aspect-ratio: auto;
+  }
+
+  /* Full-width variant: image fills content area width */
+  .blog-author.full-width .blog-author-image picture {
+    width: 100%;
+  }
+
+  .blog-author.full-width .blog-author-image img {
+    width: 100%;
+    height: 300px;
+  }
+
+  .blog-author-social {
+    gap: 16px;
+  }
+}
+
+/* Tablet 768-1199px: stacked, 328x328 image, 48px side padding */
+@media (min-width: 768px) {
+  .blog-author {
+    padding: 56px 48px;
+  }
+
+  .blog-author-image {
+    margin-bottom: 52px;
+  }
+
+  .blog-author-image picture {
+    width: 328px;
+  }
+
+  .blog-author-image img {
+    width: 328px;
+    height: 328px;
+    aspect-ratio: auto;
+  }
+
+  /* Full-width variant: image fills content area width */
+  .blog-author.full-width .blog-author-image picture {
+    width: 100%;
+  }
+
+  .blog-author.full-width .blog-author-image img {
+    width: 100%;
+    height: 328px;
+  }
+}
+
+/* Desktop 1200px+: 2-column grid, 328x328 image left, content right */
+@media (min-width: 1200px) {
+  .blog-author {
     display: grid;
-    grid-template-columns: 120px 1fr;
-    column-gap: 24px;
-    row-gap: 0;
+    grid-template-columns: 328px minmax(0, 600px);
+    column-gap: 32px;
     align-items: start;
-    padding: 56px 30px;
+    justify-content: center;
   }
 
   .blog-author-image {
@@ -122,41 +183,17 @@
   }
 
   .blog-author-image picture {
-    width: 120px;
+    width: 328px;
   }
 
   .blog-author-image img {
-    border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    aspect-ratio: auto;
+    width: 328px;
+    height: 328px;
   }
 
   .blog-author-info,
   .blog-author-social,
   .blog-author-subscribe {
     grid-column: 2;
-  }
-
-  .blog-author-social {
-    gap: 16px;
-    margin-top: 16px;
-  }
-}
-
-/* Desktop 1200px+: larger image */
-@media (min-width: 1200px) {
-  .blog-author {
-    grid-template-columns: 160px 1fr;
-    column-gap: 32px;
-  }
-
-  .blog-author-image picture {
-    width: 160px;
-  }
-
-  .blog-author-image img {
-    width: 160px;
-    height: 160px;
   }
 }
