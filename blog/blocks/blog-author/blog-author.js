@@ -18,7 +18,6 @@ function resolvePlatform(href) {
 }
 
 function decorateSocial(row) {
-  // Links may be wrapped in <p> tags — flatten them to direct children
   const links = [...row.querySelectorAll('a')];
   row.replaceChildren(...links);
   row.className = 'blog-author-social';
