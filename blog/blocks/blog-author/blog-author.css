@@ -52,7 +52,7 @@
 .blog-author-social {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 8px;
   align-items: center;
   margin-top: 32px;
 }
@@ -61,15 +61,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  color: inherit;
+  width: 40px;
+  height: 40px;
+  background: var(--color-gray-700, #2c2c2c);
+  border-radius: 8px;
+  color: #fff;
   text-decoration: none;
 }
 
 .blog-author-social .icon {
-  width: 32px;
-  height: 32px;
+  display: contents;
+}
+
+.blog-author-social .icon svg {
+  display: block;
+  width: 22px;
+  height: 22px;
 }
 
 .blog-author-subscribe {
@@ -132,6 +139,7 @@
   }
 
   .blog-author-social {
+    gap: 16px;
     margin-top: 16px;
   }
 }
