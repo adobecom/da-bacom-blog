@@ -77,7 +77,11 @@ function injectSchema(el) {
     '@type': 'Person',
     name,
     url: window.location.href,
-    worksFor: { '@type': 'Organization', name: 'Adobe', url: 'https://www.adobe.com/' }, // TODO: support author-company row when porting to Milo
+    worksFor: {
+      '@type': 'Organization',
+      name: 'Adobe',
+      url: 'https://www.adobe.com/',
+    },
   };
 
   const title = el.querySelector('.blog-author-title')?.textContent?.trim();

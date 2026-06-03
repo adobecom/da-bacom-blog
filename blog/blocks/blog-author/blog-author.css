@@ -1,9 +1,7 @@
-/* Outer row wrappers are transparent to layout */
 .blog-author > div {
   display: contents;
 }
 
-/* Mobile 360-599px */
 .blog-author {
   display: flex;
   flex-direction: column;
@@ -104,7 +102,6 @@
   color: inherit;
 }
 
-/* Small tablet 600-767px: stacked, 300x300 image */
 @media (min-width: 600px) {
   .blog-author {
     padding: 56px 32px;
@@ -120,7 +117,6 @@
     aspect-ratio: auto;
   }
 
-  /* Full-width variant: image fills content area width */
   .blog-author.full-width .blog-author-image picture {
     width: 100%;
   }
@@ -135,7 +131,6 @@
   }
 }
 
-/* Tablet 768-1199px: stacked, 328x328 image, 48px side padding */
 @media (min-width: 768px) {
   .blog-author {
     padding: 56px 48px;
@@ -155,7 +150,6 @@
     aspect-ratio: auto;
   }
 
-  /* Full-width variant: image fills content area width */
   .blog-author.full-width .blog-author-image picture {
     width: 100%;
   }
@@ -166,7 +160,6 @@
   }
 }
 
-/* Desktop 1200px+: 2-column grid, 328x328 image left, content right */
 @media (min-width: 1200px) {
   .blog-author {
     display: grid;
