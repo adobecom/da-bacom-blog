@@ -36,25 +36,8 @@ function decorateSocial(row) {
   loadIcons(row.querySelectorAll('span.icon'));
 }
 
-function normalizeBrToParagraphs(row) {
-  const nodes = [...row.childNodes];
-  const paras = [];
-  let p = document.createElement('p');
-  nodes.forEach((node) => {
-    if (node.nodeName === 'BR') {
-      if (p.textContent.trim()) paras.push(p);
-      p = document.createElement('p');
-    } else {
-      p.append(node.cloneNode(true));
-    }
-  });
-  if (p.textContent.trim()) paras.push(p);
-  row.replaceChildren(...paras);
-}
-
 function decorateText(row) {
   row.className = 'blog-author-info';
-  if (!row.querySelector('p') && row.querySelector('br')) normalizeBrToParagraphs(row);
   const paras = row.querySelectorAll('p');
   if (paras[0]) paras[0].className = 'blog-author-name';
   if (paras[1]) paras[1].className = 'blog-author-title';
