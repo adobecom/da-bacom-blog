@@ -164,6 +164,7 @@
   .blog-author {
     display: grid;
     grid-template-columns: 328px minmax(0, 600px);
+    grid-template-rows: repeat(5, auto);
     column-gap: 32px;
     align-items: start;
     justify-content: center;
@@ -172,16 +173,22 @@
   .blog-author-image {
     grid-column: 1;
     grid-row: 1 / -1;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
     margin-bottom: 0;
   }
 
   .blog-author-image picture {
-    width: 328px;
+    display: contents;
   }
 
   .blog-author-image img {
     width: 328px;
-    height: 328px;
+    flex: 1;
+    min-height: 328px;
+    object-fit: cover;
+    object-position: top center;
   }
 
   .blog-author-info,
