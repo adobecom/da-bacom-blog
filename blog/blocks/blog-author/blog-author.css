@@ -20,11 +20,6 @@
   object-position: top center;
 }
 
-.blog-author-info {
-  display: flex;
-  flex-direction: column;
-}
-
 .blog-author-name {
   font-size: 36px;
   font-weight: 700;
@@ -185,7 +180,9 @@
     object-position: top center;
   }
 
-  .blog-author-info,
+  .blog-author-name,
+  .blog-author-title,
+  .blog-author-description,
   .blog-author-social,
   .blog-author-subscribe {
     grid-column: 2;

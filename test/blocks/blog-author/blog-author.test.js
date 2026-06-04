@@ -4,11 +4,9 @@ import init from '../../../blog/blocks/blog-author/blog-author.js';
 const BLOCK_HTML = `
 <div class="blog-author">
   <div><div><picture><img src="https://example.com/author.jpg" alt="Jane Doe"></picture></div></div>
-  <div><div>
-    <p>Jane Doe</p>
-    <p>Senior Director, Marketing</p>
-    <p>Jane has 15 years of experience in B2B marketing.</p>
-  </div></div>
+  <div><div><p>Jane Doe</p></div></div>
+  <div><div><p>Senior Director, Marketing</p></div></div>
+  <div><div><p>Jane has 15 years of experience in B2B marketing.</p></div></div>
   <div><div>
     <a href="https://linkedin.com/in/janedoe">LinkedIn</a>
     <a href="https://twitter.com/janedoe">Twitter</a>
@@ -41,20 +39,20 @@ describe('Blog Author', () => {
     expect(document.querySelector('.blog-author-image picture')).to.exist;
   });
 
-  it('adds name and title classes to text paragraphs', async () => {
+  it('assigns name and title classes by row order', async () => {
     await init(document.querySelector('.blog-author'));
     expect(document.querySelector('.blog-author-name').textContent).to.equal('Jane Doe');
     expect(document.querySelector('.blog-author-title').textContent).to.equal('Senior Director, Marketing');
   });
 
-  it('adds description class to remaining paragraphs', async () => {
+  it('assigns description class to third and subsequent text rows', async () => {
     await init(document.querySelector('.blog-author'));
     expect(document.querySelector('.blog-author-description').textContent).to.include('15 years');
   });
 
-  it('adds blog-author-info class to text row', async () => {
+  it('assigns blog-author-name class to the first text row', async () => {
     await init(document.querySelector('.blog-author'));
-    expect(document.querySelector('.blog-author-info')).to.exist;
+    expect(document.querySelector('.blog-author-name')).to.exist;
   });
 
   it('adds blog-author-social class to links row', async () => {
@@ -139,12 +137,10 @@ describe('Blog Author', () => {
     expect(socialContainers[0].querySelectorAll('a')).to.have.length(3);
   });
 
-  it('treats a bio row with a non-social link as subscribe, not social', async () => {
+  it('treats a row with a non-social link as subscribe, not social', async () => {
     document.body.innerHTML = `
       <div class="blog-author">
-        <div><div>
-          <p>Jane Doe</p>
-        </div></div>
+        <div><div><p>Jane Doe</p></div></div>
         <div><div>
           <p><a href="https://example.com/subscribe">Subscribe</a></p>
         </div></div>
@@ -166,17 +162,6 @@ describe('Blog Author', () => {
     const links = document.querySelectorAll('.blog-author-social a');
     expect(links[0].hidden).to.be.false;
     expect(links[1].hidden).to.be.true;
-  });
-
-  it('handles <br>-separated text content instead of <p> tags', async () => {
-    document.body.innerHTML = `
-      <div class="blog-author">
-        <div><div>Shelly Chiang<br>Senior Manager, Adobe for Business<br>Shelly is a senior manager.</div></div>
-      </div>`;
-    await init(document.querySelector('.blog-author'));
-    expect(document.querySelector('.blog-author-name').textContent).to.equal('Shelly Chiang');
-    expect(document.querySelector('.blog-author-title').textContent).to.equal('Senior Manager, Adobe for Business');
-    expect(document.querySelector('.blog-author-description').textContent).to.include('senior manager');
   });
 
   it('does not inject schema when name is missing', async () => {

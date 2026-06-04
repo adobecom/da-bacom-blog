@@ -35,33 +35,6 @@ function decorateSocial(row) {
   loadIcons(row.querySelectorAll('span.icon'));
 }
 
-function normalizeBrToParagraphs(row) {
-  const nodes = [...row.childNodes];
-  const paras = [];
-  let p = document.createElement('p');
-  nodes.forEach((node) => {
-    if (node.nodeName === 'BR') {
-      if (p.textContent.trim()) paras.push(p);
-      p = document.createElement('p');
-    } else {
-      p.append(node.cloneNode(true));
-    }
-  });
-  if (p.textContent.trim()) paras.push(p);
-  row.replaceChildren(...paras);
-}
-
-function decorateText(row) {
-  row.className = 'blog-author-info';
-  if (!row.querySelector('p') && row.querySelector('br')) normalizeBrToParagraphs(row);
-  const paras = row.querySelectorAll('p');
-  if (paras[0]) paras[0].className = 'blog-author-name';
-  if (paras[1]) paras[1].className = 'blog-author-title';
-  paras.forEach((p, i) => {
-    if (i >= 2) p.className = 'blog-author-description';
-  });
-}
-
 async function decorateSubscribe(row) {
   row.className = 'blog-author-subscribe';
   const cfg = getConfig();
@@ -85,7 +58,7 @@ async function decorateSubscribe(row) {
 }
 
 function injectSchema(el) {
-  const name = el.querySelector('.blog-author-name')?.textContent?.trim();
+  const name = el.querySelector('.blog-author-name')?.textContent;
   if (!name) return;
 
   const schema = {
@@ -100,11 +73,11 @@ function injectSchema(el) {
     },
   };
 
-  const title = el.querySelector('.blog-author-title')?.textContent?.trim();
+  const title = el.querySelector('.blog-author-title')?.textContent;
   if (title) schema.jobTitle = title;
 
   const desc = [...el.querySelectorAll('.blog-author-description')]
-    .map((p) => p.textContent.trim()).join(' ');
+    .map((p) => p.textContent).join(' ');
   if (desc) schema.description = desc;
 
   const img = el.querySelector('picture img')?.src;
@@ -122,7 +95,9 @@ function injectSchema(el) {
 
 export default async function init(el) {
   let socialContainer = null;
+  let textIdx = 0;
   const subscribeDecorations = [];
+  const TEXT_CLASSES = ['blog-author-name', 'blog-author-title', 'blog-author-description'];
 
   el.querySelectorAll(':scope > div > div').forEach((row) => {
     if (row.querySelector('picture')) {
@@ -137,7 +112,8 @@ export default async function init(el) {
     } else if (row.querySelector('a')) {
       subscribeDecorations.push(decorateSubscribe(row));
     } else {
-      decorateText(row);
+      row.className = TEXT_CLASSES[Math.min(textIdx, 2)];
+      textIdx += 1;
     }
   });
 
