@@ -12,10 +12,6 @@
   margin-bottom: 48px;
 }
 
-.blog-author-image picture {
-  display: block;
-}
-
 .blog-author-image img {
   display: block;
   width: 100%;
@@ -113,7 +109,6 @@
 
   .blog-author-image img {
     width: 300px;
-    height: 300px;
     aspect-ratio: auto;
   }
 
@@ -146,7 +141,6 @@
 
   .blog-author-image img {
     width: 328px;
-    height: 328px;
     aspect-ratio: auto;
   }
 

@@ -122,29 +122,26 @@ function injectSchema(el) {
 
 export default async function init(el) {
   let socialContainer = null;
-  const rowsToRemove = [];
   const subscribeDecorations = [];
 
-  [...el.children].forEach((row) => {
-    const inner = row.querySelector(':scope > div') ?? row;
-    if (inner.querySelector('picture')) {
-      inner.className = 'blog-author-image';
-    } else if ([...inner.querySelectorAll('a')].some((a) => resolvePlatform(a.href))) {
+  el.querySelectorAll(':scope > div > div').forEach((row) => {
+    if (row.querySelector('picture')) {
+      row.className = 'blog-author-image';
+    } else if ([...row.querySelectorAll('a')].some((a) => resolvePlatform(a.href))) {
       if (!socialContainer) {
-        socialContainer = inner;
+        socialContainer = row;
       } else {
-        [...inner.querySelectorAll('a')].forEach((a) => socialContainer.append(a));
-        rowsToRemove.push(row);
+        [...row.querySelectorAll('a')].forEach((a) => socialContainer.append(a));
+        row.parentElement.remove();
       }
-    } else if (inner.querySelector('a')) {
-      subscribeDecorations.push(decorateSubscribe(inner));
+    } else if (row.querySelector('a')) {
+      subscribeDecorations.push(decorateSubscribe(row));
     } else {
-      decorateText(inner);
+      decorateText(row);
     }
   });
 
   if (socialContainer) decorateSocial(socialContainer);
-  rowsToRemove.forEach((r) => r.remove());
 
   await Promise.all(subscribeDecorations);
   injectSchema(el);
