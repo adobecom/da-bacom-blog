@@ -168,6 +168,17 @@ describe('Blog Author', () => {
     expect(links[1].hidden).to.be.true;
   });
 
+  it('handles <br>-separated text content instead of <p> tags', async () => {
+    document.body.innerHTML = `
+      <div class="blog-author">
+        <div><div>Shelly Chiang<br>Senior Manager, Adobe for Business<br>Shelly is a senior manager.</div></div>
+      </div>`;
+    await init(document.querySelector('.blog-author'));
+    expect(document.querySelector('.blog-author-name').textContent).to.equal('Shelly Chiang');
+    expect(document.querySelector('.blog-author-title').textContent).to.equal('Senior Manager, Adobe for Business');
+    expect(document.querySelector('.blog-author-description').textContent).to.include('senior manager');
+  });
+
   it('does not inject schema when name is missing', async () => {
     document.body.innerHTML = '<div class="blog-author"><div><div><picture><img src="x.jpg"></picture></div></div></div>';
     await init(document.querySelector('.blog-author'));
