@@ -1,7 +1,7 @@
 import { expect } from '@esm-bundle/chai';
 import { readFile } from '@web/test-runner-commands';
 import sinon from 'sinon';
-import { setLibs, buildAutoBlocks } from '../../blog/scripts/scripts.js';
+import { setLibs, buildAutoBlocks, transformExlLinks } from '../../blog/scripts/scripts.js';
 
 describe('Libs', () => {
   it('Default Libs', () => {
@@ -43,6 +43,56 @@ describe('Libs', () => {
     };
     const libs = setLibs(location);
     expect(libs).to.equal('https://awesome--milo--forkedowner.aem.live/libs');
+  });
+});
+
+describe('Transform Experience League Links', () => {
+  it('does nothing for en-US locale', () => {
+    const locale = { ietf: 'en-US' };
+    const root = document.createElement('div');
+    root.innerHTML = '<a href="https://experienceleague.adobe.com/en/docs/thing">Link</a>';
+    transformExlLinks(locale, root);
+    expect(root.querySelector('a').href).to.equal('https://experienceleague.adobe.com/en/docs/thing');
+  });
+
+  it('does nothing for locale without exl mapping', () => {
+    const locale = { ietf: 'en-AU' };
+    const root = document.createElement('div');
+    root.innerHTML = '<a href="https://experienceleague.adobe.com/en/docs/thing">Link</a>';
+    transformExlLinks(locale, root);
+    expect(root.querySelector('a').href).to.equal('https://experienceleague.adobe.com/en/docs/thing');
+  });
+
+  it('transforms /en/ path segment to locale exl value', () => {
+    const locale = { ietf: 'fr-FR', exl: 'fr' };
+    const root = document.createElement('div');
+    root.innerHTML = '<a href="https://experienceleague.adobe.com/en/docs/experience-manager">Link</a>';
+    transformExlLinks(locale, root);
+    expect(root.querySelector('a').href).to.equal('https://experienceleague.adobe.com/fr/docs/experience-manager');
+  });
+
+  it('transforms .html?lang=en links', () => {
+    const locale = { ietf: 'de-DE', exl: 'de' };
+    const root = document.createElement('div');
+    root.innerHTML = '<a href="https://experienceleague.adobe.com/docs/thing.html?lang=en">Link</a>';
+    transformExlLinks(locale, root);
+    expect(root.querySelector('a').href).to.equal('https://experienceleague.adobe.com/de/docs/thing');
+  });
+
+  it('skips links with #_dnt', () => {
+    const locale = { ietf: 'fr-FR', exl: 'fr' };
+    const root = document.createElement('div');
+    root.innerHTML = '<a href="https://experienceleague.adobe.com/en/docs/thing#_dnt">Link</a>';
+    transformExlLinks(locale, root);
+    expect(root.querySelector('a').href).to.equal('https://experienceleague.adobe.com/en/docs/thing#_dnt');
+  });
+
+  it('transforms links in a custom root element (e.g. fragment content)', () => {
+    const locale = { ietf: 'fr-FR', exl: 'fr' };
+    const root = document.createElement('div');
+    root.innerHTML = '<a href="https://experienceleague.adobe.com/en/docs/experience-manager">Link</a>';
+    transformExlLinks(locale, root);
+    expect(root.querySelector('a').href).to.equal('https://experienceleague.adobe.com/fr/docs/experience-manager');
   });
 });
 
