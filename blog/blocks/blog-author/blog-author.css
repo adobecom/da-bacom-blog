@@ -50,8 +50,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
   background: var(--color-gray-700, #2c2c2c);
   border-radius: 8px;
   color: #fff;
@@ -64,8 +64,9 @@
 
 .blog-author-social .icon svg {
   display: block;
-  width: 22px;
-  height: 22px;
+  width: 16px;
+  height: 16px;
+  transform: translateY(-2px);
 }
 
 .blog-author-subscribe {
