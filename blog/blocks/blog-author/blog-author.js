@@ -1,7 +1,5 @@
 import { LIBS } from '../../scripts/scripts.js';
 
-const { getConfig } = await import(`${LIBS}/utils/utils.js`);
-const { replaceKey } = await import(`${LIBS}/features/placeholders.js`);
 const iconsModule = await import(`${LIBS}/features/icons/icons.js`).catch(() => null);
 const loadIcons = iconsModule?.default ?? (() => {});
 
@@ -33,28 +31,6 @@ function decorateSocial(row) {
     a.replaceChildren(span);
   });
   loadIcons(row.querySelectorAll('span.icon'));
-}
-
-async function decorateSubscribe(row) {
-  row.className = 'blog-author-subscribe';
-  const cfg = getConfig();
-  const resolve = async (key) => {
-    const val = await replaceKey(key, cfg).catch(() => '');
-    return val && val.toLowerCase().replace(/[\s-]+/g, '-') !== key ? val : '';
-  };
-  const body = await resolve('get-the-latest-articles') || 'Get the latest articles sent to your inbox.';
-  const btn = await resolve('subscribe') || 'Subscribe';
-
-  const a = row.querySelector('a');
-  const p = row.querySelector('p') ?? document.createElement('p');
-
-  p.textContent = body;
-  if (a) {
-    a.textContent = btn;
-    a.className = 'blog-author-subscribe-btn';
-  }
-
-  row.replaceChildren(...[p, a].filter(Boolean));
 }
 
 function injectSchema(el) {
@@ -96,7 +72,6 @@ function injectSchema(el) {
 export default async function init(el) {
   let socialContainer = null;
   let textIdx = 0;
-  const subscribeDecorations = [];
   const TEXT_CLASSES = ['blog-author-name', 'blog-author-title', 'blog-author-description'];
 
   el.querySelectorAll(':scope > div > div').forEach((row) => {
@@ -109,8 +84,6 @@ export default async function init(el) {
         [...row.querySelectorAll('a')].forEach((a) => socialContainer.append(a));
         row.parentElement.remove();
       }
-    } else if (row.querySelector('a')) {
-      subscribeDecorations.push(decorateSubscribe(row));
     } else {
       row.className = TEXT_CLASSES[Math.min(textIdx, 2)];
       textIdx += 1;
@@ -119,6 +92,5 @@ export default async function init(el) {
 
   if (socialContainer) decorateSocial(socialContainer);
 
-  await Promise.all(subscribeDecorations);
   injectSchema(el);
 }

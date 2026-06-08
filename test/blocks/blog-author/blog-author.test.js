@@ -11,9 +11,6 @@ const BLOCK_HTML = `
     <a href="https://linkedin.com/in/janedoe">LinkedIn</a>
     <a href="https://twitter.com/janedoe">Twitter</a>
   </div></div>
-  <div><div>
-    <p><a href="https://example.com/subscribe">Subscribe</a></p>
-  </div></div>
 </div>`;
 
 function getPersonSchema() {
@@ -81,14 +78,6 @@ describe('Blog Author', () => {
     expect(links[1].querySelector('.icon-twitter')).to.exist;
   });
 
-  it('decorates subscribe CTA row', async () => {
-    await init(document.querySelector('.blog-author'));
-    const sub = document.querySelector('.blog-author-subscribe');
-    expect(sub).to.exist;
-    expect(sub.querySelector('.blog-author-subscribe-btn')).to.exist;
-    expect(sub.querySelector('.blog-author-subscribe-btn').href).to.include('subscribe');
-  });
-
   it('injects Person JSON-LD schema', async () => {
     await init(document.querySelector('.blog-author'));
     const schema = getPersonSchema();
@@ -135,19 +124,6 @@ describe('Blog Author', () => {
     const socialContainers = document.querySelectorAll('.blog-author-social');
     expect(socialContainers).to.have.length(1);
     expect(socialContainers[0].querySelectorAll('a')).to.have.length(3);
-  });
-
-  it('treats a row with a non-social link as subscribe, not social', async () => {
-    document.body.innerHTML = `
-      <div class="blog-author">
-        <div><div><p>Jane Doe</p></div></div>
-        <div><div>
-          <p><a href="https://example.com/subscribe">Subscribe</a></p>
-        </div></div>
-      </div>`;
-    await init(document.querySelector('.blog-author'));
-    expect(document.querySelector('.blog-author-subscribe')).to.exist;
-    expect(document.querySelector('.blog-author-social')).to.not.exist;
   });
 
   it('hides unrecognized links in the social row', async () => {
