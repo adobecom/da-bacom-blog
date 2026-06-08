@@ -33,7 +33,7 @@ function decorateSocial(row) {
   loadIcons(row.querySelectorAll('span.icon'));
 }
 
-function injectSchema(el) {
+function injectSchema(el, company) {
   const name = el.querySelector('.blog-author-name')?.textContent;
   if (!name) return;
 
@@ -42,12 +42,11 @@ function injectSchema(el) {
     '@type': 'Person',
     name,
     url: window.location.href,
-    worksFor: {
-      '@type': 'Organization',
-      name: 'Adobe',
-      url: 'https://www.adobe.com/',
-    },
   };
+
+  if (company) {
+    schema.worksFor = { '@type': 'Organization', name: company };
+  }
 
   const title = el.querySelector('.blog-author-title')?.textContent;
   if (title) schema.jobTitle = title;
@@ -72,6 +71,7 @@ function injectSchema(el) {
 export default async function init(el) {
   let socialContainer = null;
   let textIdx = 0;
+  let company = null;
   const TEXT_CLASSES = ['blog-author-name', 'blog-author-title', 'blog-author-description'];
 
   el.querySelectorAll(':scope > div > div').forEach((row) => {
@@ -84,6 +84,9 @@ export default async function init(el) {
         [...row.querySelectorAll('a')].forEach((a) => socialContainer.append(a));
         row.parentElement.remove();
       }
+    } else if (socialContainer) {
+      company = row.textContent.trim();
+      row.parentElement.remove();
     } else {
       row.className = TEXT_CLASSES[Math.min(textIdx, 2)];
       textIdx += 1;
@@ -92,5 +95,5 @@ export default async function init(el) {
 
   if (socialContainer) decorateSocial(socialContainer);
 
-  injectSchema(el);
+  injectSchema(el, company);
 }

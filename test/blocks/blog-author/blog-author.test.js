@@ -86,7 +86,7 @@ describe('Blog Author', () => {
     expect(schema.name).to.equal('Jane Doe');
     expect(schema.jobTitle).to.equal('Senior Director, Marketing');
     expect(schema.url).to.be.a('string');
-    expect(schema.worksFor.name).to.equal('Adobe');
+    expect(schema.worksFor).to.be.undefined;
   });
 
   it('includes image and sameAs in schema', async () => {
@@ -95,6 +95,27 @@ describe('Blog Author', () => {
     expect(schema.image).to.include('example.com/author.jpg');
     expect(schema.sameAs).to.include('https://linkedin.com/in/janedoe');
     expect(schema.sameAs).to.include('https://twitter.com/janedoe');
+  });
+
+  it('reads company row after social links into schema and removes it from DOM', async () => {
+    document.body.innerHTML = `
+      <div class="blog-author">
+        <div><div><p>Jane Doe</p></div></div>
+        <div><div>
+          <a href="https://linkedin.com/in/jane">LinkedIn</a>
+        </div></div>
+        <div><div><p>Adobe</p></div></div>
+      </div>`;
+    await init(document.querySelector('.blog-author'));
+    const schema = getPersonSchema();
+    expect(schema.worksFor.name).to.equal('Adobe');
+    expect(document.querySelector('.blog-author').textContent).to.not.include('Adobe');
+  });
+
+  it('omits worksFor from schema when no company row is authored', async () => {
+    await init(document.querySelector('.blog-author'));
+    const schema = getPersonSchema();
+    expect(schema.worksFor).to.be.undefined;
   });
 
   it('omits schema fields when content is absent', async () => {
