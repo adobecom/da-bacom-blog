@@ -72,10 +72,20 @@ export default async function init(el) {
   let socialContainer = null;
   let textIdx = 0;
   let company = null;
+  const HEX = '#[0-9a-fA-F]{3,6}';
   const TEXT_CLASSES = ['blog-author-name', 'blog-author-title', 'blog-author-description'];
 
   el.querySelectorAll(':scope > div > div').forEach((row) => {
-    if (row.querySelector('picture')) {
+    const text = row.textContent.trim();
+    const gradient = text.match(new RegExp(`^(${HEX})\\s*,\\s*(${HEX})$`));
+    const solid = !gradient && new RegExp(`^${HEX}$`).test(text);
+    if (gradient) {
+      el.style.background = `linear-gradient(to bottom, ${gradient[1]}, ${gradient[2]})`;
+      row.parentElement.remove();
+    } else if (solid) {
+      el.style.backgroundColor = text;
+      row.parentElement.remove();
+    } else if (row.querySelector('picture')) {
       row.className = 'blog-author-image';
     } else if ([...row.querySelectorAll('a')].some((a) => resolvePlatform(a.href))) {
       if (!socialContainer) {
@@ -94,6 +104,13 @@ export default async function init(el) {
   });
 
   if (socialContainer) decorateSocial(socialContainer);
+
+  const content = document.createElement('div');
+  content.className = 'blog-author-content';
+  el.querySelectorAll('.blog-author-name, .blog-author-title, .blog-author-description, .blog-author-social')
+    .forEach((t) => content.append(t));
+  el.querySelectorAll(':scope > div:not(:has(*))').forEach((d) => d.remove());
+  el.append(content);
 
   injectSchema(el, company);
 }
