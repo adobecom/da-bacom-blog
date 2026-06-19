@@ -36,6 +36,15 @@ describe('Libs', () => {
     expect(libs).to.equal('http://localhost:6456/libs');
   });
 
+  it('Supports milolibs query param on .adobe.io', () => {
+    const location = {
+      hostname: 'bacom-blog.adobe.io',
+      search: '?milolibs=foo',
+    };
+    const libs = setLibs(location);
+    expect(libs).to.equal('https://foo--milo--adobecom.aem.live/libs');
+  });
+
   it('Supports forked milolibs query param', () => {
     const location = {
       hostname: 'localhost',
