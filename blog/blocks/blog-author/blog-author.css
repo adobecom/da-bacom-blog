@@ -9,15 +9,17 @@
 }
 
 .blog-author-image {
-  margin-bottom: 48px;
+  margin-bottom: 24px;
 }
 
 .blog-author-image img {
   display: block;
   width: 100%;
+  max-width: 148px;
   aspect-ratio: 1;
   object-fit: cover;
   object-position: top center;
+  border-radius: 50%;
 }
 
 .blog-author-name {
@@ -80,6 +82,7 @@
 
   .blog-author-image img {
     width: 300px;
+    max-width: none;
     aspect-ratio: auto;
   }
 
@@ -103,6 +106,7 @@
 
   .blog-author-image img {
     width: 328px;
+    max-width: none;
     aspect-ratio: auto;
   }
 
@@ -128,7 +132,9 @@
 
   .blog-author-image img {
     width: 328px;
+    max-width: none;
     height: 328px;
+    aspect-ratio: 1;
     object-fit: cover;
     object-position: top center;
   }
