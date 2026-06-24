@@ -75,33 +75,48 @@ export default async function init(el) {
   const HEX = '#[0-9a-fA-F]{3,6}';
   const TEXT_CLASSES = ['blog-author-name', 'blog-author-title', 'blog-author-description'];
 
-  el.querySelectorAll(':scope > div > div').forEach((row) => {
+  function decorateRow(row) {
     const text = row.textContent.trim();
+
     const gradient = text.match(new RegExp(`^(${HEX})\\s*,\\s*(${HEX})$`));
-    const solid = !gradient && new RegExp(`^${HEX}$`).test(text);
     if (gradient) {
       el.style.background = `linear-gradient(to bottom, ${gradient[1]}, ${gradient[2]})`;
       row.parentElement.remove();
-    } else if (solid) {
+      return;
+    }
+
+    if (new RegExp(`^${HEX}$`).test(text)) {
       el.style.backgroundColor = text;
       row.parentElement.remove();
-    } else if (row.querySelector('picture')) {
+      return;
+    }
+
+    if (row.querySelector('picture')) {
       row.className = 'blog-author-image';
-    } else if ([...row.querySelectorAll('a')].some((a) => resolvePlatform(a.href))) {
+      return;
+    }
+
+    if ([...row.querySelectorAll('a')].some((a) => resolvePlatform(a.href))) {
       if (!socialContainer) {
         socialContainer = row;
       } else {
         [...row.querySelectorAll('a')].forEach((a) => socialContainer.append(a));
         row.parentElement.remove();
       }
-    } else if (socialContainer) {
-      company = row.textContent.trim();
-      row.parentElement.remove();
-    } else {
-      row.className = TEXT_CLASSES[Math.min(textIdx, 2)];
-      textIdx += 1;
+      return;
     }
-  });
+
+    if (socialContainer) {
+      company = text;
+      row.parentElement.remove();
+      return;
+    }
+
+    row.className = TEXT_CLASSES[Math.min(textIdx, 2)];
+    textIdx += 1;
+  }
+
+  el.querySelectorAll(':scope > div > div').forEach(decorateRow);
 
   if (socialContainer) decorateSocial(socialContainer);
 
