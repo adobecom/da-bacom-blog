@@ -225,9 +225,28 @@ export function transformExlLinks(locale, root = document) {
 }
 
 // Load LCP image immediately
+const eagerLoad = (img) => {
+  img?.setAttribute('loading', 'eager');
+  img?.setAttribute('fetchpriority', 'high');
+};
+
+export const getLCPImages = (doc) => {
+  const lcpSection = doc.querySelector('.marquee, .hero-marquee, .section-metadata img');
+  if (!lcpSection) return [doc.querySelector('img')];
+  if (lcpSection.nodeName === 'IMG') return [lcpSection];
+  if (lcpSection.classList.contains('split')) return lcpSection.querySelectorAll('img');
+  const marqueeDiv = lcpSection.firstElementChild;
+  const foregroundImg = lcpSection.querySelector(':scope > div:last-child img');
+  if (marqueeDiv.childElementCount > 1) {
+    if (window.innerWidth < 600) return [marqueeDiv.querySelector(':scope > div:first-child img') || foregroundImg];
+    if (window.innerWidth >= 600 && window.innerWidth < 1200) return [marqueeDiv.querySelector(':scope > div:nth-child(2) img') || foregroundImg];
+    if (window.innerWidth >= 1200) return [marqueeDiv.querySelector(':scope > div:last-child img') || foregroundImg];
+  }
+  return [lcpSection.querySelector('img') || doc.querySelector('img')];
+};
+
 (function loadLCPImage() {
-  const lcpImg = document.querySelector('img');
-  lcpImg?.removeAttribute('loading');
+  getLCPImages(document)?.forEach(eagerLoad);
 }());
 
 async function detectSidekick({ loadScript, loadStyle }) {
