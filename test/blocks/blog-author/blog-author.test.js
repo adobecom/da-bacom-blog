@@ -166,4 +166,44 @@ describe('Blog Author', () => {
     await init(document.querySelector('.blog-author'));
     expect(getPersonSchema()).to.be.null;
   });
+
+  it('wraps text and social elements in blog-author-content', async () => {
+    await init(document.querySelector('.blog-author'));
+    const content = document.querySelector('.blog-author-content');
+    expect(content).to.exist;
+    expect(content.querySelector('.blog-author-name')).to.exist;
+    expect(content.querySelector('.blog-author-title')).to.exist;
+    expect(content.querySelector('.blog-author-description')).to.exist;
+    expect(content.querySelector('.blog-author-social')).to.exist;
+  });
+
+  it('applies solid hex background color and removes the row from DOM', async () => {
+    document.body.innerHTML = `
+      <div class="blog-author">
+        <div><div><p>#f0e6d3</p></div></div>
+        <div><div><p>Jane Doe</p></div></div>
+      </div>`;
+    await init(document.querySelector('.blog-author'));
+    const el = document.querySelector('.blog-author');
+    expect(el.style.backgroundColor).to.equal('rgb(240, 230, 211)');
+    expect(el.textContent).to.not.include('#f0e6d3');
+  });
+
+  it('applies gradient background from two comma-separated hex colors', async () => {
+    document.body.innerHTML = `
+      <div class="blog-author">
+        <div><div><p>#f0e6d3, #ffffff</p></div></div>
+        <div><div><p>Jane Doe</p></div></div>
+      </div>`;
+    await init(document.querySelector('.blog-author'));
+    const el = document.querySelector('.blog-author');
+    expect(el.style.background).to.include('linear-gradient');
+    expect(el.textContent).to.not.include('#f0e6d3');
+  });
+
+  it('does not treat non-hex text as a background color', async () => {
+    await init(document.querySelector('.blog-author'));
+    const el = document.querySelector('.blog-author');
+    expect(el.style.backgroundColor).to.equal('');
+  });
 });
