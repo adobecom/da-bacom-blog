@@ -103,6 +103,7 @@ const STYLES = '/blog/styles/styles.css';
 // Add any config options.
 const CONFIG = {
   imsClientId: 'bacom',
+  imsScope: 'AdobeID,openid,gnav,pps.read,firefly_api,additional_info.roles,read_organizations,account_cluster.read',
   stage: { edgeConfigId: '7d1ba912-10b6-4384-a8ff-4bfb1178e869' },
   prod: { edgeConfigId: '65acfd54-d9fe-405c-ba04-8342d6782ab0' },
   locales: {
