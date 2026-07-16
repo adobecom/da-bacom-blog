@@ -196,11 +196,54 @@ export async function decorateMarquee(articleHeader, { bodyText } = {}) {
   wireSharePill(articleHeader, labels.share);
 }
 
+// Moves the article body into `content` without destroying anything.
+//
+// A typical blog article has NO `---` section breaks, so Milo wraps the
+// marquee, the blog-layout marker, and the entire body into a SINGLE
+// `.section`. Removing that section (as an earlier version did) deleted the
+// whole article. Instead we operate at the node level: keep the marquee where
+// it is, move every other body node out of the marker's section, absorb any
+// following sections (multi-section articles), and remove ONLY the marker.
+function relocateBody({ section, marker, content, articleHeader }) {
+  const holdsMarquee = (node) => !!articleHeader
+    && (node === articleHeader || node.contains?.(articleHeader));
+
+  // Move every child of the marker's section except the marquee and the
+  // marker itself into the content column.
+  [...section.children].forEach((child) => {
+    if (child === marker || holdsMarquee(child)) return;
+    content.append(child);
+  });
+
+  // Absorb any sections that follow (author-used `---` breaks), skipping any
+  // that hold the marquee so it always stays above the grid.
+  let sibling = section.nextElementSibling;
+  while (sibling) {
+    const next = sibling.nextElementSibling;
+    if (sibling.classList?.contains('section') && !holdsMarquee(sibling)) {
+      content.append(sibling);
+    }
+    sibling = next;
+  }
+
+  // Remove only the marker — never the section, which may still hold the
+  // marquee.
+  marker.remove();
+
+  // If the section is now empty (marquee lived in its own earlier section),
+  // drop the husk; otherwise keep it (it still holds the marquee).
+  if (!holdsMarquee(section) && !section.children.length) {
+    const anchor = section.previousElementSibling;
+    section.remove();
+    return anchor;
+  }
+  return section;
+}
+
 export default async function init(el) {
   document.body.classList.add('blog-2026');
 
   const main = el.closest('main') || document.querySelector('main');
-  const layoutSection = el.closest('.section');
   const articleHeader = document.querySelector('.article-header');
 
   const grid = document.createElement('div');
@@ -212,17 +255,28 @@ export default async function init(el) {
   const content = document.createElement('div');
   content.className = 'blog-content';
 
-  if (main && layoutSection) {
-    const sections = [...main.children].filter((child) => child.classList?.contains('section'));
-    const layoutIdx = sections.indexOf(layoutSection);
-    const sectionsAfter = layoutIdx >= 0 ? sections.slice(layoutIdx + 1) : [];
-    sectionsAfter.forEach((section) => {
-      if (section.querySelector('.article-header')) return;
-      content.append(section);
-    });
+  // Walk up to the block's top-level ancestor inside `main` (its section) and
+  // to the section child that directly contains the block (the marker to
+  // remove). In Milo, blocks always live inside a section.
+  let section = el;
+  while (section.parentElement && section.parentElement !== main) {
+    section = section.parentElement;
+  }
+  let marker = el;
+  while (marker.parentElement && marker.parentElement !== section) {
+    marker = marker.parentElement;
   }
 
-  layoutSection?.remove();
+  if (main && section.parentElement === main && section !== el) {
+    const anchor = relocateBody({ section, marker, content, articleHeader });
+    // Place the grid right after the marquee (or wherever the block was).
+    if (anchor?.parentElement === main) anchor.after(grid);
+    else main.append(grid);
+  } else {
+    // Degenerate markup (block not inside a section). Don't move anything —
+    // just append the grid so nothing is destroyed.
+    (main || document.body).append(grid);
+  }
 
   const sideNavContainer = document.createElement('div');
   sideNavContainer.className = 'blog-side-nav';
@@ -232,12 +286,6 @@ export default async function init(el) {
   rail.append(sideNavContainer, metaTagsContainer, await buildRelatedPlaceholder());
 
   grid.append(rail, content);
-
-  // `el` lives inside `layoutSection`, which was just removed from the DOM
-  // above — appending to it here would silently build the grid onto a
-  // detached node. Fall back to document.body instead (main is always
-  // present in production; this only matters for degenerate markup).
-  (main || document.body).append(grid);
 
   const progressBarContainer = document.createElement('div');
   progressBarContainer.className = 'blog-progress-bar';
