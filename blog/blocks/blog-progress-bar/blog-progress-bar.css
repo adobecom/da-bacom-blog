@@ -9,7 +9,11 @@
   z-index: 1;
   height: var(--blog-progress-weight, 8px);
   overflow: hidden;
-  background: var(--color-gray-200);
+
+  /* Transparent track: at the top of the article the under-marquee dotted
+     divider shows through as the unfilled portion (per Figma); once stuck,
+     only the solid blue fill reads. */
+  background: transparent;
 }
 
 .blog-progress-bar-fill {

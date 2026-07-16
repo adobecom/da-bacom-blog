@@ -17,6 +17,12 @@
   border-bottom: var(--blog-divider-weight) dotted var(--blog-divider-color);
 }
 
+/* Progress bar sits on the under-marquee divider (pulled up to overlap it) so
+   the dotted line reads as its unfilled track and the blue fill grows across. */
+.blog-2026 .blog-article-grid > .blog-progress-bar {
+  margin-top: -5px;
+}
+
 @media (min-width: 1200px) {
   .blog-2026 .blog-article-grid {
     display: grid;
@@ -25,6 +31,11 @@
     align-items: start;
     justify-content: center;
     border-inline-start: var(--blog-divider-weight) dotted var(--blog-divider-color);
+  }
+
+  /* Span the full container width (rail gutter + content). */
+  .blog-2026 .blog-article-grid > .blog-progress-bar {
+    grid-column: 1 / -1;
   }
 
   /* Rail stretches to the full grid height so its gutter divider runs the

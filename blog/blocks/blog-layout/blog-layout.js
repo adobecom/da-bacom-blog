@@ -287,9 +287,12 @@ export default async function init(el) {
 
   grid.append(rail, content);
 
+  // Progress bar spans the full container (over the rail gutter + content) and
+  // sits on the under-marquee divider, so it goes at the top of the grid — not
+  // inside the content column (which would trap it at 820px, offset right).
   const progressBarContainer = document.createElement('div');
   progressBarContainer.className = 'blog-progress-bar';
-  content.prepend(progressBarContainer);
+  grid.prepend(progressBarContainer);
 
   await Promise.all([
     mountModule('blog-side-nav', sideNavContainer),

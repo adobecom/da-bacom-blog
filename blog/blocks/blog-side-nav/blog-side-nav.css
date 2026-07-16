@@ -92,11 +92,13 @@
   }
 }
 
-/* Desktop rail: sticky beneath the marquee, disabled for short articles */
+/* Desktop rail: sticky beneath the marquee, disabled for short articles.
+   Offset an extra 22px below the shared sticky top so the full-width progress
+   bar (which sticks at --blog-rail-sticky-top) clears the nav label. */
 @media (min-width: 1200px) {
   .blog-side-nav {
     position: sticky;
-    top: var(--blog-rail-sticky-top, 96px);
+    top: calc(var(--blog-rail-sticky-top, 96px) + 22px);
   }
 
   .blog-side-nav.blog-side-nav-no-sticky {
