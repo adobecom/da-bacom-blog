@@ -25,25 +25,47 @@
   flex-direction: column;
   gap: 2px;
   margin: 0;
-  padding: 8px;
+  padding: 6px;
   border: 1px solid var(--color-gray-300);
   border-radius: 10px;
   list-style: none;
 }
 
-.blog-side-nav-list li {
+.blog-side-nav-item {
   margin: 0;
+}
+
+/* Top-level section row: link (Section N: title) + optional expander. */
+.blog-side-nav-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
 }
 
 .blog-side-nav-list a {
   display: block;
-  padding: 9px 12px;
   border-inline-start: 2px solid transparent;
   border-radius: 6px;
   color: var(--color-gray-700);
-  font-size: var(--body-font-size-xs);
   line-height: 1.4;
   text-decoration: none;
+}
+
+.blog-side-nav-row > a {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: var(--body-font-size-xs);
+}
+
+.blog-side-nav-num {
+  font-weight: 700;
+  color: var(--color-gray-800);
+}
+
+.blog-side-nav-sublist a {
+  padding: 7px 12px;
+  font-size: var(--body-font-size-xxs);
+  color: var(--color-gray-600);
 }
 
 .blog-side-nav-list a:hover,
@@ -56,7 +78,46 @@
   border-inline-start-color: var(--color-accent);
   background: var(--color-gray-100);
   color: var(--color-accent);
-  font-weight: 700;
+}
+
+.blog-side-nav-list a.is-active .blog-side-nav-num {
+  color: var(--color-accent);
+}
+
+/* "+" expander for sections that have subsections (h3s). */
+.blog-side-nav-expand {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-gray-800);
+  border: 0;
+  border-radius: 8px;
+  color: var(--color-white);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.blog-side-nav-expand:hover {
+  background: var(--color-black);
+}
+
+/* Nested subsection list — hidden until the section is expanded. */
+.blog-side-nav-sublist {
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  margin: 2px 0;
+  padding-inline-start: 14px;
+  list-style: none;
+}
+
+.blog-side-nav-item.is-open .blog-side-nav-sublist {
+  display: flex;
 }
 
 .blog-side-nav-item-extra {

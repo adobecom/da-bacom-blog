@@ -73,6 +73,38 @@ describe('blog-side-nav', () => {
     expect(nav.querySelectorAll('.blog-side-nav-item-extra')).to.have.length(0);
   });
 
+  it('prefixes each top-level item with "Section N:"', async () => {
+    await init(document.querySelector('.blog-side-nav'));
+    const nums = [...document.querySelectorAll('.blog-side-nav-row .blog-side-nav-num')];
+    expect(nums.map((n) => n.textContent.trim())).to.deep.equal(['Section 1:', 'Section 2:']);
+    expect(document.querySelector('.blog-side-nav-title').textContent).to.equal('First section');
+  });
+
+  it('nests h3 subsections under their h2 with a "+" expander that toggles them', async () => {
+    document.body.innerHTML = `<div class="blog-content">
+      <h2>Parent</h2><p>x</p>
+      <h3>Child one</h3><p>a</p><h3>Child two</h3><p>b</p>
+      <h2>Lonely</h2><p>y</p>
+      <nav class="blog-side-nav"></nav></div>`;
+    await init(document.querySelector('.blog-side-nav'));
+    const items = document.querySelectorAll('.blog-side-nav-item');
+    expect(items).to.have.length(2);
+    // First section has a sublist of 2 + an expander; second has neither.
+    const sublist = items[0].querySelector('.blog-side-nav-sublist');
+    expect(sublist.querySelectorAll('a')).to.have.length(2);
+    expect(sublist.querySelector('a').getAttribute('href')).to.equal('#child-one');
+    expect(items[1].querySelector('.blog-side-nav-sublist')).to.be.null;
+
+    const expander = items[0].querySelector('.blog-side-nav-expand');
+    expect(expander).to.exist;
+    expect(expander.getAttribute('aria-expanded')).to.equal('false');
+    expect(items[0].classList.contains('is-open')).to.be.false;
+    expander.click();
+    expect(expander.getAttribute('aria-expanded')).to.equal('true');
+    expect(items[0].classList.contains('is-open')).to.be.true;
+    expect(items[1].querySelector('.blog-side-nav-expand')).to.be.null;
+  });
+
   it('falls back to main h2 when there is no .blog-content', async () => {
     document.body.innerHTML = `<main>
       <h2>Only section</h2>
