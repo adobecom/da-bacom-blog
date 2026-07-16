@@ -12,6 +12,11 @@
   min-width: 0;
 }
 
+/* section dividers */
+.blog-2026 .article-header {
+  border-bottom: var(--blog-divider-weight) dotted var(--blog-divider-color);
+}
+
 @media (min-width: 1200px) {
   .blog-2026 .blog-article-grid {
     display: grid;
@@ -19,11 +24,19 @@
     column-gap: 32px;
     align-items: start;
     justify-content: center;
+    border-left: var(--blog-divider-weight) dotted var(--blog-divider-color);
   }
 
   .blog-2026 .blog-rail {
     position: sticky;
     top: 96px;
     align-self: start;
+    border-right: var(--blog-divider-weight) dotted var(--blog-divider-color);
+  }
+}
+
+@media (max-width: 599px) {
+  .blog-2026 .blog-rail {
+    border-right: 0;
   }
 }
