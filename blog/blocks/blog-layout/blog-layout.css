@@ -27,10 +27,12 @@
     border-inline-start: var(--blog-divider-weight) dotted var(--blog-divider-color);
   }
 
+  /* Rail stretches to the full grid height so its gutter divider runs the
+     whole length of the article. The jump-to-section nav inside it is what
+     sticks (see blog-side-nav.css), not the rail itself — a sticky rail would
+     shrink to its content and cut the divider off partway down. */
   .blog-2026 .blog-rail {
-    position: sticky;
-    top: var(--blog-rail-sticky-top, 96px);
-    align-self: start;
+    align-self: stretch;
     border-inline-end: var(--blog-divider-weight) dotted var(--blog-divider-color);
   }
 }

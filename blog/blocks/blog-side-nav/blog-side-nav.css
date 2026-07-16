@@ -10,7 +10,6 @@
   padding: 0 0 12px;
   background: none;
   border: 0;
-  border-bottom: 1px solid var(--color-gray-300);
   font-size: var(--body-font-size-xs);
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -19,11 +18,14 @@
   cursor: pointer;
 }
 
+/* Bordered rounded box around the section list (Figma jump-to-section). */
 .blog-side-nav-list {
   display: flex;
   flex-direction: column;
   margin: 0;
-  padding: 12px 0 0;
+  padding: 6px 8px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 8px;
   list-style: none;
 }
 
@@ -34,7 +36,7 @@
 .blog-side-nav-list a {
   display: block;
   padding-block: 8px;
-  padding-inline: 16px 0;
+  padding-inline: 12px 8px;
   border-inline-start: 2px solid transparent;
   color: var(--color-gray-700);
   font-size: var(--body-font-size-s);

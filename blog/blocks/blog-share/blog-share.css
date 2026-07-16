@@ -6,50 +6,36 @@
 .share-modal .blog-share {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding: 4px;
+  gap: 20px;
+  padding: 24px;
 }
 
+/* Card: page image on top (full-width landscape), title + subhead stacked
+   below — matches the Figma share modal. */
 .share-modal .blog-share-card {
   display: flex;
-  gap: 16px;
-  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
 }
 
 .share-modal .blog-share-card-img {
-  width: 96px;
-  height: 96px;
+  width: 100%;
+  height: 200px;
   object-fit: cover;
-  border-radius: 8px;
-  flex-shrink: 0;
+  border-radius: 12px;
 }
 
-/* Headline + subhead share a COMBINED 2-line budget (spec 05-share-modal.md:
-   "Maximum of two lines for card headline + subhead. Headline takes
-   priority and is truncated if extending beyond two lines."). The title
-   renders first in DOM order, so capping the body to two title line-heights
-   with overflow: hidden lets the headline claim as much of that budget as
-   it needs before the subhead gets any remaining space. The title's own
-   -webkit-line-clamp: 2 stays as an upper safety bound so a very long
-   headline alone never exceeds two lines either. */
 .share-modal .blog-share-card-body {
-  /* Shared with .blog-share-card-title below so the combined-clamp math
-     stays derived from the same values instead of duplicating magic
-     numbers in two places. */
-  --blog-share-title-font-size: 16px;
-  --blog-share-title-line-height: 1.3;
-
   display: flex;
   flex-direction: column;
   gap: 4px;
   min-width: 0;
-  max-height: calc(2 * var(--blog-share-title-font-size) * var(--blog-share-title-line-height));
-  overflow: hidden;
 }
 
-/* Headline takes truncation priority: 2-line clamp, ellipsis overflow.
-   See TITLE_LONG_THRESHOLD in blog-share.js for the subhead-drop logic
-   that backs this up when the headline alone fills both lines. */
+/* Title: up to 2 lines; the subhead below it also clamps to 2. Both stay
+   fully visible (the earlier combined single-budget clamp cut the headline
+   off — the Figma card shows headline and subhead together). */
 .share-modal .blog-share-card-title {
   /* stylelint-disable-next-line value-no-vendor-prefix -- line-clamp requires the legacy -webkit-box flex model in browsers without standard line-clamp support */
   display: -webkit-box;
@@ -57,14 +43,20 @@
   -webkit-line-clamp: 2;
   overflow: hidden;
   margin: 0;
-  font-size: var(--blog-share-title-font-size);
+  font-size: 18px;
   font-weight: 700;
-  line-height: var(--blog-share-title-line-height);
+  line-height: 1.3;
 }
 
 .share-modal .blog-share-card-desc {
+  /* stylelint-disable-next-line value-no-vendor-prefix -- see title above */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
   margin: 0;
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.35;
   color: var(--color-gray-700, #6e6e6e);
 }
 
@@ -78,9 +70,12 @@
 }
 
 .share-modal .blog-share-channels > li {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
 }
 
+/* Icon-only rounded-square buttons (Figma): white, subtle border, icon
+   centered. The text label stays in the DOM for accessibility but is
+   visually hidden. */
 .share-modal .blog-share-x,
 .share-modal .blog-share-email,
 .share-modal .blog-share-linkedin,
@@ -88,27 +83,44 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  width: 100%;
-  height: 40px;
-  padding: 0 16px;
-  background: var(--color-gray-700, #2c2c2c);
-  border: none;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 14px;
-  text-decoration: none;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  background: var(--color-white, #fff);
+  border: 1px solid var(--color-gray-300);
+  border-radius: 14px;
+  color: var(--color-gray-800);
   cursor: pointer;
 }
 
+.share-modal .blog-share-x:hover,
+.share-modal .blog-share-email:hover,
+.share-modal .blog-share-linkedin:hover,
+.share-modal .blog-share-copy:hover {
+  background: var(--color-gray-100);
+}
+
+.share-modal .blog-share-channel-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .share-modal .blog-share-channels .icon {
-  display: contents;
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
 }
 
 .share-modal .blog-share-channels .icon svg {
   display: block;
-  width: 16px;
-  height: 16px;
+  width: 100%;
+  height: 100%;
 }
 
 .share-modal .blog-share-copied {

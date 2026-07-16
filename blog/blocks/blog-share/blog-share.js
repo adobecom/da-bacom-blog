@@ -103,6 +103,10 @@ function buildCard({ title, description, image }) {
     img.className = 'blog-share-card-img';
     img.src = image;
     img.alt = '';
+    img.loading = 'lazy';
+    // Drafts / pages without a valid card image resolve to a broken URL —
+    // drop the element rather than render a broken-image box.
+    img.addEventListener('error', () => img.remove());
     card.append(img);
   }
 
