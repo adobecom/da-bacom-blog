@@ -79,13 +79,17 @@ export default async function init(el) {
 
     // Stop tracking once the bar is removed from the DOM (e.g. block
     // teardown in an SPA-style re-render), so we don't leak listeners.
-    const cleanupObserver = new MutationObserver(() => {
-      if (el.isConnected) return;
-      window.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', recomputeBounds);
-      cleanupObserver.disconnect();
-    });
-    cleanupObserver.observe(document.body, { childList: true, subtree: true });
+    // Only the bar's own parent needs watching for that — no need for a
+    // subtree observer on the whole document.
+    if (el.parentNode) {
+      const cleanupObserver = new MutationObserver(() => {
+        if (el.isConnected) return;
+        window.removeEventListener('scroll', schedule);
+        window.removeEventListener('resize', recomputeBounds);
+        cleanupObserver.disconnect();
+      });
+      cleanupObserver.observe(el.parentNode, { childList: true });
+    }
 
     render();
   } catch (e) {

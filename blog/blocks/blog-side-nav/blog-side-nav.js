@@ -5,7 +5,13 @@ const LABEL_KEY = 'jump-to-section';
 const LABEL_FALLBACK = 'JUMP TO SECTION';
 const NAV_ARIA_LABEL = 'Jump to section';
 const LINK_SELECTOR = '.blog-side-nav-list a';
+// The -96px here must stay in sync with --blog-rail-sticky-top
+// (blog/styles/styles.css, under .blog-2026) — it's the same sticky offset
+// expressed as a scroll-spy root margin instead of a CSS `top`.
 const SCROLL_SPY_ROOT_MARGIN = '-96px 0px -70% 0px';
+// Matches blog-side-nav.css's `min-width: 1200px` breakpoint, above which
+// the list is always visible (a rail, not an accordion).
+const DESKTOP_MEDIA_QUERY = '(min-width: 1200px)';
 
 function getHeadings() {
   return document.querySelector('.blog-content')?.querySelectorAll('h2')
@@ -95,9 +101,22 @@ function buildNav(el, headings, label) {
   toggle.className = 'blog-side-nav-toggle';
   toggle.setAttribute('aria-expanded', 'true');
   toggle.textContent = label;
+
+  // At >= 1200px the list is always visible (rail, not an accordion — see
+  // DESKTOP_MEDIA_QUERY / blog-side-nav.css's matching breakpoint), so the
+  // toggle has nothing to do there. Without this guard, a click recorded
+  // while accordion-collapsed on mobile and then resized up to desktop
+  // would leave aria-expanded="false" while the list is actually visible —
+  // an a11y desync. Keep the toggle a no-op above the breakpoint and pin
+  // aria-expanded back to "true" whenever the viewport crosses into it.
+  const desktopQuery = window.matchMedia?.(DESKTOP_MEDIA_QUERY);
   toggle.addEventListener('click', () => {
+    if (desktopQuery?.matches) return;
     const expanded = toggle.getAttribute('aria-expanded') === 'true';
     toggle.setAttribute('aria-expanded', String(!expanded));
+  });
+  desktopQuery?.addEventListener?.('change', (e) => {
+    if (e.matches) toggle.setAttribute('aria-expanded', 'true');
   });
 
   const list = document.createElement('ol');
