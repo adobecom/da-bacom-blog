@@ -1,0 +1,29 @@
+.blog-2026 .blog-article-grid {
+  display: block;
+}
+
+.blog-2026 .blog-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.blog-2026 .blog-content {
+  min-width: 0;
+}
+
+@media (min-width: 1200px) {
+  .blog-2026 .blog-article-grid {
+    display: grid;
+    grid-template-columns: var(--blog-rail-width) minmax(0, var(--blog-content-max));
+    column-gap: 32px;
+    align-items: start;
+    justify-content: center;
+  }
+
+  .blog-2026 .blog-rail {
+    position: sticky;
+    top: 96px;
+    align-self: start;
+  }
+}
