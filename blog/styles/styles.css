@@ -66,6 +66,12 @@
   --blog-divider-weight: 2px;
   --blog-progress-color: var(--color-accent); /* #1473E6 */
   --blog-progress-weight: 8px;
+
+  /* Shared sticky offset for the rail (blog-side-nav.css, blog-layout.css's
+     .blog-rail, blog-progress-bar.css) so they all stick beneath the
+     marquee at the same point. Kept in sync manually with
+     SCROLL_SPY_ROOT_MARGIN in blog-side-nav.js. */
+  --blog-rail-sticky-top: 96px;
 }
 
 body main {
@@ -171,7 +177,7 @@ main p picture img {
 
 .blog-2026 .article-header .article-byline-sharing {
   flex-shrink: 0;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 /* Share pill: replaces Milo's per-network sharing icons with a single

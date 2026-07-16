@@ -2,10 +2,10 @@
 .blog-progress-bar {
   position: sticky;
 
-  /* Same sticky offset as the side nav rail (blog-side-nav.css
-     --blog-rail-sticky-top / blog-layout.css .blog-rail), so the bar tracks
-     the article alongside it. */
-  top: 96px;
+  /* Same sticky offset as the side nav rail (--blog-rail-sticky-top,
+     defined once on .blog-2026 in blog/styles/styles.css), so the bar
+     tracks the article alongside it. */
+  top: var(--blog-rail-sticky-top, 96px);
   z-index: 1;
   height: var(--blog-progress-weight, 8px);
   overflow: hidden;
@@ -19,6 +19,12 @@
   transform: scaleX(var(--p, 0));
   transform-origin: left;
   will-change: transform;
+}
+
+/* RTL: the fill must grow from the trailing edge (right), not the left,
+   so it reads in the same reading-direction-relative sense as LTR. */
+[dir="rtl"] .blog-progress-bar-fill {
+  transform-origin: right;
 }
 
 @media (prefers-reduced-motion: no-preference) {

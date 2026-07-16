@@ -1,6 +1,4 @@
 .blog-side-nav {
-  --blog-rail-sticky-top: 96px;
-
   display: block;
 }
 
@@ -35,8 +33,9 @@
 
 .blog-side-nav-list a {
   display: block;
-  padding: 8px 0 8px 16px;
-  border-left: 2px solid transparent;
+  padding-block: 8px;
+  padding-inline: 16px 0;
+  border-inline-start: 2px solid transparent;
   color: var(--color-gray-700);
   font-size: var(--body-font-size-s);
   line-height: 1.4;
@@ -49,7 +48,7 @@
 }
 
 .blog-side-nav-list a.is-active {
-  border-left-color: var(--color-accent);
+  border-inline-start-color: var(--color-accent);
   color: var(--color-accent);
   font-weight: 700;
 }
@@ -95,7 +94,7 @@
 @media (min-width: 1200px) {
   .blog-side-nav {
     position: sticky;
-    top: var(--blog-rail-sticky-top);
+    top: var(--blog-rail-sticky-top, 96px);
   }
 
   .blog-side-nav.blog-side-nav-no-sticky {

@@ -24,19 +24,19 @@
     column-gap: 32px;
     align-items: start;
     justify-content: center;
-    border-left: var(--blog-divider-weight) dotted var(--blog-divider-color);
+    border-inline-start: var(--blog-divider-weight) dotted var(--blog-divider-color);
   }
 
   .blog-2026 .blog-rail {
     position: sticky;
-    top: 96px;
+    top: var(--blog-rail-sticky-top, 96px);
     align-self: start;
-    border-right: var(--blog-divider-weight) dotted var(--blog-divider-color);
+    border-inline-end: var(--blog-divider-weight) dotted var(--blog-divider-color);
   }
 }
 
 @media (max-width: 599px) {
   .blog-2026 .blog-rail {
-    border-right: 0;
+    border-inline-end: 0;
   }
 }
