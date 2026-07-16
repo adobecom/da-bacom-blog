@@ -124,6 +124,7 @@ main p picture img {
 .blog-2026 .blog-content .section p picture img,
 .blog-2026 .blog-content .section .figure img {
   max-height: 300px;
+  object-fit: cover;
 }
 
 .article-feed .article-card-date,
