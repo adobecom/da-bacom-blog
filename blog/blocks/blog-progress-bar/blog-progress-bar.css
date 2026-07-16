@@ -1,0 +1,28 @@
+/* Identical on all breakpoints (spec 07 / task Q6): no responsive variation. */
+.blog-progress-bar {
+  position: sticky;
+
+  /* Same sticky offset as the side nav rail (blog-side-nav.css
+     --blog-rail-sticky-top / blog-layout.css .blog-rail), so the bar tracks
+     the article alongside it. */
+  top: 96px;
+  z-index: 1;
+  height: var(--blog-progress-weight, 8px);
+  overflow: hidden;
+  background: var(--color-gray-200);
+}
+
+.blog-progress-bar-fill {
+  width: 100%;
+  height: 100%;
+  background: var(--blog-progress-color, #1473E6);
+  transform: scaleX(var(--p, 0));
+  transform-origin: left;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .blog-progress-bar-fill {
+    transition: transform 0.15s linear;
+  }
+}
