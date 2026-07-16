@@ -1,0 +1,47 @@
+.blog-meta-tags {
+  max-width: var(--blog-meta-max);
+}
+
+.blog-meta-tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/*
+ * Two-row clamp: rows beyond the second are hidden by JS (blog-meta-tags.js,
+ * clampToRows), which sets the `hidden` attribute on overflow <li> elements.
+ * `hidden` maps to `display: none` below, which both clips the overflow and
+ * removes those pills from the tab order / accessibility tree in one step —
+ * this is the only place overflow handling lives, do not duplicate it here
+ * with a max-height + overflow:hidden approach.
+ */
+.blog-meta-tags-list li[hidden] {
+  display: none;
+}
+
+.blog-meta-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 999px;
+  font-size: var(--body-font-size-xs);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-gray-700);
+  text-decoration: none;
+  background: transparent;
+}
+
+.blog-meta-tag:hover {
+  background: var(--color-gray-100);
+}
+
+.blog-meta-tag:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
