@@ -102,6 +102,20 @@ describe('blog-share', () => {
       await copyShareLink('https://x/y', status);
       expect(status.hidden).to.be.false;
     });
+
+    it('does not show the copied status when navigator.clipboard is absent and the legacy fallback fails', async () => {
+      Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+      const originalExecCommand = document.execCommand;
+      document.execCommand = () => false;
+      try {
+        const status = document.createElement('span');
+        status.hidden = true;
+        await copyShareLink('https://x/y', status);
+        expect(status.hidden).to.be.true;
+      } finally {
+        document.execCommand = originalExecCommand;
+      }
+    });
   });
 
   describe('init', () => {

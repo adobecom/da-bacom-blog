@@ -71,17 +71,55 @@ function buildChannelLink({ className, href, ariaLabel, icon, label }) {
   return a;
 }
 
+// Fallback for contexts where navigator.clipboard is unavailable (insecure
+// HTTP origins, older browsers): use the legacy execCommand copy path.
+function legacyCopy(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.append(textarea);
+  textarea.select();
+  let succeeded = false;
+  try {
+    succeeded = document.execCommand('copy');
+  } catch (e) {
+    succeeded = false;
+  }
+  textarea.remove();
+  return succeeded;
+}
+
+// Timer ids are scoped per-element (rather than hung off this function) so
+// concurrent copy targets don't clobber each other's auto-hide timeout.
+const hideTimers = new WeakMap();
+
 // Exported so the copy handler can be unit tested independently of a real
 // click event / navigator.clipboard implementation (see spec 05 test plan).
 export async function copyShareLink(url, copiedEl) {
-  try {
-    await navigator.clipboard?.writeText(url);
-  } catch (e) {
-    window.lana?.log(`blog-share: clipboard write failed: ${e.message}`, { severity: 'warning', tags: 'blog-share' });
+  let succeeded = true;
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch (e) {
+      // The browser attempted the write and it was rejected (e.g. denied
+      // permission) — still surface the status as before; only the
+      // API-absent case below must suppress it.
+      window.lana?.log(`blog-share: clipboard write failed: ${e.message}`, { severity: 'warning', tags: 'blog-share' });
+    }
+  } else {
+    // navigator.clipboard is absent entirely (e.g. insecure context) —
+    // never silently claim success; fall back to execCommand, and only
+    // show the "Link copied" status if that actually worked.
+    succeeded = legacyCopy(url);
   }
+
+  if (!succeeded) return;
+
   copiedEl.hidden = false;
-  clearTimeout(copyShareLink.hideTimer);
-  copyShareLink.hideTimer = setTimeout(() => { copiedEl.hidden = true; }, COPIED_VISIBLE_MS);
+  clearTimeout(hideTimers.get(copiedEl));
+  hideTimers.set(copiedEl, setTimeout(() => { copiedEl.hidden = true; }, COPIED_VISIBLE_MS));
 }
 
 function buildChannels(url, title) {
@@ -182,8 +220,23 @@ export async function openShareModal() {
 // wire beyond the block root.
 export default async function init(el) {
   if (!el) return;
-  const trigger = el.querySelector('a, button') || el;
+  const fallbackTrigger = el.querySelector('a, button');
+  const trigger = fallbackTrigger || el;
   trigger.setAttribute('aria-haspopup', 'dialog');
+
+  if (!fallbackTrigger) {
+    // Falling back to a non-button/non-anchor root — make it keyboard
+    // operable so it matches the a11y expectations of a real trigger.
+    trigger.setAttribute('tabindex', '0');
+    trigger.setAttribute('role', 'button');
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openShareModal();
+      }
+    });
+  }
+
   trigger.addEventListener('click', (e) => {
     e.preventDefault();
     openShareModal();
