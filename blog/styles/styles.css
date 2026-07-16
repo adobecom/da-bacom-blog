@@ -56,6 +56,18 @@
   --detail-font-size-s: 0.75rem; /* 12px */
 }
 
+/* === blog-2026 layout === */
+.blog-2026 {
+  --blog-rail-width: 360px;
+  --blog-content-max: 820px;
+  --blog-headline-max: 1200px;
+  --blog-meta-max: 800px;
+  --blog-divider-color: var(--color-gray-400); /* #B6B6B6 */
+  --blog-divider-weight: 2px;
+  --blog-progress-color: var(--color-accent); /* #1473E6 */
+  --blog-progress-weight: 8px;
+}
+
 body main {
   font-size: var(--body-font-size-m);
   line-height: var(--body-line-height);
