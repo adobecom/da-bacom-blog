@@ -120,6 +120,94 @@ main p picture img {
   object-fit: cover;
 }
 
+/*
+ * Updated marquee (spec 01): restyle the Milo article-header only under the
+ * .blog-2026 scope class so legacy articles (no blog-layout authored) render
+ * unchanged. The eyebrow/share-pill elements themselves are injected by
+ * blog-layout.js's decorateMarquee() — this is purely CSS-first styling.
+ */
+.blog-2026 .article-header .article-eyebrow,
+.blog-2026 .article-header .article-category,
+.blog-2026 .article-header .article-title,
+.blog-2026 .article-header .article-byline {
+  max-width: var(--blog-headline-max);
+  margin-inline: auto;
+}
+
+.blog-2026 .article-header .article-eyebrow {
+  font-size: var(--detail-font-size-s);
+  font-weight: var(--detail-font-weight);
+  line-height: var(--detail-line-height);
+  color: var(--color-gray-600);
+  margin-top: var(--spacing-l);
+  margin-bottom: var(--spacing-s);
+}
+
+.blog-2026 .article-header .article-byline {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.blog-2026 .article-header .article-byline-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.blog-2026 .article-header .article-author-image {
+  flex-shrink: 0;
+}
+
+.blog-2026 .article-header .article-author-image img {
+  display: block;
+  width: 64px;
+  height: 64px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.blog-2026 .article-header .article-byline-sharing {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Share pill: replaces Milo's per-network sharing icons with a single
+ * Spectrum-like pill button — styled to match .blog-meta-tag
+ * (blog/blocks/blog-meta-tags/blog-meta-tags.css) for visual consistency. */
+.blog-2026 .blog-share-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 999px;
+  background: transparent;
+  font-size: var(--body-font-size-xs);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-gray-700);
+  cursor: pointer;
+}
+
+.blog-2026 .blog-share-pill:hover {
+  background: var(--color-gray-100);
+}
+
+.blog-2026 .blog-share-pill:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 599px) {
+  .blog-2026 .article-header .article-author-image img {
+    width: 48px;
+    height: 48px;
+  }
+}
+
 /* === blog-2026 content block overrides === */
 .blog-2026 .blog-content .section p picture img,
 .blog-2026 .blog-content .section .figure img {
