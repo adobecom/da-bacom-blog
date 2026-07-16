@@ -1,5 +1,5 @@
 import { expect } from '@esm-bundle/chai';
-import init, { buildShareContent, copyShareLink } from '../../../blog/blocks/blog-share/blog-share.js';
+import init, { buildShareContent, copyShareLink, openShareModal } from '../../../blog/blocks/blog-share/blog-share.js';
 
 describe('blog-share', () => {
   describe('buildShareContent', () => {
@@ -115,6 +115,13 @@ describe('blog-share', () => {
       } finally {
         document.execCommand = originalExecCommand;
       }
+    });
+  });
+
+  describe('openShareModal', () => {
+    it('loads the blog-share stylesheet (rail/modal content bypasses Milo loadBlock)', async () => {
+      await openShareModal();
+      expect(document.querySelector('link[href="/blog/blocks/blog-share/blog-share.css"]')).to.exist;
     });
   });
 

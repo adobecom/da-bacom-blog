@@ -3,6 +3,75 @@ import { LIBS } from '../../scripts/scripts.js';
 const iconsModule = await import(`${LIBS}/features/icons/icons.js`).catch(() => null);
 const loadIcons = iconsModule?.default ?? (() => {});
 
+const CSS_HREF = '/blog/blocks/blog-share/blog-share.css';
+
+// English fallbacks used when Milo/placeholders are unavailable (e.g.
+// offline unit tests) or a key hasn't been authored yet in the placeholders
+// sheet. 'copied-to-clipboard' reuses the key name mandated by spec 05 so it
+// stays in sync with any other surface using the same wording.
+const PLACEHOLDER_FALLBACKS = {
+  'share-on-x': 'Share on X',
+  'share-via-email': 'Share via email',
+  'share-on-linkedin': 'Share on LinkedIn',
+  'copy-link': 'Copy link',
+  'copied-to-clipboard': 'Link copied',
+  share: 'Share',
+};
+
+// Resolves one or more Milo placeholder keys, falling back to the English
+// literal (PLACEHOLDER_FALLBACKS) when Milo/placeholders are unavailable or
+// a key is unresolved. Mirrors the pattern already used by
+// blog-side-nav.js's getLabel() / blog-layout.js's getPlaceholders().
+async function getPlaceholders(keys) {
+  const fallbackResult = () => (
+    Object.fromEntries(keys.map((key) => [key, PLACEHOLDER_FALLBACKS[key]]))
+  );
+  try {
+    const [placeholdersMod, utilsMod] = await Promise.all([
+      import(`${LIBS}/features/placeholders.js`).catch(() => null),
+      import(`${LIBS}/utils/utils.js`).catch(() => null),
+    ]);
+    const { replaceKey } = placeholdersMod ?? {};
+    const { getConfig } = utilsMod ?? {};
+    if (!replaceKey || !getConfig) return fallbackResult();
+    const config = getConfig();
+    const entries = await Promise.all(keys.map(async (key) => {
+      const fallback = PLACEHOLDER_FALLBACKS[key];
+      const value = await replaceKey(key, config).catch(() => null);
+      const notFoundSentinel = key.replace(/-/g, ' ');
+      const isUnresolved = !value || value === key || value === notFoundSentinel;
+      return [key, isUnresolved ? fallback : value];
+    }));
+    return Object.fromEntries(entries);
+  } catch {
+    return fallbackResult();
+  }
+}
+
+// Rail/modal content built by blog-layout.js's share pill bypasses Milo's
+// loadBlock, so nothing else injects this block's stylesheet. Load it here,
+// guarding against a double-inject if the modal is opened more than once.
+async function loadShareStyle() {
+  if (document.querySelector(`link[href="${CSS_HREF}"]`)) return;
+
+  try {
+    const utilsModule = await import(`${LIBS}/utils/utils.js`).catch(() => null);
+    const loadStyle = utilsModule?.loadStyle;
+    if (typeof loadStyle === 'function') {
+      loadStyle(CSS_HREF);
+      return;
+    }
+
+    if (document.querySelector(`link[href="${CSS_HREF}"]`)) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = CSS_HREF;
+    document.head.append(link);
+  } catch (e) {
+    window.lana?.log(`blog-share: failed to load styles: ${e?.message}`, { severity: 'warning', tags: 'blog-share' });
+  }
+}
+
 // Above this many characters the headline alone is expected to fill both
 // available clamp lines, so the subhead is dropped to give the headline
 // display priority (per spec: "headline takes priority and is truncated
@@ -122,7 +191,7 @@ export async function copyShareLink(url, copiedEl) {
   hideTimers.set(copiedEl, setTimeout(() => { copiedEl.hidden = true; }, COPIED_VISIBLE_MS));
 }
 
-function buildChannels(url, title) {
+function buildChannels(url, title, labels) {
   const list = document.createElement('ul');
   list.className = 'blog-share-channels';
 
@@ -132,7 +201,7 @@ function buildChannels(url, title) {
   const xLink = buildChannelLink({
     className: 'blog-share-x',
     href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
-    ariaLabel: 'Share on X',
+    ariaLabel: labels['share-on-x'],
     icon: 'twitter',
     label: 'X',
   });
@@ -140,13 +209,13 @@ function buildChannels(url, title) {
   const emailLink = document.createElement('a');
   emailLink.className = 'blog-share-email';
   emailLink.href = `mailto:?subject=${encodedTitle}&body=${encodedUrl}`;
-  emailLink.setAttribute('aria-label', 'Share via email');
+  emailLink.setAttribute('aria-label', labels['share-via-email']);
   emailLink.append(makeIcon('email'), makeLabel('Email'));
 
   const linkedinLink = buildChannelLink({
     className: 'blog-share-linkedin',
     href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
-    ariaLabel: 'Share on LinkedIn',
+    ariaLabel: labels['share-on-linkedin'],
     icon: 'linkedin',
     label: 'LinkedIn',
   });
@@ -154,14 +223,14 @@ function buildChannels(url, title) {
   const copyBtn = document.createElement('button');
   copyBtn.type = 'button';
   copyBtn.className = 'blog-share-copy';
-  copyBtn.setAttribute('aria-label', 'Copy link');
-  copyBtn.append(makeIcon('link'), makeLabel('Copy link'));
+  copyBtn.setAttribute('aria-label', labels['copy-link']);
+  copyBtn.append(makeIcon('link'), makeLabel(labels['copy-link']));
 
   const copiedEl = document.createElement('span');
   copiedEl.className = 'blog-share-copied';
   copiedEl.setAttribute('role', 'status');
   copiedEl.hidden = true;
-  copiedEl.textContent = 'Link copied';
+  copiedEl.textContent = labels['copied-to-clipboard'];
 
   copyBtn.addEventListener('click', () => { copyShareLink(url, copiedEl); });
 
@@ -176,13 +245,24 @@ function buildChannels(url, title) {
 
 // Pure(ish) builder: given plain data, returns the modal content element.
 // No metadata reads, no getModal calls — keeps this unit-testable offline.
-export function buildShareContent({ title = '', description = '', image = '', url = '' } = {}) {
+// `labels` is optional and defaults to the English fallbacks so existing
+// callers/tests that don't pass it still see the exact same strings; the
+// real openShareModal() below resolves localized labels first.
+export function buildShareContent({
+  title = '',
+  description = '',
+  image = '',
+  url = '',
+  labels = {},
+} = {}) {
+  const resolvedLabels = { ...PLACEHOLDER_FALLBACKS, ...labels };
+
   const wrapper = document.createElement('div');
   wrapper.className = 'blog-share';
 
   wrapper.append(buildCard({ title, description, image }));
 
-  const { list, copiedEl } = buildChannels(url, title);
+  const { list, copiedEl } = buildChannels(url, title, resolvedLabels);
   wrapper.append(list, copiedEl);
 
   loadIcons(wrapper.querySelectorAll('span.icon'));
@@ -191,7 +271,11 @@ export function buildShareContent({ title = '', description = '', image = '', ur
 }
 
 export async function openShareModal() {
-  const utilsModule = await import(`${LIBS}/utils/utils.js`).catch(() => null);
+  const [utilsModule, labels] = await Promise.all([
+    import(`${LIBS}/utils/utils.js`).catch(() => null),
+    getPlaceholders(['share-on-x', 'share-via-email', 'share-on-linkedin', 'copy-link', 'copied-to-clipboard', 'share']),
+    loadShareStyle(),
+  ]);
   const getMetadata = utilsModule?.getMetadata ?? (() => null);
 
   // Card Metadata first (Title/CardTitle, CardDescription, cardImage),
@@ -201,7 +285,7 @@ export async function openShareModal() {
   const image = getMetadata('card-image') || getMetadata('og:image') || '';
   const url = window.location.href;
 
-  const content = buildShareContent({ title, description, image, url });
+  const content = buildShareContent({ title, description, image, url, labels });
 
   const modalModule = await import(`${LIBS}/blocks/modal/modal.js`).catch(() => ({}));
   const getModal = modalModule?.getModal;
@@ -211,7 +295,7 @@ export async function openShareModal() {
     return;
   }
 
-  getModal(null, { id: 'share', class: 'share-modal', content, title: 'Share' });
+  getModal(null, { id: 'share', class: 'share-modal', content, title: labels.share });
 }
 
 // Decorates a standalone authored trigger, if this block is authored on a

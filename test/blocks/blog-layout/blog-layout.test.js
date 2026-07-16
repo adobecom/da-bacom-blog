@@ -47,6 +47,14 @@ describe('blog-layout', () => {
     expect(header.querySelector('.article-eyebrow')).to.exist;
     expect(header.querySelector('.blog-share-pill')).to.exist;
   });
+
+  it('loads each rail sub-block stylesheet when mounting it (rail blocks bypass Milo loadBlock)', async () => {
+    await init(document.querySelector('.blog-layout'));
+    ['blog-side-nav', 'blog-meta-tags', 'blog-progress-bar'].forEach((name) => {
+      const href = `/blog/blocks/${name}/${name}.css`;
+      expect(document.querySelector(`link[href="${href}"]`), `${href} should be loaded`).to.exist;
+    });
+  });
 });
 
 describe('computeReadTime', () => {
@@ -126,5 +134,13 @@ describe('decorateMarquee', () => {
     const header = document.querySelector('.article-header');
     await decorateMarquee(header);
     expect(header.querySelector('.blog-share-pill')).to.exist;
+  });
+
+  it('does not duplicate the share pill on a second decorate pass', async () => {
+    document.body.innerHTML = '<main><div class="article-header"><div class="article-byline"></div></div></main>';
+    const header = document.querySelector('.article-header');
+    await decorateMarquee(header);
+    await decorateMarquee(header);
+    expect(header.querySelectorAll('.blog-share-pill')).to.have.length(1);
   });
 });
