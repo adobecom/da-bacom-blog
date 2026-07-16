@@ -1,0 +1,110 @@
+/* Scoped under .share-modal — the dialog class Milo's getModal applies
+   (see openShareModal(): getModal(null, { class: 'share-modal', ... })).
+   Milo's own modal.css supplies the dialog chrome (curtain, close button,
+   focus trap styling); this file only styles the blog-share content. */
+
+.share-modal .blog-share {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 4px;
+}
+
+.share-modal .blog-share-card {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.share-modal .blog-share-card-img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.share-modal .blog-share-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* Headline takes truncation priority: 2-line clamp, ellipsis overflow.
+   See TITLE_LONG_THRESHOLD in blog-share.js for the subhead-drop logic
+   that backs this up when the headline alone fills both lines. */
+.share-modal .blog-share-card-title {
+  /* stylelint-disable-next-line value-no-vendor-prefix -- line-clamp requires the legacy -webkit-box flex model in browsers without standard line-clamp support */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.share-modal .blog-share-card-desc {
+  /* stylelint-disable-next-line value-no-vendor-prefix -- line-clamp requires the legacy -webkit-box flex model in browsers without standard line-clamp support */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-gray-700, #6e6e6e);
+}
+
+.share-modal .blog-share-channels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.share-modal .blog-share-channels > li {
+  flex: 1 1 auto;
+}
+
+.share-modal .blog-share-x,
+.share-modal .blog-share-email,
+.share-modal .blog-share-linkedin,
+.share-modal .blog-share-copy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 40px;
+  padding: 0 16px;
+  background: var(--color-gray-700, #2c2c2c);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.share-modal .blog-share-channels .icon {
+  display: contents;
+}
+
+.share-modal .blog-share-channels .icon svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.share-modal .blog-share-copied {
+  text-align: center;
+  font-size: 14px;
+}
+
+.share-modal .blog-share-copied[hidden] {
+  display: none;
+}
