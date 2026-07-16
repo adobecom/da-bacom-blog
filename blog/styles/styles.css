@@ -120,6 +120,12 @@ main p picture img {
   object-fit: cover;
 }
 
+/* === blog-2026 content block overrides === */
+.blog-2026 .blog-content .section p picture img,
+.blog-2026 .blog-content .section .figure img {
+  max-height: 300px;
+}
+
 .article-feed .article-card-date,
 .gnav-search-results .article-card-date,
 .recommended-articles .article-card-date,
@@ -224,5 +230,12 @@ main .article-header .article-category p {
 
   .global-navigation .feds-profile > .feds-signIn {
     margin-right: 0;
+  }
+
+  .blog-2026 .blog-content .section .content,
+  .blog-2026 .blog-content .section .columns,
+  .blog-2026 .blog-content .section p:has(img) {
+    max-width: var(--blog-content-max);
+    margin-inline: 0;
   }
 }
