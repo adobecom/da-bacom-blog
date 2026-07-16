@@ -83,6 +83,11 @@ export function setActiveLink(nav, id) {
 function buildNav(el, headings, label) {
   el.classList.add('blog-side-nav');
   el.setAttribute('aria-label', NAV_ARIA_LABEL);
+  // The real mount path (blog-layout.js) hands us a plain <div>, not a <nav>,
+  // so aria-label alone would not be exposed as a landmark to AT. When the
+  // host element isn't already a <nav>, explicitly expose the navigation
+  // landmark role. Avoid the redundant role when it already is a <nav>.
+  if (el.tagName !== 'NAV') el.setAttribute('role', 'navigation');
   el.replaceChildren();
 
   const toggle = document.createElement('button');
@@ -140,7 +145,7 @@ function wireLinkClicks(list) {
     if (!target) return;
     event.preventDefault();
 
-    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
     target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
 
     if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');

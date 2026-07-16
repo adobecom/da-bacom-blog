@@ -94,6 +94,22 @@ describe('blog-side-nav', () => {
     expect(document.querySelector('.blog-side-nav').getAttribute('aria-label')).to.equal('Jump to section');
   });
 
+  it('does not add a redundant role when mounted on a real <nav>', async () => {
+    await init(document.querySelector('.blog-side-nav'));
+    expect(document.querySelector('.blog-side-nav').hasAttribute('role')).to.be.false;
+  });
+
+  it('exposes a navigation landmark when mounted on a plain div, as in the real blog-layout.js mount path', async () => {
+    document.body.innerHTML = `<div class="blog-content">
+      <h2>First section</h2><p>x</p><h2>Second section</h2><p>y</p>
+      </div>
+      <div class="blog-side-nav"></div>`;
+    await init(document.querySelector('.blog-side-nav'));
+    const el = document.querySelector('.blog-side-nav');
+    expect(el.getAttribute('role')).to.equal('navigation');
+    expect(el.getAttribute('aria-label')).to.equal('Jump to section');
+  });
+
   describe('pickActiveId (pure scroll-spy helper)', () => {
     it('returns the topmost id that is currently intersecting', () => {
       const ids = ['a', 'b', 'c'];
