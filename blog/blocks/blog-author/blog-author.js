@@ -42,6 +42,7 @@ function injectSchema(el, company) {
     '@type': 'Person',
     name,
     url: window.location.href,
+    '@id': `${window.location.origin}${window.location.pathname}#person`,
   };
 
   if (company) {
