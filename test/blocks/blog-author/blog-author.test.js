@@ -86,6 +86,7 @@ describe('Blog Author', () => {
     expect(schema.name).to.equal('Jane Doe');
     expect(schema.jobTitle).to.equal('Senior Director, Marketing');
     expect(schema.url).to.be.a('string');
+    expect(schema['@id']).to.equal(`${window.location.origin}${window.location.pathname}#person`);
     expect(schema.worksFor).to.be.undefined;
   });
 
