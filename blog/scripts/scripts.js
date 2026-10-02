@@ -88,6 +88,8 @@ async function buildArticleHeader(el) {
 export async function buildAutoBlocks() {
   const { getMetadata } = await import(`${LIBS}/utils/utils.js`);
   const mainEl = document.querySelector('main');
+  const blogV2 = document.querySelector('.blog-header');
+  if (blogV2) return;
   try {
     if (getMetadata('publication-date') && !mainEl.querySelector('.article-header')) {
       await buildArticleHeader(mainEl);
@@ -234,6 +236,7 @@ export function transformExlLinks(locale, root = document) {
 
 async function detectSidekick({ loadScript, loadStyle }) {
   const initPlugins = async () => {
+    // eslint-disable-next-line import/no-cycle
     const init = (await import('./sidekick.js')).default;
     init({ loadScript, loadStyle });
   };
