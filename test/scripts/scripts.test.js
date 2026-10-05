@@ -127,6 +127,26 @@ describe('Auto Blocks', () => {
     expect(document.querySelector('.article-header')).to.exist;
   });
 
+  it('does not move the AI summary image into the article header', async () => {
+    document.querySelector('main picture').remove();
+    const summary = document.createElement('div');
+    summary.className = 'ai-summary';
+    summary.innerHTML = `
+      <div><div><picture><img src="data:," alt=""></picture></div></div>
+      <div><div><h2>Key takeaways</h2><ul><li>Summary content</li></ul></div></div>`;
+    document.querySelector('main').append(summary);
+    const picture = summary.querySelector('picture');
+
+    await buildAutoBlocks();
+
+    expect(summary.querySelector('picture')).to.equal(picture);
+    const header = document.querySelector('.article-header');
+    expect(header).to.exist;
+    expect(header.querySelector('picture')).to.not.exist;
+    expect(header.lastElementChild.hidden).to.be.true;
+    expect(window.lana.log.called).to.be.false;
+  });
+
   it('does not show the category', async () => {
     await buildAutoBlocks();
     const category = document.head.querySelector('meta[name=category]').content;

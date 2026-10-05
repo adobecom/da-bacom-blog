@@ -65,10 +65,11 @@ async function buildArticleHeader(el) {
   const { getMetadata, getConfig } = await import(`${LIBS}/utils/utils.js`);
   const div = document.createElement('div');
   const h1 = el.querySelector('h1');
-  const media = h1.nextElementSibling?.querySelector('picture, a') || el.querySelector('picture');
-  const caption = getImageCaption(media);
+  const media = h1.nextElementSibling?.querySelector('picture:not(.ai-summary picture), a:not(.ai-summary a)')
+    || el.querySelector('picture:not(.ai-summary picture)');
+  const caption = media ? getImageCaption(media) : '';
   const mediaContainer = document.createElement('div');
-  mediaContainer.append(media);
+  if (media) mediaContainer.append(media);
   if (caption) { mediaContainer.append(caption); }
   const author = getMetadata('author') || 'Adobe Communications Team';
   const { locale } = getConfig();
@@ -81,6 +82,7 @@ async function buildArticleHeader(el) {
       <p>${publicationDate}</p>`],
     [mediaContainer],
   ]);
+  if (!media) articleHeaderBlockEl.lastElementChild.hidden = true;
   div.append(articleHeaderBlockEl);
   el.prepend(div);
 }
