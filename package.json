@@ -39,9 +39,9 @@
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "sinon": "13.0.1",
-    "stylelint": "14.6.0",
+    "stylelint": "17.16.0",
     "stylelint-config-prettier": "9.0.3",
-    "stylelint-config-standard": "25.0.0"
+    "stylelint-config-standard": "40.0.0"
   },
   "lint-staged": {
     "*.js": "eslint",
