@@ -259,7 +259,9 @@ async function detectSidekick({ loadScript, loadStyle }) {
   const paths = [`${LIBS}/styles/styles.css`];
   if (STYLES) { paths.push(STYLES); }
   const skin = document.head.querySelector('meta[name="skin"]')?.content;
-  if (skin) paths.push(`${LIBS}/styles/skins/${skin}.css`);
+  if (/^[\w-]+$/.test(skin || '')) {
+    paths.push(`${LIBS}/c2/styles/s2a-tokens.css`, `/blog/styles/skins/${skin}.css`);
+  }
   paths.forEach((path) => {
     const link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
