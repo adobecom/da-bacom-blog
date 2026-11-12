@@ -32,6 +32,15 @@
     letter-spacing: var(--s2a-typography-letter-spacing-body-md);
     -webkit-font-smoothing: antialiased;
 
+    /* C2's container is full width with spacing-lg gutters on mobile; C1's is 83.4% wide */
+    @media (width < 768px) {
+      .container {
+        width: auto;
+        margin-inline: 0;
+        padding-inline: var(--s2a-spacing-lg);
+      }
+    }
+
     .body-md {
       font-size: var(--s2a-typography-font-size-body-md);
       line-height: var(--s2a-typography-line-height-body-md);
