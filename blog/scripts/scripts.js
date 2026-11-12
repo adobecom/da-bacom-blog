@@ -258,6 +258,8 @@ async function detectSidekick({ loadScript, loadStyle }) {
 (function loadStyles() {
   const paths = [`${LIBS}/styles/styles.css`];
   if (STYLES) { paths.push(STYLES); }
+  const skin = document.head.querySelector('meta[name="skin"]')?.content;
+  if (skin) paths.push(`${LIBS}/styles/skins/${skin}.css`);
   paths.forEach((path) => {
     const link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
