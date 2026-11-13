@@ -88,8 +88,6 @@ async function buildArticleHeader(el) {
 export async function buildAutoBlocks() {
   const { getMetadata } = await import(`${LIBS}/utils/utils.js`);
   const mainEl = document.querySelector('main');
-  const blogV2 = document.querySelector('.blog-header');
-  if (blogV2) return;
   try {
     if (getMetadata('publication-date') && !mainEl.querySelector('.article-header')) {
       await buildArticleHeader(mainEl);
@@ -256,7 +254,9 @@ async function detectSidekick({ loadScript, loadStyle }) {
  * ------------------------------------------------------------
  */
 (function loadStyles() {
-  const paths = [];
+  const isC2 = document.querySelector('meta[name="foundation"]');
+  const miloStyles = isC2 ? `${LIBS}/c2/styles/styles.css` : `${LIBS}/styles/styles.css`;
+  const paths = [miloStyles];
   if (STYLES) { paths.push(STYLES); }
   paths.forEach((path) => {
     const link = document.createElement('link');
