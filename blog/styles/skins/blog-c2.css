@@ -21,6 +21,11 @@
 
   /* C1's grays and spacing, remapped to the S2A ramps */
   main {
+    /* one rule for every border and divider (MWPW-215387, pending design confirmation): one width,
+       and the design's #b6b6b6 on its nearest S2A token (black 32% is #adadad on white) */
+    --blog-c2-rule-width: var(--s2a-border-width-sm);
+    --blog-c2-rule-color: var(--s2a-color-transparent-black-32);
+    --blog-c2-rule: var(--blog-c2-rule-width) solid var(--blog-c2-rule-color);
     --color-gray-100: var(--s2a-color-gray-50);
     --color-gray-200: var(--s2a-color-gray-100);
     --color-gray-300: var(--s2a-color-gray-300);
@@ -162,9 +167,12 @@
 
   .blog-divider-frame,
   .blog-article-layout {
-    --blog-divider-dots: var(--s2a-color-border-subtle) 0 var(--s2a-border-width-md);
-    --blog-divider-rule-image: linear-gradient(var(--s2a-color-border-subtle), var(--s2a-color-border-subtle));
-    --blog-divider-rule-size: var(--s2a-border-width-sm);
+    /* the frame's rules are dotted from 600px, as C1 draws them; solid below */
+    --blog-divider-dots:
+      var(--blog-c2-rule-color) 0 var(--blog-c2-rule-width),
+      transparent var(--blog-c2-rule-width) calc(var(--blog-c2-rule-width) + var(--s2a-spacing-2xs));
+    --blog-divider-rule-image: linear-gradient(var(--blog-c2-rule-color), var(--blog-c2-rule-color));
+    --blog-divider-rule-size: var(--blog-c2-rule-width);
   }
 
   /* side navigation and related content */
@@ -179,8 +187,39 @@
   }
 
   .blog-side-navigation {
+    /* jump nav text: the design's #2c2c2c on gray-800 (#292929) */
+    nav {
+      color: var(--s2a-color-gray-800);
+    }
+
+    nav > ul {
+      border-color: var(--blog-c2-rule-color);
+    }
+
     .blog-side-navigation-toggle {
       border-radius: var(--s2a-border-radius-round);
+    }
+
+    /* +/-: open shows a plain minus on the same chip, in place of C1's circled minus on black */
+    .blog-side-navigation-toggle[aria-expanded="true"] {
+      &,
+      &:hover {
+        border-color: var(--s2a-color-gray-100);
+        background: var(--s2a-color-gray-50);
+        color: inherit;
+      }
+
+      .blog-side-navigation-toggle-icon {
+        width: var(--s2a-spacing-sm);
+        height: var(--s2a-spacing-sm);
+        border: 0;
+        border-radius: 0;
+
+        &::before {
+          width: var(--s2a-spacing-sm);
+          height: var(--s2a-spacing-3xs);
+        }
+      }
     }
 
     nav > ul > li > a {
@@ -205,7 +244,7 @@
 
   /* stylelint-disable-next-line selector-class-pattern */
   .blog-related-content .consonant-Card {
-    border-color: var(--s2a-color-border-subtle);
+    border-color: var(--blog-c2-rule-color);
     border-radius: var(--s2a-border-radius-md);
     background-color: var(--s2a-color-background-default);
   }
@@ -232,7 +271,7 @@
   /* stylelint-enable selector-class-pattern */
 
   .ai-summary {
-    border: 0;
+    border: var(--blog-c2-rule);
     border-radius: var(--s2a-border-radius-md);
     background-color: var(--s2a-color-background-subtle);
 
@@ -254,6 +293,24 @@
 
   .accordion .accordion-heading .accordion-trigger {
     font-weight: var(--s2a-font-weight-heading);
+  }
+
+  /* the accordion's rules and its +/- on the jump nav's: same rule, same glyph */
+  .accordion-container:not(.no-borders) {
+    .descr-list.accordion {
+      border-block-end: var(--blog-c2-rule);
+    }
+
+    .accordion .descr-term button {
+      border-block-start: var(--blog-c2-rule);
+    }
+  }
+
+  .accordion-icon {
+    &::before,
+    &::after {
+      background: var(--s2a-color-gray-800);
+    }
   }
 
   .quote .quote-copy {
@@ -387,14 +444,20 @@
     .blog-article-layout {
       --blog-divider-gap: var(--s2a-section-spacing-lg);
       --blog-divider-inline-space: var(--s2a-section-spacing-lg);
+      --blog-divider-rule-image: repeating-linear-gradient(to right, var(--blog-divider-dots));
     }
 
     .blog-divider-frame::before {
-      inset-inline: max(0px, calc(var(--grid-margins-width) - var(--s2a-section-spacing-lg) - var(--s2a-border-width-md)));
+      inset-inline: max(0px, calc(var(--grid-margins-width) - var(--s2a-section-spacing-lg) - var(--blog-c2-rule-width)));
+      background-size: var(--blog-c2-rule-width) 100%;
     }
 
     .blog-article-layout {
-      column-gap: calc(2 * var(--s2a-section-spacing-lg) + var(--s2a-border-width-md));
+      column-gap: calc(2 * var(--s2a-section-spacing-lg) + var(--blog-c2-rule-width));
+    }
+
+    .blog-divider-frame + .blog-article-layout::before {
+      inline-size: var(--blog-c2-rule-width);
     }
 
     :is(.blog-side-navigation, .ai-summary) {
@@ -402,8 +465,8 @@
     }
 
     .blog-side-navigation nav > ul {
-      border-color: var(--s2a-color-border-subtle);
-      border-radius: var(--s2a-border-radius-md);
+      border: var(--blog-c2-rule);
+      border-radius: var(--s2a-border-radius-2xs);
       box-shadow: none;
       overflow: hidden;
     }
