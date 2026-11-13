@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { importMapsPlugin } from '@web/dev-server-import-maps';
 import { defaultReporter } from '@web/test-runner';
+import { readdirSync } from 'node:fs';
 
 function customReporter() {
   return {
@@ -15,6 +16,17 @@ function customReporter() {
     },
   };
 }
+// lets test/styles/skins.test.js check every skin, including ones added later
+function listSkinsPlugin() {
+  return {
+    name: 'list-skins',
+    executeCommand({ command }) {
+      if (command !== 'list-skins') return undefined;
+      return readdirSync('blog/styles/skins').filter((file) => file.endsWith('.css'));
+    },
+  };
+}
+
 export default {
   coverageConfig: {
     exclude: [
@@ -24,7 +36,7 @@ export default {
       '**/deps/**',
     ],
   },
-  plugins: [importMapsPlugin({})],
+  plugins: [importMapsPlugin({}), listSkinsPlugin()],
   reporters: [
     defaultReporter({ reportTestResults: true, reportTestProgress: true }),
     customReporter(),
