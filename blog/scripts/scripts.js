@@ -256,7 +256,7 @@ async function detectSidekick({ loadScript, loadStyle }) {
  * ------------------------------------------------------------
  */
 (function loadStyles() {
-  const isC2 = document.querySelector('meta[name="foundation"]') === 'c2';
+  const isC2 = document.querySelector('meta[name="foundation"]')?.content === 'c2';
   const miloStyles = isC2 ? `${LIBS}/c2/styles/styles.css` : `${LIBS}/styles/styles.css`;
   const paths = [miloStyles];
   if (STYLES) { paths.push(STYLES); }
