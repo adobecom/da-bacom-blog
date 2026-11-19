@@ -88,7 +88,7 @@ async function buildArticleHeader(el) {
 export async function buildAutoBlocks() {
   const { getMetadata } = await import(`${LIBS}/utils/utils.js`);
   const mainEl = document.querySelector('main');
-  const blogV2 = document.querySelector('.blog-header');
+  const blogV2 = document.querySelector('.blog-header, .blog-header-c2');
   if (blogV2) return;
   try {
     if (getMetadata('publication-date') && !mainEl.querySelector('.article-header')) {
